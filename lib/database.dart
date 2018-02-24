@@ -31,6 +31,19 @@ class WordDatabase {
 
     return ret;
   }
+
+  static List<WordDatabaseEntry> match({List<WordDatabaseEntry> db,
+    String query}) {
+    List<WordDatabaseEntry> ret = [];
+
+    for (var entry in db) {
+      if (query.isNotEmpty && (entry.entryName.contains(query))) {
+        ret.add(entry);
+      }
+    }
+
+    return ret;
+  }
 }
 
 class WordDatabaseEntry {

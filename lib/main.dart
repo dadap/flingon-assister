@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'database.dart';
+import 'package:xml/xml.dart' as xml;
+import 'dart:io';
+import 'package:material_search/material_search.dart';
 
 void main() => runApp(new MyApp());
 
@@ -25,6 +29,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+
   MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -43,18 +48,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  List<WordDatabaseEntry> db;
 
   @override
   Widget build(BuildContext context) {
@@ -87,22 +81,26 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
+            new MaterialSearchInput(
+              placeholder: '  🔍 nuq Danej',
+              getResults: (String query) async {
+                if (db == null) {
+                  db = await WordDatabase.getDatabase();
+                }
+
+                final results = WordDatabase.match(db: db, query: query);
+
+                return results.map((item) => new MaterialSearchResult<String>(
+                  value: item.entryName,
+                  text: item.entryName + ': ' + item.definition,
+                )).toList();
+              },
             ),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
+            new Text('\nqeylIS, maleghmeH yIwovmoH, reH.'),
           ],
         ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
