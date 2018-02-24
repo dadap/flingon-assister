@@ -106,12 +106,14 @@ class WordDatabaseEntry {
   }
 
   Widget toWidget() {
-    return new Column(
-      children: [
-        new Text('$entryName ($partOfSpeech)'),
-        new Text('$definition'),
-        new Text('$notes'),
-      ]
+    return new Expanded(
+      child: new ListView(
+        children: [
+         new Text('$entryName ($partOfSpeech)'),
+         new Text('$definition'),
+         new Text('$notes'),
+        ],
+      ),
     );
   }
 }
