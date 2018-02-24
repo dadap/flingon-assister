@@ -48,10 +48,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<WordDatabaseEntry> db;
+  List<WordDatabaseEntry> _db;
+  Widget _main = new Text('Please be patient while the database is loading…');
 
   @override
   Widget build(BuildContext context) {
+
+    print('building');
+
+    if (_db == null) {
+      WordDatabase.getDatabase().then((ret) {
+        print('callback ran');
+        setState(() {
+          _db = ret;
+          _main = WordDatabase.match(db: _db, query: 'boQwI\'').first.toWidget();
+        });
+      });
+    }
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -100,11 +114,11 @@ class _MyHomePageState extends State<MyHomePage> {
             new MaterialSearchInput(
               placeholder: '  🔍 nuq Danej',
               getResults: (String query) async {
-                if (db == null) {
-                  db = await WordDatabase.getDatabase();
+                if (_db == null) {
+                  _db = await WordDatabase.getDatabase();
                 }
 
-                final results = WordDatabase.match(db: db, query: query);
+                final results = WordDatabase.match(db: _db, query: query);
 
                 return results.map((item) => new MaterialSearchResult<String>(
                   value: item.entryName,
@@ -112,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 )).toList();
               },
             ),
-            new Text('\nqeylIS, maleghmeH yIwovmoH, reH.'),
+            _main,
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
