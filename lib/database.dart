@@ -1,6 +1,7 @@
 import 'package:xml/xml.dart' as xml;
 import 'package:flutter/services.dart';
 import 'dart:async';
+import 'package:flutter/material.dart';
 
 class WordDatabase {
   static Future<List<WordDatabaseEntry>> getDatabase() async {
@@ -97,5 +98,15 @@ class WordDatabaseEntry {
       return matching.first.text;
     }
     return '';
+  }
+
+  Widget toWidget() {
+    return new Column(
+      children: [
+        new Text('$entryName ($partOfSpeech)'),
+        new Text('$definition'),
+        new Text('$notes'),
+      ]
+    );
   }
 }
