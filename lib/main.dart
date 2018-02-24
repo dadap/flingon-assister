@@ -64,6 +64,20 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
       ),
+      drawer: new Drawer(
+        child: new Column(
+          children: <Widget>[
+            new Text('boQwI\'',
+                style: new TextStyle(
+                  fontSize: 24.0, fontWeight: FontWeight.bold, height: 3.0)),
+            new Text('Reference'),
+            new Text('Useful Phrases'),
+            new Text('Media'),
+            new Text('Klingon Language Institute'),
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+    ),
       body: new Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
