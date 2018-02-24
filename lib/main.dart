@@ -125,6 +125,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   text: item.entryName + ': ' + item.definition,
                 )).toList();
               },
+              onSelect: (String selected) {
+                setState(() {
+                  _main = WordDatabase.match(db: _db, query: selected).first.toWidget();
+                });
+              }
             ),
             _main,
           ],
