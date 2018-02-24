@@ -49,7 +49,12 @@ class WordDatabase {
 
 class WordDatabaseEntry {
   WordDatabaseEntry.fromXmlNode(xml.XmlNode node) {
-    id = int.parse(innerText(ofNode: node, withName: 'id'));
+    try {
+      id = int.parse(innerText(ofNode: node, withName: 'id'));
+    } catch (InvalidNumberException) {
+      // XXX figure out what ID isn't parsing
+      id = 0;
+    }
     entryName = innerText(ofNode: node, withName: 'entry_name');
     partOfSpeech = innerText(ofNode: node, withName: 'part_of_speech');
     definition = innerText(ofNode: node, withName: 'definition');
