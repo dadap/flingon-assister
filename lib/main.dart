@@ -32,15 +32,6 @@ class MyHomePage extends StatefulWidget {
 
   MyHomePage({Key key, this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -51,62 +42,79 @@ class _MyHomePageState extends State<MyHomePage> {
   Map<String, WordDatabaseEntry> _db;
   Widget _main = new Text('Please be patient while the database is loading…');
 
-  @override
-  Widget build(BuildContext context) {
-
+  /* Load an entry as the main widget */
+  load(String destination) {
+    /* Lazily initialize the database if not ready, then attempt load again. */
     if (_db == null) {
       WordDatabase.getDatabase().then((ret) {
-        setState(() {
-          _db = ret;
-          _main = _db['boQwI\':n'].toWidget();
-          print('done');
-        });
+        _db = ret;
+        load(destination);
+      });
+    }
+    setState(() {
+      _main = _db[destination].toWidget();
+    });
+  }
+
+  /* Build the navigation menu for the drawer. */
+  List<Widget> buildmenu() {
+    /* List of menu categories, items, and destinations */
+    final Map<String, Map<String, String>> menu = {
+      'boQwI\'' : {
+        'About' : 'boQwI\':n',
+      },
+      'Reference': {
+        'Pronunciation' : 'QIch:n',
+        'Prefixes' : 'moHaq:n',
+        'Noun Suffixes' : 'DIp:n',
+        'Verb Suffixes' : 'wot:n',
+      },
+    };
+
+    List<Widget> ret = [];
+
+    for (String category in menu.keys) {
+      List<ListTile> options = [];
+      for (String name in menu[category].keys) {
+        options.add(new ListTile(
+          title: new Text(name),
+          onTap: () {
+            load(menu[category][name]);
+            Navigator.pop(context);
+          },
+        ));
+      }
+      ret.add(new ExpansionTile(
+        title: new Text(category),
+        children: options,
+        initiallyExpanded: true,
+      ));
+    }
+
+    return ret;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    /* Initialize the database and load the "boQwI'" entry when done. */
+    if (_db == null) {
+      WordDatabase.getDatabase().then((ret) {
+        _db = ret;
+        load('boQwI\':n');
       });
     }
 
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return new Scaffold(
       appBar: new AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
       ),
       drawer: new Drawer(
-        child: new Column(
-          children: <Widget>[
-            new Text('boQwI\'',
-                style: new TextStyle(
-                  fontSize: 24.0, fontWeight: FontWeight.bold, height: 3.0)),
-            new Text('Reference'),
-            new Text('Useful Phrases'),
-            new Text('Media'),
-            new Text('Klingon Language Institute'),
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: new ListView(
+          children: buildmenu(),
         ),
     ),
       body: new Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: new Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you ran
-          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-          // window in IntelliJ) to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             new MaterialSearchInput(
@@ -124,15 +132,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 )).toList();
               },
               onSelect: (String selected) {
-                setState(() {
-                  _main = _db[selected].toWidget();
-                });
+                load(selected);
               }
             ),
             _main,
           ],
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
