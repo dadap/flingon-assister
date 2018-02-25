@@ -71,6 +71,8 @@ class WordDatabaseEntry {
     searchTags = innerText(ofNode: node, withName: 'search_tags');
     searchTagsDe = innerText(ofNode: node, withName: 'search_tags_de');
     source = innerText(ofNode: node, withName: 'source');
+
+    searchName = normalizeSearchName('$entryName:$partOfSpeech');
   }
 
   int id;
@@ -90,7 +92,7 @@ class WordDatabaseEntry {
   String searchTags;
   String searchTagsDe;
   String source;
-
+  String searchName;
 
   static String innerText({xml.XmlNode ofNode, String withName}) {
     Iterable<xml.XmlNode> matching = ofNode.children.where((child) {
@@ -115,5 +117,23 @@ class WordDatabaseEntry {
         ],
       ),
     );
+  }
+
+  static String normalizeSearchName(String namepos) {
+    List<String> split = namepos.split(':');
+
+    String homophone = '';
+
+    if (split.length > 2) {
+      for (String attrib in split[2].split(',')) {
+        try {
+          int homophoneNum = int.parse(attrib);
+          homophone = ':$homophoneNum';
+          break;
+        } catch (FormatException) {}
+      }
+    }
+
+    return '${split[0]}:${split[1]}$homophone';
   }
 }
