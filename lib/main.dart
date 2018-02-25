@@ -48,7 +48,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<WordDatabaseEntry> _db;
+  Map<String, WordDatabaseEntry> _db;
   Widget _main = new Text('Please be patient while the database is loading…');
 
   @override
@@ -58,7 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
       WordDatabase.getDatabase().then((ret) {
         setState(() {
           _db = ret;
-          _main = WordDatabase.match(db: _db, query: 'boQwI\'').first.toWidget();
+          _main = _db['boQwI\':n'].toWidget();
+          print('done');
         });
       });
     }
@@ -118,13 +119,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 final results = WordDatabase.match(db: _db, query: query);
 
                 return results.map((item) => new MaterialSearchResult<String>(
-                  value: item.entryName,
+                  value: item.searchName,
                   text: item.entryName + ': ' + item.definition,
                 )).toList();
               },
               onSelect: (String selected) {
                 setState(() {
-                  _main = WordDatabase.match(db: _db, query: selected).first.toWidget();
+                  _main = _db[selected].toWidget();
                 });
               }
             ),

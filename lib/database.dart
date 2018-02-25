@@ -4,8 +4,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class WordDatabase {
-  static Future<List<WordDatabaseEntry>> getDatabase() async {
-    List<WordDatabaseEntry> ret = [];
+  static Future<Map<String, WordDatabaseEntry>> getDatabase() async {
+    Map<String, WordDatabaseEntry> ret = new Map();
 
     final List<String> memSegments = [
       '00-header', '01-b', '02-ch', '03-D', '04-gh', '05-H', '06-j', '07-l',
@@ -27,19 +27,22 @@ class WordDatabase {
         .findAllElements('database')
         .first
         .findElements('table')) {
-      ret.add(new WordDatabaseEntry.fromXmlNode(entry));
+      var elem = new WordDatabaseEntry.fromXmlNode(entry);
+      ret[elem.searchName] = elem;
     }
 
     return ret;
   }
 
-  static List<WordDatabaseEntry> match({List<WordDatabaseEntry> db,
+  static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
     String query}) {
     List<WordDatabaseEntry> ret = [];
 
-    for (var entry in db) {
-      if (query.isNotEmpty && (entry.entryName.contains(query))) {
-        ret.add(entry);
+    if (db != null) {
+      for (var entry in db.values) {
+        if (query.isNotEmpty && (entry.entryName.contains(query))) {
+          ret.add(entry);
+        }
       }
     }
 
