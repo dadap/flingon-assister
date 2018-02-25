@@ -54,11 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
 
-    print('building');
-
     if (_db == null) {
       WordDatabase.getDatabase().then((ret) {
-        print('callback ran');
         setState(() {
           _db = ret;
           _main = WordDatabase.match(db: _db, query: 'boQwI\'').first.toWidget();
