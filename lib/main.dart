@@ -6,12 +6,15 @@ import 'package:material_search/material_search.dart';
 
 void main() => runApp(new MyApp());
 
+// TODO: maybe assign this based on target (e.g. boQwI' on Android)
+final String appName = 'jIboQ';
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'boQwI\'',
+      title: appName,
       theme: new ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.red,
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.redAccent,
         highlightColor: Colors.red,
       ),
-      home: new MyHomePage(title: 'boQwI\''),
+      home: new MyHomePage(title: appName),
     );
   }
 }
@@ -56,8 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> buildmenu() {
     /* List of menu categories, items, and destinations */
     final Map<String, Map<String, String>> menu = {
-      'boQwI\'' : {
-        'About' : 'boQwI\':n',
+      appName : {
+        'About' : 'boQwI\':n', // TODO write an entry for jIboQ
       },
       'Reference': {
         'Pronunciation' : 'QIch:n',
