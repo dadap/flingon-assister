@@ -89,6 +89,34 @@ class _MyHomePageState extends State<MyHomePage> {
     return ret;
   }
 
+  // Display the search bar
+  loadSearch() {
+    setState(() {
+      _main = new Expanded(
+        child: new MaterialSearchInput(
+          placeholder: '  🔍 nuq Danej',
+          autovalidate: false,
+          getResults: (String query) async {
+            if (_db == null) {
+              _db = await WordDatabase.getDatabase();
+            }
+
+            final results = WordDatabase.match(db: _db, query: query);
+
+            return results.map((item) =>
+            new MaterialSearchResult<String>(
+              value: item.searchName,
+              text: item.entryName + ': ' + item.definition,
+            )).toList();
+          },
+          onSelect: (String selected) {
+            load(selected);
+          }
+        )
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     /* Initialize the database and load the "boQwI'" entry when done. */
@@ -102,6 +130,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
+        actions: [
+          new IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: loadSearch,
+          ),
+        ]
       ),
       drawer: new Drawer(
         child: new ListView(
@@ -112,24 +146,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            new MaterialSearchInput(
-              placeholder: '  🔍 nuq Danej',
-              getResults: (String query) async {
-                if (_db == null) {
-                  _db = await WordDatabase.getDatabase();
-                }
-
-                final results = WordDatabase.match(db: _db, query: query);
-
-                return results.map((item) => new MaterialSearchResult<String>(
-                  value: item.searchName,
-                  text: item.entryName + ': ' + item.definition,
-                )).toList();
-              },
-              onSelect: (String selected) {
-                load(selected);
-              }
-            ),
             _main,
           ],
         ),
