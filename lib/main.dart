@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         'About' : 'boQwI\':n', // TODO write an entry for jIboQ
       },
       'Reference': {
-        'Pronunciation' : 'QIch:n',
+        'Pronunciation' : 'QIch wab Ho\'DoS:n',
         'Prefixes' : 'moHaq:n',
         'Noun Suffixes' : 'DIp:n',
         'Verb Suffixes' : 'wot:n',
