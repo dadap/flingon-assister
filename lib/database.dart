@@ -112,15 +112,33 @@ class WordDatabaseEntry {
   }
 
   Widget toWidget(TextStyle style, {Function onTap(String)}) {
-    return new Expanded(
+    return new Expanded(child: new Padding(
+      padding: new EdgeInsets.symmetric(horizontal: 8.0),
       child: new ListView(
         children: [
-         new Text('$entryName ($partOfSpeech)'),
-         new Text('$definition'),
-         new KlingonText(fromString: '$notes', style: style, onTap: onTap),
+          new Padding(
+            padding: new EdgeInsets.symmetric(vertical: 8.0),
+            child: new Text(
+              '$entryName',
+              style: new TextStyle(
+                fontSize: style.fontSize * 2.5,
+                fontFamily: 'serif',
+              ),
+          )),
+          new RichText(text: new TextSpan(
+            style: style,
+            children: [
+              new TextSpan(text: '('),
+              new TextSpan(
+                text: '$partOfSpeech',
+                style: new TextStyle(fontStyle: FontStyle.italic)
+              ),
+              new TextSpan(text: ') $definition\n'),
+            ],
+          )),
+          new KlingonText(fromString: '$notes', style: style, onTap: onTap),
         ],
-      ),
-    );
+    )));
   }
 
   static String normalizeSearchName(String namepos) {
