@@ -3,6 +3,7 @@ import 'database.dart';
 import 'package:xml/xml.dart' as xml;
 import 'dart:io';
 import 'package:material_search/material_search.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(new MyApp());
 
@@ -39,6 +40,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /* Load an entry as the main widget */
   load(String destination) {
+    List<String> destinationSplit = destination.split(':');
+    if (destinationSplit.length < 2) {
+      return;
+    }
+
+    // XXX we're not reaching this block
+    if ((destinationSplit[1].contains('url')) && (destinationSplit.length > 3)) {
+      print('launching ' + [destinationSplit[3], destinationSplit[4]].join(':'));
+      launch([destinationSplit[3], destinationSplit[4]].join(':'));
+      return;
+    }
+
+    destination = WordDatabaseEntry.normalizeSearchName(destination);
+
     /* Lazily initialize the database if not ready, then attempt load again. */
     if (_db == null) {
       WordDatabase.getDatabase().then((ret) {
@@ -47,7 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
     setState(() {
-      _main = _db[destination].toWidget(Theme.of(context).textTheme.body1);
+      print('loading: $destination');
+      _main = _db[destination].toWidget(
+          Theme.of(context).textTheme.body1,
+          onTap: load
+      );
     });
   }
 

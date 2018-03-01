@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 
 class KlingonText extends RichText {
   final TextStyle style;
@@ -25,15 +26,30 @@ class KlingonText extends RichText {
       if (remainder.startsWith('{') && remainder.contains('}')) {
         int endIndex = remainder.indexOf('}');
         String klingon = remainder.substring(1, endIndex);
-        String klingonTextOnly = klingon.split(':').first;
+        List<String> klingonSplit = klingon.split(':');
+        String textOnly = klingonSplit[0];
+        String textType = klingonSplit.length > 1 ? klingonSplit[1] : null;
+        String textFlags = klingonSplit.length > 2 ? klingonSplit[2] : null;
+
+        bool serif = textType != null && textType != 'url';
+        bool link = textFlags == null ||
+            !textFlags.split(',').contains('nolink');
+        TapGestureRecognizer recognizer = new TapGestureRecognizer();;
+
         remainder = remainder.substring(endIndex + 1);
 
+        if (link && onTap != null) {
+          recognizer.onTap = () {onTap(klingon);};
+        }
+
         ret.add(new TextSpan(
-          text: klingonTextOnly,
+          text: textOnly,
           style: new TextStyle(
-            fontFamily: 'RobotoSlab', // distinguish 'I' and 'l'
+            fontFamily: serif ? 'RobotoSlab' : style.fontFamily,
+            decoration: link ? TextDecoration.underline : null,
             // TODO color coding, part of speech tagging
           ),
+          recognizer: recognizer,
           // TODO handle tap
         ));
       } else {
