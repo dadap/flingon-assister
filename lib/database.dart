@@ -122,7 +122,7 @@ class WordDatabaseEntry {
               '$entryName',
               style: new TextStyle(
                 fontSize: style.fontSize * 2.5,
-                fontFamily: 'serif',
+                fontFamily: 'RobotoSlab',
               ),
           )),
           new RichText(text: new TextSpan(

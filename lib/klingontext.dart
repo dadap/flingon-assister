@@ -31,7 +31,7 @@ class KlingonText extends RichText {
         ret.add(new TextSpan(
           text: klingonTextOnly,
           style: new TextStyle(
-            fontFamily: 'serif', // distinguish 'I' and 'l'
+            fontFamily: 'RobotoSlab', // distinguish 'I' and 'l'
             // TODO color coding, part of speech tagging
           ),
           // TODO handle tap
