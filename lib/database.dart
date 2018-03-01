@@ -149,7 +149,7 @@ class WordDatabaseEntry {
     if (split.length > 2) {
       for (String attrib in split[2].split(',')) {
         try {
-          int homophoneNum = int.parse(attrib);
+          int homophoneNum = int.parse(attrib.split('h').first);
           homophone = ':$homophoneNum';
           break;
         } catch (FormatException) {}
