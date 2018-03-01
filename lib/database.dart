@@ -2,6 +2,7 @@ import 'package:xml/xml.dart' as xml;
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'klingontext.dart';
 
 class WordDatabase {
   static Future<Map<String, WordDatabaseEntry>> getDatabase() async {
@@ -110,13 +111,13 @@ class WordDatabaseEntry {
     return '';
   }
 
-  Widget toWidget() {
+  Widget toWidget(TextStyle style, {Function onTap(String)}) {
     return new Expanded(
       child: new ListView(
         children: [
          new Text('$entryName ($partOfSpeech)'),
          new Text('$definition'),
-         new Text('$notes'),
+         new KlingonText(fromString: '$notes', style: style, onTap: onTap),
         ],
       ),
     );

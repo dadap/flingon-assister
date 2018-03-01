@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
     setState(() {
-      _main = _db[destination].toWidget();
+      _main = _db[destination].toWidget(Theme.of(context).textTheme.body1);
     });
   }
 
