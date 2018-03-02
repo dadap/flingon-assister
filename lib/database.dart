@@ -36,16 +36,11 @@ class WordDatabase {
     return ret;
   }
 
-  static bool _containsInsensitive(String haystack, String needle) {
-    return haystack.toLowerCase().contains(needle.toLowerCase());
-  }
-
   // Measures similarity between haystack and needle. If haystack contains
   // needle, returns the number of extra characters in haystack that aren't
   // also in needle. Otherwise, returns a large number for sorting purposes.
-  // TODO: exact case matches should be scored preferably
-  static int _extraChars(String haystack, String needle) {
-    if (_containsInsensitive(haystack, needle)) {
+  static int _extraChars(String needle, String haystack) {
+    if (haystack.contains(needle)) {
       return haystack.length - needle.length;
     }
 
@@ -59,9 +54,9 @@ class WordDatabase {
     if (db != null) {
       for (var entry in db.values) {
         if (query.isNotEmpty && ((
-            _containsInsensitive(entry.entryName, query) ||
-              _containsInsensitive(entry.definition, query) ||
-              _containsInsensitive(entry.searchTags, query)
+            entry.entryName.contains(query) ||
+            entry.definition.contains(query) ||
+            entry.searchTags.contains(query)
         ))) {
           ret.add(entry);
         }
@@ -72,11 +67,11 @@ class WordDatabase {
     // the search query.
     ret.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
       return min(_extraChars(query, a.entryName),
-          min(_extraChars(a.definition, query),
-              _extraChars(a.searchTags, query))) -
-          min(_extraChars(b.entryName, query),
-              min(_extraChars(b.definition, query),
-                  _extraChars(b.searchTags, query)));
+          min(_extraChars(query, a.definition),
+              _extraChars(query, a.searchTags))) -
+          min(_extraChars(query, b.entryName),
+              min(_extraChars(query, b.definition),
+                  _extraChars(query, b.searchTags)));
     });
 
     return ret;
