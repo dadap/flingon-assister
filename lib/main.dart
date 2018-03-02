@@ -46,28 +46,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     // XXX we're not reaching this block
-    if ((destinationSplit[1].contains('url')) && (destinationSplit.length > 3)) {
-      print('launching ' + [destinationSplit[3], destinationSplit[4]].join(':'));
+    if ((destinationSplit[1].contains('url')) &&
+        (destinationSplit.length > 3)) {
       launch([destinationSplit[3], destinationSplit[4]].join(':'));
       return;
     }
 
     destination = WordDatabaseEntry.normalizeSearchName(destination);
 
-    /* Lazily initialize the database if not ready, then attempt load again. */
-    if (_db == null) {
-      WordDatabase.getDatabase().then((ret) {
-        _db = ret;
-        load(destination);
-      });
-    }
-    setState(() {
-      print('loading: $destination');
-      _main = _db[destination].toWidget(
-          Theme.of(context).textTheme.body1,
-          onTap: load
-      );
-    });
+    Navigator.of(context).push(new MaterialPageRoute(
+        builder: (BuildContext ctx) {
+          return buildHelper(ctx, destination);
+        }));
   }
 
   /* Build the navigation menu for the drawer. */
@@ -93,8 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
         options.add(new ListTile(
           title: new Text(name),
           onTap: () {
-            load(menu[category][name]);
             Navigator.pop(context);
+            load(menu[category][name]);
           },
         ));
       }
@@ -110,11 +100,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Display the search bar
   loadSearch() {
-    setState(() {
-      _main = new Expanded(
-        child: new MaterialSearchInput(
+    Navigator.of(context).push(new MaterialPageRoute(
+      builder: (BuildContext ctx) {
+        return new MaterialSearch(
           placeholder: '  🔍 nuq Danej',
-          autovalidate: false,
           getResults: (String query) async {
             if (_db == null) {
               _db = await WordDatabase.getDatabase();
@@ -130,45 +119,64 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           onSelect: (String selected) {
             load(selected);
-          }
-        )
+          },
+        );
+      }
+    ));
+  }
+
+  Widget getEntry(String entry, BuildContext context) {
+    Widget ret;
+
+    if (_db == null) {
+      ret = const Text('Error: database not initialized!');
+    } else if (_db[entry] == null) {
+      ret = new Text('The entry {$entry} was not found in the database.');
+    } else {
+      ret = _db[entry].toWidget(Theme.of(context).textTheme.body1, onTap: load);
+    }
+
+    return new Column(children: [ret]);
+  }
+
+  Widget buildHelper(BuildContext context, String entry) {
+    Widget main = new CircularProgressIndicator();
+
+      /* Initialize the database and load the "boQwI'" entry when done. */
+      if (_db == null) {
+        WordDatabase.getDatabase().then((ret) {
+          _db = ret;
+          setState(() {
+            main = getEntry(entry, context);
+          });
+        });
+      } else {
+        main = getEntry(entry, context);
+      }
+
+      return new Scaffold(
+        appBar: new AppBar(
+            title: new Text(widget.title),
+            actions: [
+              new IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: loadSearch,
+              ),
+            ]
+        ),
+        drawer: new Drawer(
+          child: new ListView(
+            children: buildmenu(),
+          ),
+        ),
+        body: new Center(
+          child: main,
+        ),
       );
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    /* Initialize the database and load the "boQwI'" entry when done. */
-    if (_db == null) {
-      WordDatabase.getDatabase().then((ret) {
-        _db = ret;
-        load('boQwI\':n');
-      });
-    }
-
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
-        actions: [
-          new IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: loadSearch,
-          ),
-        ]
-      ),
-      drawer: new Drawer(
-        child: new ListView(
-          children: buildmenu(),
-        ),
-    ),
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            _main,
-          ],
-        ),
-      ),
-    );
+    return buildHelper(context, 'boQwI\':n');
   }
 }
