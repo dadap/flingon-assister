@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'klingontext.dart';
+import 'dart:math';
 
 class WordDatabase {
   static Future<Map<String, WordDatabaseEntry>> getDatabase() async {
@@ -35,6 +36,17 @@ class WordDatabase {
     return ret;
   }
 
+  // Measures similarity between haystack and needle. If haystack contains
+  // needle, returns the number of extra characters in haystack that aren't
+  // also in needle. Otherwise, returns a large number for sorting purposes.
+  static int _extraChars(String needle, String haystack) {
+    if (haystack.contains(needle)) {
+      return haystack.length - needle.length;
+    }
+
+    return 999999999;
+  }
+
   static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
     String query}) {
     List<WordDatabaseEntry> ret = [];
@@ -50,6 +62,17 @@ class WordDatabase {
         }
       }
     }
+
+    // Sort based on which entry contained a hit that most closely resembled
+    // the search query.
+    ret.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
+      return min(_extraChars(query, a.entryName),
+          min(_extraChars(query, a.definition),
+              _extraChars(query, a.searchTags))) -
+          min(_extraChars(query, b.entryName),
+              min(_extraChars(query, b.definition),
+                  _extraChars(query, b.searchTags)));
+    });
 
     return ret;
   }
