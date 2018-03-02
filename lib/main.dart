@@ -120,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onSelect: (String selected) {
             load(selected);
           },
+          limit: 200,
         );
       }
     ));
