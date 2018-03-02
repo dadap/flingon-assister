@@ -41,7 +41,11 @@ class WordDatabase {
 
     if (db != null) {
       for (var entry in db.values) {
-        if (query.isNotEmpty && (entry.entryName.contains(query))) {
+        if (query.isNotEmpty && ((
+            entry.entryName.contains(query) ||
+            entry.definition.contains(query) ||
+            entry.searchTags.contains(query)
+        ))) {
           ret.add(entry);
         }
       }
