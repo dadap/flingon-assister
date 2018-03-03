@@ -89,6 +89,18 @@ class _MyHomePageState extends State<MyHomePage> {
         'Empire Union Day' : '*:sen:eu',
         'Rejecting a suitor' : '*:sen:rej',
       },
+      'Media' : {
+        'Klingon lessons' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0OcaX5G6_5TCuIisvS4Xed6',
+        'Conversational phrases' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0MazOxYJq47Eqdsa9F2glPg',
+        'Battle commands' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0Mwfo-f1YJv1VC7pNgiqicp',
+        'Other commands' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0PuQHLzrhp0n4TXsOZVzYzo',
+        'Curses' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0NHU5zsb7rd7Vz0Ed_4hLhg',
+        'Other words and phrases' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0MsVYmwqMCXp8rwDjSKZzWC',
+      },
+      'Klingon Language Institute' : {
+        'Online Lessons' : ':url:http://www.kli.org/learn-klingon-online/',
+        'Ask Questions!' : ':url:http://www.kli.org/questions/categories/',
+      },
     };
 
     List<Widget> ret = [];
