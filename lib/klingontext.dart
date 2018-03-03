@@ -14,7 +14,7 @@ class KlingonText extends RichText {
     text: _ProcessKlingonText(fromString, onTap, style),
   );
 
-  // Build a TextSpan containing 'src', with tet {in curly braces} formatted
+  // Build a TextSpan containing 'src', with text {in curly braces} formatted
   // appropriately.
   static TextSpan _ProcessKlingonText(String src, Function onTap(String),
       TextStyle style) {
@@ -31,9 +31,18 @@ class KlingonText extends RichText {
         String textType = klingonSplit.length > 1 ? klingonSplit[1] : null;
         String textFlags = klingonSplit.length > 2 ? klingonSplit[2] : null;
 
-        bool serif = textType != null && textType != 'url';
-        bool link = textFlags == null ||
-            !textFlags.split(',').contains('nolink');
+        // Klingon words (i.e., anything that's not a URL or source citation)
+        // should be in a serif font, to distinguish 'I' and 'l'.
+        bool serif = textType != null && textType != 'url' && textType != 'src';
+
+        // Anything that's not a source citation or explicitly not a link should
+        // be treated as a link.
+        bool link = (textType != null && textType != 'src') &&
+            (textFlags == null || !textFlags.split(',').contains('nolink'));
+
+        // Source citations are italicized
+        bool italic = textType != null && textType == 'src';
+
         TapGestureRecognizer recognizer = new TapGestureRecognizer();;
 
         remainder = remainder.substring(endIndex + 1);
@@ -47,10 +56,10 @@ class KlingonText extends RichText {
           style: new TextStyle(
             fontFamily: serif ? 'RobotoSlab' : style.fontFamily,
             decoration: link ? TextDecoration.underline : null,
+            fontStyle: italic ? FontStyle.italic : null,
             // TODO color coding, part of speech tagging
           ),
           recognizer: recognizer,
-          // TODO handle tap
         ));
       } else {
         int endIndex = remainder.indexOf('{');
