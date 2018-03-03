@@ -76,6 +76,19 @@ class _MyHomePageState extends State<MyHomePage> {
         'Noun Suffixes' : 'DIp:n',
         'Verb Suffixes' : 'wot:n',
       },
+      'Useful Phrases' : {
+        'Beginner\'s Conversation' : '*:sen:bc',
+        'Jokes and Funy Stories' : '*:sen:joke',
+        'Rite of Ascension' : '*:sen:nt',
+        'QI\'lop holiday' : '*:sen:Ql',
+        'Toasts' : '*:sen:toast',
+        'Lyrics' : '*:sen:lyr',
+        'Curse Warfare' : '*:sen:mv',
+        'Replacement Proverbs' : '*:sen:rp',
+        'Secrecy Proverbs' : '*:sen:sp',
+        'Empire Union Day' : '*:sen:eu',
+        'Rejecting a suitor' : '*:sen:rej',
+      },
     };
 
     List<Widget> ret = [];
@@ -134,6 +147,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (_db == null) {
       ret = const Text('Error: database not initialized!');
+    } else if (entry.startsWith('*:')) {
+      List<Widget> entries = [];
+
+      _db.values.where((elem) {
+        return elem.partOfSpeech == entry.substring(2);
+      }).forEach((elem) {
+        entries.add(elem.toListTile(onTap: () => load(elem.searchName)));
+      });
+
+      ret = new Expanded(child: new ListView(children: entries));
     } else if (_db[entry] == null) {
       ret = new Text('The entry {$entry} was not found in the database.');
     } else {
@@ -146,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildHelper(BuildContext context, String entry) {
     Widget main = new CircularProgressIndicator();
 
-      /* Initialize the database and load the "boQwI'" entry when done. */
+      // Lazily nitialize the database and load destination entry when done.
       if (_db == null) {
         WordDatabase.getDatabase().then((ret) {
           _db = ret;

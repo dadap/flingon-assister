@@ -207,8 +207,23 @@ class WordDatabaseEntry {
     )));
   }
 
+  ListTile toListTile({Function onTap}) {
+    return new ListTile(
+      title: new Text(
+          entryName,
+          style: new TextStyle(fontFamily: 'RobotoSlab'),
+      ),
+      subtitle: new Text(definition),
+      onTap: onTap,
+    );
+  }
+
   static String normalizeSearchName(String namepos) {
     List<String> split = namepos.split(':');
+
+    if (split.first == '*') {
+      return namepos;
+    }
 
     String homophone = '';
 
