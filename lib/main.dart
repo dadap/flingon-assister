@@ -45,10 +45,13 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    // XXX we're not reaching this block
-    if ((destinationSplit[1].contains('url')) &&
-        (destinationSplit.length > 3)) {
-      launch([destinationSplit[3], destinationSplit[4]].join(':'));
+    if (destinationSplit[1].contains('url') && destinationSplit.length > 3) {
+      launch(destinationSplit.skip(2).join(':'));
+      return;
+    }
+
+    if (destinationSplit[1].contains('mailto') && destinationSplit.length > 2) {
+      launch(destinationSplit.skip(1).join(':'));
       return;
     }
 
