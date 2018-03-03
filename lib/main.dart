@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'database.dart';
-import 'package:xml/xml.dart' as xml;
-import 'dart:io';
-import 'package:material_search/material_search.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(new MyApp());
@@ -126,29 +123,72 @@ class _MyHomePageState extends State<MyHomePage> {
     return ret;
   }
 
-  // Display the search bar
+  // Display the search page
   loadSearch() {
+    Widget main;
+
+    TextEditingController controller = new TextEditingController();
+    Function onPressed;
+    Function clearText = () => setState(() {
+      controller.clear();
+    });
+
     Navigator.of(context).push(new MaterialPageRoute(
       builder: (BuildContext ctx) {
-        return new MaterialSearch(
-          placeholder: '  🔍 nuq Danej',
-          getResults: (String query) async {
-            if (_db == null) {
-              _db = await WordDatabase.getDatabase();
-            }
+        // XXX this isn't updating state consistently when typing a search
+        // query without pressing enter.
+        controller.addListener(() {
+          if (_db == null) {
+            setState(() {
+              main = new CircularProgressIndicator();
+            });
 
-            final results = WordDatabase.match(db: _db, query: query);
+            WordDatabase.getDatabase().then((db) {
+              _db = db;
+              setState(() {main = null;});
+            });
+          }
 
-            return results.map((item) =>
-            new MaterialSearchResult<String>(
-              value: item.searchName,
-              text: item.entryName + ': ' + item.definition,
-            )).toList();
-          },
-          onSelect: (String selected) {
-            load(selected);
-          },
-          limit: 200,
+          if (controller.text.isEmpty) {
+            setState(() {
+              onPressed = null;
+              main = null;
+            });
+          } else if (_db != null) {
+            List<Widget> results = [];
+            Widget newMain;
+
+            WordDatabase.match(db: _db, query: controller.text).forEach((e) {
+              results.add(e.toListTile(onTap: () => load(e.searchName)));
+            });
+
+            newMain = new Column(
+              children: [new Expanded(child: new ListView(children: results))
+            ],);
+
+            setState(() {
+              onPressed = clearText;
+              main = newMain;
+            });
+          }
+        });
+
+        return new Scaffold(
+          appBar: new AppBar(
+            title: new TextField(
+              autofocus: true,
+              autocorrect: false,
+              style: Theme.of(context).textTheme.title,
+              controller: controller,
+            ),
+            actions: [
+              new IconButton(
+                icon: new Icon(Icons.clear),
+                onPressed: onPressed,
+              ),
+            ],
+          ),
+          body: new Center(child: main),
         );
       }
     ));

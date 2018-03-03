@@ -6,7 +6,6 @@ dependencies:
     sdk: flutter
 
   xml: any
-  material_search: any
   url_launcher: any
 
   # The following adds the Cupertino Icons font to your application.
