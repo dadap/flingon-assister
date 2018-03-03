@@ -139,12 +139,17 @@ class WordDatabaseEntry {
   }
 
   Widget toWidget(TextStyle style, {Function onTap(String)}) {
+    final double listPadding = 8.0;
+    final double hMargins = 8.0;
+
+    final Widget emptyWidget = const Text('');
+
     return new Expanded(child: new Padding(
-      padding: new EdgeInsets.symmetric(horizontal: 8.0),
+      padding: new EdgeInsets.symmetric(horizontal: hMargins),
       child: new ListView(
         children: [
           new Padding(
-            padding: new EdgeInsets.symmetric(vertical: 8.0),
+            padding: new EdgeInsets.only(bottom: listPadding),
             child: new Text(
               '$entryName',
               style: new TextStyle(
@@ -152,18 +157,52 @@ class WordDatabaseEntry {
                 fontFamily: 'RobotoSlab',
               ),
           )),
-          new RichText(text: new TextSpan(
+          new Padding(
+              padding: new EdgeInsets.only(bottom: listPadding),
+              child: new RichText(text: new TextSpan(
+                style: style,
+                children: [
+                  new TextSpan(text: '('),
+                  new TextSpan(
+                    text: '$partOfSpeech',
+                    style: new TextStyle(fontStyle: FontStyle.italic)
+                  ),
+                  new TextSpan(text: ') $definition'),
+                ],
+              )),
+            ),
+          notes.isNotEmpty ? new Padding(
+            padding: new EdgeInsets.only(bottom: listPadding),
+            child: new KlingonText(
+                fromString: '$notes',
+                style: style,
+                onTap: onTap
+            ),
+          ) : emptyWidget,
+          examples.isNotEmpty ? new Padding(
+            padding: new EdgeInsets.only(bottom: listPadding),
+            child: new KlingonText(
+            fromString: 'Examples: $examples',
             style: style,
-            children: [
-              new TextSpan(text: '('),
-              new TextSpan(
-                text: '$partOfSpeech',
-                style: new TextStyle(fontStyle: FontStyle.italic)
-              ),
-              new TextSpan(text: ') $definition\n'),
-            ],
-          )),
-          new KlingonText(fromString: '$notes', style: style, onTap: onTap),
+            onTap: onTap
+            ),
+          ) : emptyWidget,
+          seeAlso.isNotEmpty ? new Padding(
+            padding: new EdgeInsets.only(bottom: listPadding),
+            child: new KlingonText(
+                fromString: 'See also: $seeAlso',
+                style: style,
+                onTap: onTap
+            ),
+          ) : emptyWidget,
+          source.isNotEmpty ? new Padding(
+            padding: new EdgeInsets.only(bottom: listPadding),
+            child: new KlingonText(
+                fromString: 'Source(s): $source',
+                style: style,
+                onTap: onTap
+            ),
+          ) : emptyWidget,
         ],
     )));
   }
