@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _main = new Text('Please be patient while the database is loading…');
 
   /* Load an entry as the main widget */
-  load(String destination) {
+  load(String destination, {String withTitle}) {
     List<String> destinationSplit = destination.split(':');
     if (destinationSplit.length < 2) {
       return;
@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Navigator.of(context).push(new MaterialPageRoute(
         builder: (BuildContext ctx) {
-          return buildHelper(ctx, destination);
+          return buildHelper(ctx, destination, withTitle: withTitle);
         }));
   }
 
@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: new Text(name),
           onTap: () {
             Navigator.pop(context);
-            load(menu[category][name]);
+            load(menu[category][name], withTitle: name);
           },
         ));
       }
@@ -198,13 +198,19 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
   }
 
-  Widget getEntry(String entry, BuildContext context) {
+  Widget getEntry(String entry, BuildContext context, {String withTitle}) {
     Widget ret;
 
     if (_db == null) {
       ret = const Text('Error: database not initialized!');
     } else if (entry.startsWith('*:')) {
-      List<Widget> entries = [];
+      List<Widget> entries = [
+        new ListTile(title: new Text(
+          withTitle,
+          style: new TextStyle(fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),),
+      ];
 
       _db.values.where((elem) {
         return elem.partOfSpeech == entry.substring(2);
@@ -216,25 +222,28 @@ class _MyHomePageState extends State<MyHomePage> {
     } else if (_db[entry] == null) {
       ret = new Text('The entry {$entry} was not found in the database.');
     } else {
-      ret = _db[entry].toWidget(Theme.of(context).textTheme.body1, onTap: load);
+      ret = _db[entry].toWidget(
+        Theme.of(context).textTheme.body1,
+        onTap: load,
+      );
     }
 
     return new Column(children: [ret]);
   }
 
-  Widget buildHelper(BuildContext context, String entry) {
+  Widget buildHelper(BuildContext context, String entry, {String withTitle}) {
     Widget main = new CircularProgressIndicator();
 
-      // Lazily nitialize the database and load destination entry when done.
+      // Lazily initialize the database and load destination entry when done.
       if (_db == null) {
         WordDatabase.getDatabase().then((ret) {
           _db = ret;
           setState(() {
-            main = getEntry(entry, context);
+            main = getEntry(entry, context, withTitle: withTitle);
           });
         });
       } else {
-        main = getEntry(entry, context);
+        main = getEntry(entry, context, withTitle: withTitle);
       }
 
       return new Scaffold(

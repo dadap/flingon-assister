@@ -10,13 +10,13 @@ class KlingonText extends RichText {
   // onTap: A callback to be run when links are tapped
   // style: The default style to apply to non-braced text
 
-  KlingonText({String fromString, Function onTap, this.style}) : super(
+  KlingonText({String fromString, Function(String) onTap, this.style}) : super(
     text: _ProcessKlingonText(fromString, onTap, style),
   );
 
   // Build a TextSpan containing 'src', with text {in curly braces} formatted
   // appropriately.
-  static TextSpan _ProcessKlingonText(String src, Function onTap(String),
+  static TextSpan _ProcessKlingonText(String src, Function(String) onTap,
       TextStyle style) {
     List<TextSpan> ret = [];
     String remainder = src;

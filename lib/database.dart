@@ -138,7 +138,7 @@ class WordDatabaseEntry {
     return '';
   }
 
-  Widget toWidget(TextStyle style, {Function onTap(String)}) {
+  Widget toWidget(TextStyle style, {Function(String) onTap}) {
     final double listPadding = 8.0;
     final double hMargins = 8.0;
 
