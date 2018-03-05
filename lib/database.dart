@@ -167,9 +167,20 @@ class WordDatabase {
     return results;
   }
 
+  // Sanitize input
+  static String _sanitize(String string) {
+    // Desmartify quotes
+    string = string.replaceAll('‘', '\'');
+    string = string.replaceAll('’', '\'');
+    
+    return string;
+  }
+
   // Analyze a query and search for matching non-analyzed database entries
   static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
     String query}) {
+    query = _sanitize(query);
+
     // Start with analysis results
     List<WordDatabaseEntry> ret = _analyze(db, query);
 
