@@ -139,26 +139,26 @@ class WordDatabase {
     // For verbs, additionally test prefixes. There should only be one prefix,
     // but test against all of them in case the verb stem begins with a string
     // that is coincidentally the same as a prefix, with the 0-prefix attached.
-    if (verbResults.isNotEmpty) {
-      for (WordDatabaseEntry pre in _verbprefixes) {
-        if (unparsedVerb.startsWith( // ignore '-'/'0'
-          pre.entryName.substring(0, pre.entryName.length-1))) {
-          String possibleStem = unparsedVerb.substring(pre.entryName.length-1);
-          exact = db.values.where((e) =>
-            e.searchName.startsWith('$possibleStem:v'));
+    // Do not require parsed suffixes, since a verb might consist only of a
+    // prefix plus a stem.
+    for (WordDatabaseEntry pre in _verbprefixes) {
+      if (unparsedVerb.startsWith( // ignore '-' and '0'
+        pre.entryName.substring(0, pre.entryName.length-1))) {
+        String possibleStem = unparsedVerb.substring(pre.entryName.length-1);
+        exact = db.values.where((e) =>
+          e.searchName.startsWith('$possibleStem:v'));
+        if (exact.isNotEmpty) {
+          results.insertAll(0, verbResults);
+          results.insertAll(0, exact);
+          results.insert(0, pre);
+        } else {
+          // Back out last suffix, similar to what was done for nouns
+          exact = db.values.where((e) => e.searchName.startsWith(
+            '$possibleStem${verbResults[0].entryName.substring(1)}:v'));
           if (exact.isNotEmpty) {
-            results.insertAll(0, verbResults);
+            results.insertAll(0, verbResults.sublist(1));
             results.insertAll(0, exact);
             results.insert(0, pre);
-          } else {
-            // Back out last suffix, similar to what was done for nouns
-            exact = db.values.where((e) => e.searchName.startsWith(
-              '$possibleStem${verbResults[0].entryName.substring(1)}:v'));
-            if (exact.isNotEmpty) {
-              results.insertAll(0, verbResults.sublist(1));
-              results.insertAll(0, exact);
-              results.insert(0, pre);
-            }
           }
         }
       }
