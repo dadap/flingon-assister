@@ -151,7 +151,7 @@ class WordDatabase {
           results.insertAll(0, verbResults);
           results.insertAll(0, exact);
           results.insert(0, pre);
-        } else {
+        } else if (verbResults.isNotEmpty) {
           // Back out last suffix, similar to what was done for nouns
           exact = db.values.where((e) => e.searchName.startsWith(
             '$possibleStem${verbResults[0].entryName.substring(1)}:v'));
