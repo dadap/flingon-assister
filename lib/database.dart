@@ -47,32 +47,155 @@ class WordDatabase {
     return 999999999;
   }
 
-  static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
-    String query}) {
-    List<WordDatabaseEntry> ret = [];
+  // Lazily populated lists of verb and noun affixes
+  static Iterable<WordDatabaseEntry> _verbprefixes, _verbsuffixes;
+  static Iterable<WordDatabaseEntry> _nounsuffixes;
+  static bool _analysisReady = false;
 
-    if (db != null) {
-      for (var entry in db.values) {
-        if (query.isNotEmpty && ((
-            entry.entryName.contains(query) ||
-            entry.definition.contains(query) ||
-            entry.searchTags.contains(query)
-        ))) {
-          ret.add(entry);
+  // Break the query up into separate words and analyze them
+  static List<WordDatabaseEntry> _analyze(Map<String, WordDatabaseEntry> db,
+      String query) {
+    List<WordDatabaseEntry> results = [];
+
+    if (!_analysisReady) {
+      _verbprefixes = db.values.where((e) => e.partOfSpeech == 'v:pref');
+      _verbsuffixes = db.values.where((e) => e.partOfSpeech == 'v:suff');
+      _nounsuffixes = db.values.where((e) => e.partOfSpeech == 'n:suff');
+      _analysisReady = true;
+    }
+
+    for (String word in query.split(' ')) {
+      results.insertAll(results.length, _analyzeWord(db, word));
+    }
+
+    return results;
+  }
+
+  // Test whether a word ends with one of the suffixes in the provided list.
+  // Returns an identified suffix, or null if no suffix found.
+  static WordDatabaseEntry _endsWithSuffix(Iterable<WordDatabaseEntry> suffixes,
+      String word) {
+    for (WordDatabaseEntry s in suffixes) {
+      if (word.endsWith(s.entryName.substring(1))) {
+        return s;
+      }
+    }
+    return null;
+  }
+
+  // Analyze an individual word which may or may not be composed of multiple
+  // individual components. Does not attempt to identify ungrammatical
+  // combinations, e.g. suffixes in incorrect order, multiple suffixes of same
+  // type, etc.
+  static List<WordDatabaseEntry> _analyzeWord(Map<String, WordDatabaseEntry> db,
+      String word) {
+    List<WordDatabaseEntry> nounResults = [], verbResults = [], results = [];
+    String unparsedNoun = word, unparsedVerb = word;
+    WordDatabaseEntry suff;
+
+    // Look for exact matches: this could be useful e.g. for stock phrases such
+    // as "qoslIj DatIvjaj".
+    Iterable<WordDatabaseEntry> exact = db.values.where((e) =>
+      e.entryName == word);
+    if (exact.isNotEmpty) {
+      results.insertAll(0, exact.toList());
+    }
+
+    // Pop noun suffixes off the end of the word until no more noun suffixes
+    // can be identified.
+    while ((suff = _endsWithSuffix(_nounsuffixes, unparsedNoun)) != null) {
+      nounResults.insert(0, suff);
+      unparsedNoun = unparsedNoun.substring(0, unparsedNoun.length -
+        suff.entryName.length+1); // Ignore '-'
+    }
+
+    // If noun suffixes were found, try to find an exact match for the remainder
+    // of the word once all suffixes were stripped.
+    if (nounResults.isNotEmpty) {
+      exact = db.values.where((e) =>
+          e.searchName.startsWith('$unparsedNoun:n'));
+      if (exact.isNotEmpty) {
+        results.insertAll(0, nounResults);
+        results.insertAll(0, exact);
+      } else {
+        // Back out the last suffix in case it was homophonous with the last
+        // syllable of the stem, e.g. "HomHom", "qoqqoq".
+        exact = db.values.where((e) => e.searchName.startsWith(
+          '$unparsedNoun${nounResults[0].entryName.substring(1)}:n'));
+        if (exact.isNotEmpty) {
+          results.insertAll(0, nounResults.sublist(1));
+          results.insertAll(0, exact);
         }
       }
     }
 
-    // Sort based on which entry contained a hit that most closely resembled
-    // the search query.
-    ret.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
-      return min(_extraChars(query, a.entryName),
-          min(_extraChars(query, a.definition),
-              _extraChars(query, a.searchTags))) -
-          min(_extraChars(query, b.entryName),
-              min(_extraChars(query, b.definition),
-                  _extraChars(query, b.searchTags)));
-    });
+    // Do the same for verbs
+    while ((suff = _endsWithSuffix(_verbsuffixes, unparsedVerb)) != null) {
+      verbResults.insert(0, suff);
+      unparsedVerb = unparsedVerb.substring(0, unparsedVerb.length -
+        suff.entryName.length+1); // Ignore '-'
+    }
+
+    // For verbs, additionally test prefixes. There should only be one prefix,
+    // but test against all of them in case the verb stem begins with a string
+    // that is coincidentally the same as a prefix, with the 0-prefix attached.
+    if (verbResults.isNotEmpty) {
+      for (WordDatabaseEntry pre in _verbprefixes) {
+        if (unparsedVerb.startsWith( // ignore '-'/'0'
+          pre.entryName.substring(0, pre.entryName.length-1))) {
+          String possibleStem = unparsedVerb.substring(pre.entryName.length-1);
+          exact = db.values.where((e) =>
+            e.searchName.startsWith('$possibleStem:v'));
+          if (exact.isNotEmpty) {
+            results.insertAll(0, verbResults);
+            results.insertAll(0, exact);
+            results.insert(0, pre);
+          } else {
+            // Back out last suffix, similar to what was done for nouns
+            exact = db.values.where((e) => e.searchName.startsWith(
+              '$possibleStem${verbResults[0].entryName.substring(1)}:v'));
+            if (exact.isNotEmpty) {
+              results.insertAll(0, verbResults.sublist(1));
+              results.insertAll(0, exact);
+              results.insert(0, pre);
+            }
+          }
+        }
+      }
+    }
+
+    return results;
+  }
+
+  // Analyze a query and search for matching non-analyzed database entries
+  static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
+    String query}) {
+    // Start with analysis results
+    List<WordDatabaseEntry> ret = _analyze(db, query);
+
+    if (db != null && query.isNotEmpty) {
+      // Search for entries whose entry name, definition, or search tags match
+      // the query, excluding any analysis results
+      List<WordDatabaseEntry> matches = db.values.where((e) =>
+        ret.where((r) => r.searchName == e.searchName).isEmpty && (
+          e.entryName.contains(query) ||
+          e.definition.contains(query) ||
+          e.searchTags.contains(query)
+      )).toList();
+
+      // Sort based on which entry contained a hit that most closely resembled
+      // the search query.
+      matches.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
+        return min(_extraChars(query, a.entryName),
+            min(_extraChars(query, a.definition),
+                _extraChars(query, a.searchTags))) -
+            min(_extraChars(query, b.entryName),
+                min(_extraChars(query, b.definition),
+                    _extraChars(query, b.searchTags)));
+      });
+
+      ret.insertAll(ret.length, matches);
+    }
 
     return ret;
   }
