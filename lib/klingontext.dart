@@ -14,6 +14,28 @@ class KlingonText extends RichText {
     text: _ProcessKlingonText(fromString, onTap, style),
   );
 
+  static MaterialColor _colorForPOS(String type, String flags) {
+    // Use the default color for sentences, URLs, sources, and mailto links
+    if (type == 'sen' || type == 'url' ||type == 'src' || type == 'mailto') {
+      return null;
+    }
+
+    List<String> splitFlags = flags == null ? [] : flags.split(',');
+    if (splitFlags.contains('suff') || splitFlags.contains('pre')) {
+      return Colors.red;
+    }
+
+    if (type == 'v') {
+      return Colors.yellow;
+    }
+
+    if (type == 'n') {
+      return Colors.green;
+    }
+
+    return Colors.blue;
+  }
+
   // Build a TextSpan containing 'src', with text {in curly braces} formatted
   // appropriately.
   static TextSpan _ProcessKlingonText(String src, Function(String) onTap,
@@ -57,7 +79,8 @@ class KlingonText extends RichText {
             fontFamily: serif ? 'RobotoSlab' : style.fontFamily,
             decoration: link ? TextDecoration.underline : null,
             fontStyle: italic ? FontStyle.italic : null,
-            // TODO color coding, part of speech tagging
+            color: _colorForPOS(textType, textFlags),
+            // TODO part of speech tagging
           ),
           recognizer: recognizer,
         ));
