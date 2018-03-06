@@ -58,8 +58,8 @@ class KlingonText extends RichText {
         bool serif = textType != null && textType != 'url' && textType != 'src';
 
         // Anything that's not a source citation or explicitly not a link should
-        // be treated as a link.
-        bool link = (textType != null && textType != 'src') &&
+        // be treated as a link. Don't process links without an onTap callback.
+        bool link = onTap != null && (textType != null && textType != 'src') &&
             (textFlags == null || !textFlags.split(',').contains('nolink'));
 
         // Source citations are italicized
