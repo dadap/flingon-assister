@@ -15,7 +15,7 @@ class WordDatabase {
       '17-tlh', '18-v', '19-w', '20-y', '21-a', '22-e', '23-I', '24-o',
       '25-u', '26-suffixes', '27-extra', '28-footer'
     ];
-    final memBase = 'klingon-assistant/KlingonAssistant/data/mem-';
+    final memBase = 'data/mem-';
     final memSuffix = '.xml';
     String concat = '';
 
