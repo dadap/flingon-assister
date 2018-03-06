@@ -289,6 +289,7 @@ class WordDatabaseEntry {
               style: new TextStyle(
                 fontSize: style.fontSize * 2.5,
                 fontFamily: 'RobotoSlab',
+                color: KlingonText.colorForPOS(partOfSpeech),
               ),
           )),
           new Padding(
@@ -301,7 +302,12 @@ class WordDatabaseEntry {
                     text: '$partOfSpeech',
                     style: new TextStyle(fontStyle: FontStyle.italic)
                   ),
-                  new TextSpan(text: ') $definition'),
+                  new TextSpan(text: ') '),
+                  new KlingonText(
+                    fromString: '$definition',
+                    style: style,
+                    onTap: onTap,
+                  ).text,
                 ],
               )),
             ),
@@ -345,9 +351,12 @@ class WordDatabaseEntry {
     return new ListTile(
       title: new Text(
           entryName,
-          style: new TextStyle(fontFamily: 'RobotoSlab'),
+          style: new TextStyle(
+            fontFamily: 'RobotoSlab',
+            color: KlingonText.colorForPOS(partOfSpeech),
+          ),
       ),
-      subtitle: new Text(definition),
+      subtitle: new KlingonText(fromString: definition),
       onTap: onTap,
     );
   }

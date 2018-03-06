@@ -14,6 +14,16 @@ class KlingonText extends RichText {
     text: _ProcessKlingonText(fromString, onTap, style),
   );
 
+  static MaterialColor colorForPOS(String POS) {
+    List<String> posSplit = POS.split(':');
+
+    if (posSplit.length < 1) {
+      return null;
+    }
+
+    return _colorForPOS(posSplit[0], posSplit.length > 1 ? posSplit[1] : null);
+  }
+
   static MaterialColor _colorForPOS(String type, String flags) {
     // Use the default color for sentences, URLs, sources, and mailto links
     if (type == 'sen' || type == 'url' ||type == 'src' || type == 'mailto') {
