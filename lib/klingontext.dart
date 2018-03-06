@@ -21,7 +21,7 @@ class KlingonText extends RichText {
     }
 
     List<String> splitFlags = flags == null ? [] : flags.split(',');
-    if (splitFlags.contains('suff') || splitFlags.contains('pre')) {
+    if (splitFlags.contains('suff') || splitFlags.contains('pref')) {
       return Colors.red;
     }
 
