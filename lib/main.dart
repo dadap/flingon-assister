@@ -4,8 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(new MyApp());
 
-// TODO: maybe assign this based on target (e.g. boQwI' on Android)
-final String appName = 'jIboQ';
+final String appName = 'boQwI\'';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -69,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     /* List of menu categories, items, and destinations */
     final Map<String, Map<String, String>> menu = {
       appName : {
-        'About' : 'boQwI\':n', // TODO write an entry for jIboQ
+        'About' : 'boQwI\':n',
       },
       'Reference': {
         'Pronunciation' : 'QIch wab Ho\'DoS:n',
