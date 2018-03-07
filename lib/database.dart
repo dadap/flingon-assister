@@ -144,7 +144,11 @@ class WordDatabase {
         if (exact.isNotEmpty) {
           results.insertAll(0, verbResults);
           results.insertAll(0, exact);
-          results.insert(0, pre);
+          // XXX parse, but do not display, the 0 prefix. Maybe this could be
+          // user-configurable in case people want it, but it's kind of noisy.
+          if (pre.entryName != '0') {
+            results.insert(0, pre);
+          }
         } else if (verbResults.isNotEmpty) {
           // Back out last suffix, similar to what was done for nouns
           exact = db.values.where((e) => e.searchName.startsWith(
