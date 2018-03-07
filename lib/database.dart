@@ -93,13 +93,7 @@ class WordDatabase {
     String unparsedNoun = word, unparsedVerb = word;
     WordDatabaseEntry suff;
 
-    // Look for exact matches: this could be useful e.g. for stock phrases such
-    // as "qoslIj DatIvjaj".
-    Iterable<WordDatabaseEntry> exact = db.values.where((e) =>
-      e.entryName == word);
-    if (exact.isNotEmpty) {
-      results.insertAll(0, exact.toList());
-    }
+    Iterable<WordDatabaseEntry> exact;
 
     // Pop noun suffixes off the end of the word until no more noun suffixes
     // can be identified.
@@ -164,6 +158,18 @@ class WordDatabase {
       }
     }
 
+    // Look for exact matches: this could be useful e.g. for stock phrases such
+    // as "qoslIj DatIvjaj". Don't include exact matches that are already part
+    // of the analysis breakdown, as might happen with a zero-prefixed verb with
+    // no suffixes. Add these exact matches to the head of the results list.
+    exact = db.values.where((e) => e.entryName == word);
+    if (exact.isNotEmpty) {
+      for (WordDatabaseEntry entry in exact) {
+        if (results.where((e) => e.searchName == entry.searchName).isEmpty) {
+          results.insert(0, entry);
+        }
+      }
+    }
     return results;
   }
 
