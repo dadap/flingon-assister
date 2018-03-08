@@ -1,36 +1,22 @@
-import 'package:xml/xml.dart' as xml;
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'klingontext.dart';
 import 'dart:math';
+import 'dart:convert';
+
+// XXX add proper localization support
+final locale = 'en';
 
 class WordDatabase {
   static Future<Map<String, WordDatabaseEntry>> getDatabase() async {
     Map<String, WordDatabaseEntry> ret = new Map();
 
-    final List<String> memSegments = [
-      '00-header', '01-b', '02-ch', '03-D', '04-gh', '05-H', '06-j', '07-l',
-      '08-m', '09-n', '10-ng', '11-p', '12-q', '13-Q', '14-r', '15-S', '16-t',
-      '17-tlh', '18-v', '19-w', '20-y', '21-a', '22-e', '23-I', '24-o',
-      '25-u', '26-suffixes', '27-extra', '28-footer'
-    ];
-    final memBase = 'data/mem-';
-    final memSuffix = '.xml';
-    String concat = '';
+    final memFile = 'data/qawHaq.json';
+    final doc = JSON.decode(await rootBundle.loadString(memFile));
 
-    for (String memSegment in memSegments) {
-      concat += await rootBundle.loadString(memBase + memSegment + memSuffix);
-    }
-
-    final doc = xml.parse(concat);
-
-    for (var entry in doc
-        .findAllElements('database')
-        .first
-        .findElements('table')) {
-      var elem = new WordDatabaseEntry.fromXmlNode(entry);
-      ret[elem.searchName] = elem;
+    for (String entry in doc['qawHaq'].keys) {
+      ret[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
     }
 
     return ret;
@@ -200,19 +186,16 @@ class WordDatabase {
       List<WordDatabaseEntry> matches = db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
           e.entryName.contains(query) ||
-          e.definition.contains(query) ||
-          e.searchTags.contains(query)
+          e.definition[locale].contains(query)
       )).toList();
 
       // Sort based on which entry contained a hit that most closely resembled
       // the search query.
       matches.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
         return min(_extraChars(query, a.entryName),
-            min(_extraChars(query, a.definition),
-                _extraChars(query, a.searchTags))) -
+            _extraChars(query, a.definition[locale])) -
             min(_extraChars(query, b.entryName),
-                min(_extraChars(query, b.definition),
-                    _extraChars(query, b.searchTags)));
+                _extraChars(query, b.definition[locale]));
       });
 
       ret.insertAll(ret.length, matches);
@@ -223,29 +206,25 @@ class WordDatabase {
 }
 
 class WordDatabaseEntry {
-  WordDatabaseEntry.fromXmlNode(xml.XmlNode node) {
+  WordDatabaseEntry.fromJSON(Map json) {
     try {
-      id = int.parse(innerText(ofNode: node, withName: 'id'));
+      id = int.parse(json['id']);
     } catch (InvalidNumberException) {
       // XXX figure out what ID isn't parsing
       id = 0;
     }
-    entryName = innerText(ofNode: node, withName: 'entry_name');
-    partOfSpeech = innerText(ofNode: node, withName: 'part_of_speech');
-    definition = innerText(ofNode: node, withName: 'definition');
-    definitionDE = innerText(ofNode: node, withName: 'definition_de');
-    synonyms = innerText(ofNode: node, withName: 'synonyms');
-    antonyms = innerText(ofNode: node, withName: 'antonyms');
-    seeAlso = innerText(ofNode: node, withName: 'see_also');
-    notes = innerText(ofNode: node, withName: 'notes');
-    notesDe = innerText(ofNode: node, withName: 'notes_de');
-    hiddenNotes = innerText(ofNode: node, withName: 'hidden_notes');
-    components = innerText(ofNode: node, withName: 'components');
-    examples = innerText(ofNode: node, withName: 'examples');
-    examplesDe = innerText(ofNode: node, withName: 'examples_de');
-    searchTags = innerText(ofNode: node, withName: 'search_tags');
-    searchTagsDe = innerText(ofNode: node, withName: 'search_tags_de');
-    source = innerText(ofNode: node, withName: 'source');
+    entryName = json['entry_name'];
+    partOfSpeech = json['part_of_speech'];
+    definition = json['definition'];
+    synonyms = json['synonyms'];
+    antonyms = json['antonyms'];
+    seeAlso = json['see_also'];
+    notes = json['notes'];
+    hiddenNotes = json['hidden_notes'];
+    components = json['components'];
+    examples = json['examples'];
+    searchTags = json['search_tags'];
+    source = json['source'];
 
     searchName = normalizeSearchName('$entryName:$partOfSpeech');
   }
@@ -253,40 +232,28 @@ class WordDatabaseEntry {
   int id;
   String entryName;
   String partOfSpeech;
-  String definition;
-  String definitionDE;
+  Map<String,String> definition;
   String synonyms;
   String antonyms;
   String seeAlso;
-  String notes;
-  String notesDe;
+  Map<String, String> notes;
   String hiddenNotes;
   String components;
-  String examples;
-  String examplesDe;
-  String searchTags;
-  String searchTagsDe;
+  Map<String, String> examples;
+  Map<String, List<String>> searchTags;
   String source;
-  String searchName;
 
-  static String innerText({xml.XmlNode ofNode, String withName}) {
-    Iterable<xml.XmlNode> matching = ofNode.children.where((child) {
-      return child.attributes.where((attrib) {
-        return attrib.name.toString() == 'name' &&
-            attrib.value.toString() == withName;
-      }).isNotEmpty;
-    });
-    if (matching.isNotEmpty) {
-      return matching.first.text;
-    }
-    return '';
-  }
+  String searchName;
 
   Widget toWidget(TextStyle style, {Function(String) onTap}) {
     final double listPadding = 8.0;
     final double hMargins = 8.0;
 
     final Widget emptyWidget = const Text('');
+
+    bool _isNotNullOrEmpty(Map<String, String> map) {
+      return map != null && map[locale] != null && map[locale].isNotEmpty;
+    }
 
     return new Expanded(child: new Padding(
       padding: new EdgeInsets.symmetric(horizontal: hMargins),
@@ -314,30 +281,30 @@ class WordDatabaseEntry {
                   ),
                   new TextSpan(text: ') '),
                   new KlingonText(
-                    fromString: '$definition',
+                    fromString: '${definition[locale]}',
                     style: style,
                     onTap: onTap,
                   ).text,
                 ],
               )),
             ),
-          notes.isNotEmpty ? new Padding(
+          _isNotNullOrEmpty(notes) ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
-                fromString: '$notes',
+                fromString: '${notes[locale]}',
                 style: style,
                 onTap: onTap
             ),
           ) : emptyWidget,
-          examples.isNotEmpty ? new Padding(
+          _isNotNullOrEmpty(examples) ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
-            fromString: 'Examples: $examples',
+            fromString: 'Examples: ${examples[locale]}',
             style: style,
             onTap: onTap
             ),
           ) : emptyWidget,
-          seeAlso.isNotEmpty ? new Padding(
+          seeAlso != null && seeAlso.isNotEmpty ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
                 fromString: 'See also: $seeAlso',
@@ -345,7 +312,7 @@ class WordDatabaseEntry {
                 onTap: onTap
             ),
           ) : emptyWidget,
-          source.isNotEmpty ? new Padding(
+          source != null && source.isNotEmpty ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
                 fromString: 'Source(s): $source',
@@ -366,7 +333,7 @@ class WordDatabaseEntry {
             color: KlingonText.colorForPOS(partOfSpeech),
           ),
       ),
-      subtitle: new KlingonText(fromString: definition),
+      subtitle: new KlingonText(fromString: definition[locale]),
       onTap: onTap,
     );
   }
