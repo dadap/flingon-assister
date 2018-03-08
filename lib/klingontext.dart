@@ -86,7 +86,8 @@ class KlingonText extends RichText {
         ret.add(new TextSpan(
           text: textOnly,
           style: new TextStyle(
-            fontFamily: serif ? 'RobotoSlab' : style.fontFamily,
+            fontFamily: serif ? 'RobotoSlab' :
+                                style == null ? null : style.fontFamily,
             decoration: link ? TextDecoration.underline : null,
             fontStyle: italic ? FontStyle.italic : null,
             color: _colorForPOS(textType, textFlags),
