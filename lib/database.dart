@@ -169,19 +169,60 @@ class WordDatabase {
     return results;
   }
 
+  // Table of case fixes for letters that can only ever be one case in Klingon.
+  // Case errors in 'h'/'H' or 'q'/'Q' will not be corrected.
+  static Map<String, String> klingonCase = {
+    'A' : 'a',
+    'B' : 'b',
+    // 'c' only occurs as part of 'ch', and is always lowercase
+    'CH' : 'ch',
+    'd' : 'D',
+    'E' : 'e',
+    // 'g' may occur as part of 'ng' or 'gh', and is always lowercase.
+    'G' : 'g',
+    // 'h' is lowercase when part of 'gh' or 'tlh', and capital when 'H'
+    'i' : 'I',
+    'J' : 'j',
+    // 'l' may occur on its own or as part of 'tlh', and is always lowercase
+    'L' : 'l',
+    'M' : 'm',
+    // 'n' may occor on its own or as part of 'ng', and is always lowercase
+    'N' : 'n',
+    'O' : 'o',
+    'P' : 'p',
+    // 'q' and 'Q' are distinct letters
+    'R' : 'r',
+    's' : 'S',
+    // 't' may occur on its own or as part of 'tlh', and is always lowercase
+    'T' : 't',
+    'U' : 'u',
+    'V' : 'v',
+    'W' : 'w',
+    'Y' : 'y',
+  };
+
   // Sanitize input
   static String _sanitize(String string) {
     // Desmartify quotes
     string = string.replaceAll('‘', '\'');
     string = string.replaceAll('’', '\'');
-    
+
+    // Recase letters that can only ever be one case in Klingon
+    for (String letter in klingonCase.keys) {
+      string = string.replaceAll(letter, klingonCase[letter]);
+    }
+
     return string;
   }
 
   // Analyze a query and search for matching non-analyzed database entries
   static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
     String query}) {
+
+    // Sanitize query for use in Klingon text searches, and create a lowercase
+    // version for use in non-Klingon text searches
     query = _sanitize(query);
+    String queryLowercase = query.toLowerCase();
 
     // Start with analysis results
     List<WordDatabaseEntry> ret = _analyze(db, query);
@@ -191,7 +232,13 @@ class WordDatabase {
       // query, excluding any analysis results
       List<WordDatabaseEntry> exactMatches = db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
-          e.entryName == query || e.definition[locale] == query
+          e.entryName == query
+      )).toList();
+      ret.addAll(exactMatches);
+
+      exactMatches = db.values.where((e) =>
+      ret.where((r) => r.searchName == e.searchName).isEmpty && (
+          e.definitionLowercase[locale] == queryLowercase
       )).toList();
       ret.addAll(exactMatches);
 
@@ -200,27 +247,29 @@ class WordDatabase {
       List<WordDatabaseEntry> tagMatches = db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
           e.searchTags != null && e.searchTags[locale] != null &&
-          e.searchTags[locale].contains(query)
+          e.searchTags[locale].contains(queryLowercase)
         )).toList();
       ret.addAll(tagMatches);
 
       // Search for entries whose entry name or definition partially match the
-      // query, excluding any already identified results
+      // query, excluding any already identified results, sorting based on which
+      // partial matches most closely resembled the search query
       List<WordDatabaseEntry> matches = db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
-          e.entryName.contains(query) ||
-          e.definition[locale].contains(query)
+          e.entryName.contains(query)
       )).toList();
 
-      // Sort based on which partial match contained a hit that most closely
-      // resembled the search query.
-      matches.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
-        return min(_extraChars(query, a.entryName),
+      matches.addAll(db.values.where((e) =>
+        ret.where((r) => r.searchName == e.searchName).isEmpty &&
+        matches.where((m) => m.searchName == e.searchName).isEmpty && (
+          e.definitionLowercase[locale].contains(queryLowercase)
+      )).toList());
+      matches.sort((WordDatabaseEntry a, WordDatabaseEntry b) =>
+        min(_extraChars(query, a.entryName),
             _extraChars(query, a.definition[locale])) -
-            min(_extraChars(query, b.entryName),
-                _extraChars(query, b.definition[locale]));
-      });
-      ret.insertAll(ret.length, matches);
+        min(_extraChars(query, b.entryName),
+            _extraChars(query, b.definition[locale])));
+      ret.addAll(matches);
 
       // Search for entries whose search tags partially match the query,
       // excluding any already identified results
@@ -258,12 +307,21 @@ class WordDatabaseEntry {
     source = json['source'];
 
     searchName = normalizeSearchName('$entryName:$partOfSpeech');
+
+    for (String lang in definition.keys) {
+      if (definitionLowercase == null) {
+        definitionLowercase = {};
+      }
+
+      definitionLowercase[lang] = definition[lang].toLowerCase();
+    }
   }
 
   int id;
   String entryName;
   String partOfSpeech;
   Map<String,String> definition;
+  Map<String, String> definitionLowercase;
   String synonyms;
   String antonyms;
   String seeAlso;
