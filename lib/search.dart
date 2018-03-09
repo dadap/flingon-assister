@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'database.dart';
 import 'main.dart';
+import 'dart:async';
 
 class SearchPage extends StatefulWidget {
   @override _SearchPageState createState() => new _SearchPageState();
@@ -20,6 +21,8 @@ class _SearchPageState extends State<SearchPage> {
       controller.clear();
     });
 
+    Timer timer;
+
     controller.addListener(() {
       if (_db == null) {
         setState(() {
@@ -28,7 +31,9 @@ class _SearchPageState extends State<SearchPage> {
 
         WordDatabase.getDatabase().then((db) {
           _db = db;
-          setState(() {main = null;});
+          setState(() {
+            main = null;
+          });
         });
       }
 
@@ -38,22 +43,31 @@ class _SearchPageState extends State<SearchPage> {
           main = null;
         });
       } else if (_db != null) {
-        List<Widget> results = [];
-        Widget newMain;
+        if (timer != null && timer.isActive) {
+          timer.cancel();
+        }
 
-        WordDatabase.match(db: _db, query: controller.text).forEach((e) {
-          results.add(e.toListTile(onTap: () => Navigator.of(context).push(
-              new MaterialPageRoute(builder: (ctx) => new MyHomePage(e.searchName))
-          )));
-        });
+        // Rate limit returning query results
+        timer = new Timer(const Duration(milliseconds: 250), () {
+          List<Widget> results = [];
+          Widget newMain;
 
-        newMain = new Column(
-          children: [new Expanded(child: new ListView(children: results))
-          ],);
+          WordDatabase.match(db: _db, query: controller.text).forEach((e) {
+            results.add(e.toListTile(onTap: () =>
+                Navigator.of(context).push(
+                    new MaterialPageRoute(builder: (ctx) =>
+                    new MyHomePage(e.searchName))
+                )));
+          });
 
-        setState(() {
-          onPressed = clearText;
-          main = newMain;
+          newMain = new Column(
+            children: [new Expanded(child: new ListView(children: results))
+            ],);
+
+          setState(() {
+            onPressed = clearText;
+            main = newMain;
+          });
         });
       }
     });
