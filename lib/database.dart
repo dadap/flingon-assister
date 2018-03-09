@@ -187,24 +187,49 @@ class WordDatabase {
     List<WordDatabaseEntry> ret = _analyze(db, query);
 
     if (db != null && query.isNotEmpty) {
-      // Search for entries whose entry name, definition, or search tags match
-      // the query, excluding any analysis results
+      // Search for entries whose entry name or definition exactly match the
+      // query, excluding any analysis results
+      List<WordDatabaseEntry> exactMatches = db.values.where((e) =>
+        ret.where((r) => r.searchName == e.searchName).isEmpty && (
+          e.entryName == query || e.definition[locale] == query
+      )).toList();
+      ret.addAll(exactMatches);
+
+      // Search for entries whose search tags exactly match the query,
+      // excluding any already identified results
+      List<WordDatabaseEntry> tagMatches = db.values.where((e) =>
+        ret.where((r) => r.searchName == e.searchName).isEmpty && (
+          e.searchTags != null && e.searchTags[locale] != null &&
+          e.searchTags[locale].contains(query)
+        )).toList();
+      ret.addAll(tagMatches);
+
+      // Search for entries whose entry name or definition partially match the
+      // query, excluding any already identified results
       List<WordDatabaseEntry> matches = db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
           e.entryName.contains(query) ||
           e.definition[locale].contains(query)
       )).toList();
 
-      // Sort based on which entry contained a hit that most closely resembled
-      // the search query.
+      // Sort based on which partial match contained a hit that most closely
+      // resembled the search query.
       matches.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
         return min(_extraChars(query, a.entryName),
             _extraChars(query, a.definition[locale])) -
             min(_extraChars(query, b.entryName),
                 _extraChars(query, b.definition[locale]));
       });
-
       ret.insertAll(ret.length, matches);
+
+      // Search for entries whose search tags partially match the query,
+      // excluding any already identified results
+      List<WordDatabaseEntry> partialTagMatches = db.values.where((e) =>
+      ret.where((r) => r.searchName == e.searchName).isEmpty && (
+          e.searchTags != null && e.searchTags[locale] != null &&
+              e.searchTags[locale].where((t) => t.contains(query)).isNotEmpty
+      )).toList();
+      ret.addAll(partialTagMatches);
     }
 
     return ret;
