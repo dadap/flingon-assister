@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'database.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'search.dart';
 
 void main() => runApp(new MyApp());
 
-final String appName = 'boQwI\'';
+const String appName = 'boQwI\'';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -19,16 +20,18 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.redAccent,
         highlightColor: Colors.red,
       ),
-      home: new MyHomePage(title: appName),
+      home: new MyHomePage("boQwI\':n"),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
 
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage(String this.entry, {Key key, this.title: appName}) :
+    super(key: key);
 
   final String title;
+  final String entry;
 
   @override
   _MyHomePageState createState() => new _MyHomePageState();
@@ -126,77 +129,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return ret;
   }
 
-  // Display the search page
-  loadSearch() {
-    Widget main;
-
-    TextEditingController controller = new TextEditingController();
-    Function onPressed;
-    Function clearText = () => setState(() {
-      controller.clear();
-    });
-
-    Navigator.of(context).push(new MaterialPageRoute(
-      builder: (BuildContext ctx) {
-        // XXX this isn't updating state consistently when typing a search
-        // query without pressing enter.
-        controller.addListener(() {
-          if (_db == null) {
-            setState(() {
-              main = new CircularProgressIndicator();
-            });
-
-            WordDatabase.getDatabase().then((db) {
-              _db = db;
-              setState(() {main = null;});
-            });
-          }
-
-          if (controller.text.isEmpty) {
-            setState(() {
-              onPressed = null;
-              main = null;
-            });
-          } else if (_db != null) {
-            List<Widget> results = [];
-            Widget newMain;
-
-            WordDatabase.match(db: _db, query: controller.text).forEach((e) {
-              results.add(e.toListTile(onTap: () => load(e.searchName)));
-            });
-
-            newMain = new Column(
-              children: [new Expanded(child: new ListView(children: results))
-            ],);
-
-            setState(() {
-              onPressed = clearText;
-              main = newMain;
-            });
-          }
-        });
-
-        return new Scaffold(
-          appBar: new AppBar(
-            title: new TextField(
-              autofocus: true,
-              autocorrect: false,
-              style: Theme.of(context).textTheme.title,
-              controller: controller,
-            ),
-            actions: [
-              new IconButton(
-                icon: new Icon(Icons.clear),
-                onPressed: onPressed,
-              ),
-            ],
-          ),
-          body: new Center(child: main),
-        );
-      }
-    ));
-  }
-
   Widget getEntry(String entry, BuildContext context, {String withTitle}) {
     Widget ret;
 
@@ -251,7 +183,11 @@ class _MyHomePageState extends State<MyHomePage> {
             actions: [
               new IconButton(
                 icon: const Icon(Icons.search),
-                onPressed: loadSearch,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    new MaterialPageRoute(builder: (ctx) => new SearchPage())
+                  );
+                },
               ),
             ]
         ),
@@ -268,6 +204,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return buildHelper(context, 'boQwI\':n');
+    return buildHelper(context, widget.entry);
   }
 }
