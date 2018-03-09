@@ -31,12 +31,38 @@ class WordDatabase {
   // Measures similarity between haystack and needle. If haystack contains
   // needle, returns the number of extra characters in haystack that aren't
   // also in needle. Otherwise, returns a large number for sorting purposes.
-  static int _extraChars(String needle, String haystack) {
-    if (haystack.contains(needle)) {
-      return haystack.length - needle.length;
+  static int _levenshtein(String s, String t, {int max: 999999999}) {
+    if (s == t)
+      return 0;
+    if (s.length == 0)
+      return t.length;
+    if (t.length == 0)
+      return s.length;
+
+    if ((s.length - t.length).abs() > max) {
+      return max + 1;
     }
 
-    return 999999999;
+    List<int> v0 = new List<int>.filled(t.length + 1, 0);
+    List<int> v1 = new List<int>.filled(t.length + 1, 0);
+
+    for (int i = 0; i < t.length + 1; i < i++)
+      v0[i] = i;
+
+    for (int i = 0; i < s.length; i++) {
+      v1[0] = i + 1;
+
+      for (int j = 0; j < t.length; j++) {
+        int cost = (s[i] == t[j]) ? 0 : 1;
+        v1[j + 1] = min(v1[j] + 1, min(v0[j + 1] + 1, v0[j] + cost));
+      }
+
+      for (int j = 0; j < t.length + 1; j++) {
+        v0[j] = v1[j];
+      }
+    }
+
+    return v1[t.length];
   }
 
   // Lazily populated lists of verb and noun affixes
@@ -255,20 +281,23 @@ class WordDatabase {
       // query, excluding any already identified results, sorting based on which
       // partial matches most closely resembled the search query
       List<WordDatabaseEntry> matches = db.values.where((e) =>
-        ret.where((r) => r.searchName == e.searchName).isEmpty && (
-          e.entryName.contains(query)
-      )).toList();
+        ret.where((r) => r.searchName == e.searchName).isEmpty &&
+        (query.length > 2 || _levenshtein(query, e.entryName, max: 8) < 8) &&
+        e.entryName.contains(query)
+      ).toList();
 
       matches.addAll(db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty &&
-        matches.where((m) => m.searchName == e.searchName).isEmpty && (
-          e.definitionLowercase[locale].contains(queryLowercase)
-      )).toList());
+        matches.where((m) => m.searchName == e.searchName).isEmpty &&
+        (query.length > 2 ||
+          _levenshtein(query, e.definitionLowercase[locale], max: 4) < 4) &&
+        e.definitionLowercase[locale].contains(queryLowercase)
+      ).toList());
       matches.sort((WordDatabaseEntry a, WordDatabaseEntry b) =>
-        min(_extraChars(query, a.entryName),
-            _extraChars(query, a.definition[locale])) -
-        min(_extraChars(query, b.entryName),
-            _extraChars(query, b.definition[locale])));
+        min(_levenshtein(query, a.entryName),
+            _levenshtein(query, a.definitionLowercase[locale])) -
+        min(_levenshtein(query, b.entryName),
+            _levenshtein(query, b.definitionLowercase[locale])));
       ret.addAll(matches);
 
       // Search for entries whose search tags partially match the query,
