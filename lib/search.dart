@@ -47,8 +47,12 @@ class _SearchPageState extends State<SearchPage> {
           timer.cancel();
         }
 
-        // Rate limit returning query results
-        timer = new Timer(const Duration(milliseconds: 250), () {
+        // Rate limit returning query results. Wait a little longer if the
+        // query is very short.
+        final int duration = controller.text.length > 3 ? 250 :
+          1500 / controller.text.length;
+
+        timer = new Timer(new Duration(milliseconds: duration), () {
           List<Widget> results = [];
           Widget newMain;
 
