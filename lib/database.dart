@@ -9,17 +9,23 @@ import 'dart:convert';
 final locale = 'en';
 
 class WordDatabase {
+  static Map<String, WordDatabaseEntry> db;
+
   static Future<Map<String, WordDatabaseEntry>> getDatabase() async {
-    Map<String, WordDatabaseEntry> ret = new Map();
+    if (db != null) {
+      return db;
+    }
+
+    db = new Map();
 
     final memFile = 'data/qawHaq.json';
     final doc = JSON.decode(await rootBundle.loadString(memFile));
 
     for (String entry in doc['qawHaq'].keys) {
-      ret[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
+      db[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
     }
 
-    return ret;
+    return db;
   }
 
   // Measures similarity between haystack and needle. If haystack contains
