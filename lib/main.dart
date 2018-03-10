@@ -225,6 +225,16 @@ class _MyHomePageState extends State<MyHomePage> {
             '"Klingon Language Assistant"\n\n'
             'To begin searching, simply press the "Search" (magnifying glass) '
             'button and type into the search box.\n\n'
+            'It is recommended to install a Klingon Keyboard. Otherwise, to '
+            'make it easier to type Klingon on a mobile keyboard, the '
+            'following shorthand (called "xifan hol") can be enabled under the '
+            'Preferences menu:\n'
+            'c ▶ {ch:sen:nolink} / d ▶ {D:sen:nolink} / f ▶ {ng:sen:nolink} / '
+            'g ▶ {gh:sen:nolink} / h ▶ {H:sen:nolink} /\n'
+            'i ▶ {I:sen:nolink} / k ▶ {Q:sen:nolink} / s ▶ {S:sen:nolink} / '
+            'x ▶ {tlh:sen:nolink} / z ▶ {\':sen:nolink}\n'
+            'It is also possible to choose the alternate keymapping:\n'
+            'k ▶ {q:sen:nolink} / q ▶ {Q:sen:nolink}\n\n'
             'If you encounter any problems, or have any suggestions, please '
             '{file an issue:url:http://github.com/dadap/flingon-assister/issues}'
             ' on GitHub.\n\n'
@@ -239,9 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
             'Original {boQwI\':n:nolink} app: {De\'vID:n:name}\n'
             'Flutter port: Daniel Dadap\n'
             'Klingon-English Data: {De\'vID:n:nolink}, with help from others\n'
-            // TODO expose German data
-            // 'German translations: {Quvar:n:name} (Lieven L. Litaer)\n\n'
-            '\n'
+            'German translations: {Quvar:n:name} (Lieven L. Litaer)\n\n'
             'Special thanks to Mark Okrand ({marq \'oqranD:n:name}) for '
             'creating the Klingon language.',
           style: Theme.of(context).textTheme.body1,
