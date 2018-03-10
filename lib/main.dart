@@ -209,8 +209,8 @@ class _MyHomePageState extends State<MyHomePage> {
     String dbversion;
 
     if (entry == 'help') {
-      main = new Padding(
-        padding: new EdgeInsets.symmetric(horizontal: 8.0),
+      main = new ListView(children: [new Padding(
+        padding: new EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         child: new KlingonText(
           fromString: '{tlhIngan Hol boQwI\':n:nolink} '
             '"Klingon Language Assistant"\n\n'
@@ -237,7 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
             'creating the Klingon language.',
           style: Theme.of(context).textTheme.body1,
         onTap: (dest) => load(dest),
-      ));
+      ))]);
     }
 
     // Lazily initialize the database and load destination entry when done.
