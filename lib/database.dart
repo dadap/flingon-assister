@@ -230,6 +230,15 @@ class WordDatabase {
 
   // Sanitize input
   static String _sanitize(String string) {
+    // Map pIqaD characters to tlhIngan Hol
+    const Map<String, String> pIqaD = const {
+      '' : 'a', '' : 'b', '' : 'ch', '' : 'D', '' : 'e', '' : 'gh',
+      '' : 'H', '' : 'I', '' : 'j', '' : 'l', '' : 'm', '' : 'n',
+      '' : 'ng', '' : 'o', '' : 'p', '' : 'q', '' : 'Q', '' : 'r',
+      '' : 'S', '' : 't', '' : 'tlh', '' : 'u', '' : 'v', '' : 'w',
+      '' : 'y', '' : '\'',
+    };
+
     // Desmartify quotes
     string = string.replaceAll('‘', '\'');
     string = string.replaceAll('’', '\'');
@@ -272,6 +281,11 @@ class WordDatabase {
     // these replacements last, to allow g, l, and t to be lowercased first.
     string.replaceAllMapped(new RegExp('(^|[^gl]|[^t]l)h'), (m) => '${m[1]}H');
     string.replaceAllMapped(new RegExp('(^g|[^n]g|tl)H'), (m) => '${m[1]}h');
+
+    // Transliterate any pIqaD that may be present in the search query
+    for (String letter in pIqaD.keys) {
+      string = string.replaceAll(letter, pIqaD[letter]);
+    }
 
     print(string);
     return string;
