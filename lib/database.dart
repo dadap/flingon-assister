@@ -206,7 +206,7 @@ class WordDatabase {
     'E' : 'e',
     // 'g' may occur as part of 'ng' or 'gh', and is always lowercase.
     'G' : 'g',
-    // 'h' is lowercase when part of 'gh' or 'tlh', and capital when 'H'
+    // 'h' and 'H' are handled by separate context-sensitive regex replacements
     'i' : 'I',
     'J' : 'j',
     // 'l' may occur on its own or as part of 'tlh', and is always lowercase
@@ -237,6 +237,11 @@ class WordDatabase {
     for (String letter in klingonCase.keys) {
       string = string.replaceAll(letter, klingonCase[letter]);
     }
+
+    // 'h' is lowercase when part of 'gh' or 'tlh', and capital when 'H'. Make
+    // these replacements last, to allow g, l, and t to be lowercased first.
+    string.replaceAllMapped(new RegExp('(^|[^gl]|[^t]l)h'), (m) => '${m[1]}H');
+    string.replaceAllMapped(new RegExp('(^g|[^n]g|tl)H'), (m) => '${m[1]}h');
 
     return string;
   }
