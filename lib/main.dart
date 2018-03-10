@@ -3,6 +3,7 @@ import 'database.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'search.dart';
 import 'klingontext.dart';
+import 'preferences.dart';
 
 void main() => runApp(new MyApp());
 
@@ -115,6 +116,14 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (c) => new MyHomePage('help')));
         },
       ),
+      new ListTile(
+        title: new Text('Settings'),
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.push(context, new MaterialPageRoute(
+            builder: (c) => new PreferencesPage()));
+        },
+      )
     ];
 
     for (String category in menu.keys) {
@@ -281,6 +290,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Preferences.loadPreferences();
+
     return buildHelper(context, widget.entry);
   }
 }

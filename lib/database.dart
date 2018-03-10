@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'klingontext.dart';
 import 'dart:math';
 import 'dart:convert';
+import 'preferences.dart';
 
 // XXX add proper localization support
 final locale = 'en';
@@ -233,6 +234,35 @@ class WordDatabase {
     string = string.replaceAll('‘', '\'');
     string = string.replaceAll('’', '\'');
 
+    if (Preferences.inputMode != InputMode.tlhInganHol) {
+      // Map xifan hol characters to tlhIngan Hol, ignoring identity mappings
+      // and incorrect casing. Process 'h' first to avoid turning "ng" into
+      // "ngH" instead of "ngh". Process 'g' before 'f' to avoid turning 'f'
+      // into "ngh" instead of "ng".
+      const Map<String, String> xifanCommon = const {
+        'h': 'H', 'c' : 'ch', 'g' : 'gh', 'f' : 'ng', 'x' : 'tlh', 'z' : '\''
+      };
+      const Map<String, String> xifankq = const { 'q' : 'Q', 'k' : 'q' };
+      const Map<String, String> xifankQ = const { 'k' : 'Q' };
+
+      // Lowercase the query if it was entered in xifan hol
+      string = string.toLowerCase();
+
+      for (String letter in xifanCommon.keys) {
+        string = string.replaceAll(letter, xifanCommon[letter]);
+      }
+
+      if (Preferences.inputMode == InputMode.xifanholkq) {
+        for (String letter in xifankq.keys) {
+          string = string.replaceAll(letter, xifankq[letter]);
+        }
+      } else if (Preferences.inputMode == InputMode.xifanholkQ) {
+        for (String letter in xifankQ.keys) {
+          string = string.replaceAll(letter, xifankQ[letter]);
+        }
+      }
+    }
+
     // Recase letters that can only ever be one case in Klingon
     for (String letter in klingonCase.keys) {
       string = string.replaceAll(letter, klingonCase[letter]);
@@ -243,6 +273,7 @@ class WordDatabase {
     string.replaceAllMapped(new RegExp('(^|[^gl]|[^t]l)h'), (m) => '${m[1]}H');
     string.replaceAllMapped(new RegExp('(^g|[^n]g|tl)H'), (m) => '${m[1]}h');
 
+    print(string);
     return string;
   }
 
@@ -252,8 +283,8 @@ class WordDatabase {
 
     // Sanitize query for use in Klingon text searches, and create a lowercase
     // version for use in non-Klingon text searches
-    query = _sanitize(query);
     String queryLowercase = query.toLowerCase();
+    query = _sanitize(query);
 
     // Start with analysis results
     List<WordDatabaseEntry> ret = _analyze(db, query);
