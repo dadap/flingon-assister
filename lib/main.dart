@@ -59,7 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    destination = WordDatabaseEntry.normalizeSearchName(destination);
+    if (!destination.contains('@@')) {
+      destination = WordDatabaseEntry.normalizeSearchName(destination);
+    }
 
     Navigator.of(context).push(new MaterialPageRoute(
         builder: (BuildContext ctx) {
@@ -142,11 +144,11 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_db == null) {
       ret = const Text('Error: database not initialized!');
     } else if (entry.startsWith('*:')) {
+      // Load all entries with the given category
       List<Widget> entries = [
         new ListTile(title: new Text(
           withTitle,
           style: new TextStyle(fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
         ),),
       ];
 
@@ -157,6 +159,39 @@ class _MyHomePageState extends State<MyHomePage> {
       });
 
       ret = new Expanded(child: new ListView(children: entries));
+    } else if (entry.contains('@@')) {
+      // Load components of an explicitly parsed phrase
+      List<Widget> entries = [
+        new ListTile(title: new KlingonText(
+          fromString: 'Components of: {${entry.split('@@')[0]}}',
+          style: new TextStyle(fontWeight: FontWeight.bold),
+        ),
+        ),
+      ];
+
+      for (String component in entry.split('@@')[1].split(',')) {
+        String c = component.trim();
+        entries.add(_db[c].toListTile(onTap: () => load(c)));
+      }
+
+      ret = new Expanded(child: new ListView(children: entries,));
+    } else if (entry.endsWith(':0') && entry.split(':').length > 2) {
+      // Load all homophones with the given part of speech
+      String name = entry.split(':')[0];
+      String pos = entry.split(':')[1];
+
+      List<Widget> entries = [
+        new ListTile(title: new KlingonText(
+          fromString: 'Homophones for: {${entry}} ($pos)',
+          style: new TextStyle(fontWeight: FontWeight.bold)
+        ))
+      ];
+
+      _db.values.where((e) => e.entryName == name &&
+        e.partOfSpeech.startsWith(pos)).forEach((m) =>
+          entries.add(m.toListTile(onTap: () => load(m.searchName))));
+
+      ret = new Expanded(child: new ListView(children: entries,));
     } else if (_db[entry] == null) {
       ret = new Text('The entry {$entry} was not found in the database.');
     } else {
