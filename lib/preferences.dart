@@ -69,8 +69,17 @@ class Preferences {
 
   static loadPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    _inputMode = _intToInputMode(preferences.getInt('input_mode'));
-    _searchLang = preferences.getString('search_language');
+
+    int inputMode = preferences.getInt('input_mode');
+    String searchLang = preferences.getString('search_language');
+
+    if (inputMode != null) {
+      _inputMode = _intToInputMode(inputMode);
+    }
+
+    if (searchLang != null) {
+      _searchLang = searchLang;
+    }
   }
 }
 
