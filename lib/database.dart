@@ -287,7 +287,6 @@ class WordDatabase {
       string = string.replaceAll(letter, pIqaD[letter]);
     }
 
-    print(string);
     return string;
   }
 
