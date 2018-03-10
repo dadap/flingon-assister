@@ -6,9 +6,6 @@ import 'dart:math';
 import 'dart:convert';
 import 'preferences.dart';
 
-// XXX add proper localization support
-final locale = 'en';
-
 class WordDatabase {
   static Map<String, WordDatabaseEntry> db;
 
@@ -25,6 +22,9 @@ class WordDatabase {
     for (String entry in doc['qawHaq'].keys) {
       db[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
     }
+
+    // Load the preferences so we can be aware of the currently selected locale
+    await Preferences.loadPreferences();
 
     return db;
   }
@@ -294,6 +294,9 @@ class WordDatabase {
   // Analyze a query and search for matching non-analyzed database entries
   static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
     String query}) {
+    // Get the current locale. Preferences should have already been initialized
+    // when the database was initialized.
+    String locale = Preferences.searchLang;
 
     // Sanitize query for use in Klingon text searches, and create a lowercase
     // version for use in non-Klingon text searches
@@ -339,15 +342,23 @@ class WordDatabase {
       matches.addAll(db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty &&
         matches.where((m) => m.searchName == e.searchName).isEmpty &&
+        e.definitionLowercase[locale] != null &&
         (query.length > 2 ||
           _levenshtein(query, e.definitionLowercase[locale], max: 4) < 4) &&
         e.definitionLowercase[locale].contains(queryLowercase)
       ).toList());
-      matches.sort((WordDatabaseEntry a, WordDatabaseEntry b) =>
-        min(_levenshtein(query, a.entryName),
+      matches.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
+        if (a.definitionLowercase[locale] == null ||
+            b.definitionLowercase[locale] == null) {
+          return _levenshtein(query, a.entryName) -
+            _levenshtein(query, b.entryName);
+        }
+
+        return min(_levenshtein(query, a.entryName),
             _levenshtein(query, a.definitionLowercase[locale])) -
         min(_levenshtein(query, b.entryName),
-            _levenshtein(query, b.definitionLowercase[locale])));
+            _levenshtein(query, b.definitionLowercase[locale]));
+      });
       ret.addAll(matches);
 
       // Search for entries whose search tags partially match the query,
@@ -418,6 +429,13 @@ class WordDatabaseEntry {
     final double hMargins = 8.0;
 
     final Widget emptyWidget = const Text('');
+    String locale = Preferences.searchLang;
+
+    // Fall back to English if this entry does not have a definition in the
+    // current locale.
+    if (definition[locale] == null) {
+      locale = 'en';
+    }
 
     bool _isNotNullOrEmpty(Map<String, String> map) {
       return map != null && map[locale] != null && map[locale].isNotEmpty;
@@ -493,6 +511,8 @@ class WordDatabaseEntry {
   }
 
   ListTile toListTile({Function onTap}) {
+    String locale = Preferences.searchLang;
+
     return new ListTile(
       title: new Text(
           entryName,
@@ -501,7 +521,10 @@ class WordDatabaseEntry {
             color: KlingonText.colorForPOS(partOfSpeech),
           ),
       ),
-      subtitle: new KlingonText(fromString: definition[locale]),
+      subtitle: new KlingonText(
+        fromString: definition[locale] != null ?
+          definition[locale] : definition['en']
+      ),
       onTap: onTap,
     );
   }
