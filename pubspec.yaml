@@ -41,3 +41,12 @@ flutter:
     - family: RobotoSlab
       fonts:
         - asset: assets/fonts/RobotoSlab-Regular.ttf
+    - family: DSCpIqaD
+      fonts:
+        - asset: assets/fonts/DSC-pIqaD.ttf
+    - family: TNGpIqaD
+      fonts:
+        - asset: assets/fonts/TNG-pIqaD.ttf
+    - family: pIqaDqolqoS
+      fonts:
+        - asset: assets/fonts/pIqaD-qolqoS.ttf
