@@ -436,8 +436,11 @@ class WordDatabaseEntry {
       locale = 'en';
     }
 
+    // Tests whether the given localized entry contains text, falling back
+    // to English if empty in the current locale.
     bool _isNotNullOrEmpty(Map<String, String> map) {
-      return map != null && map[locale] != null && map[locale].isNotEmpty;
+      return map != null && ((map[locale] != null && map[locale].isNotEmpty) ||
+        map['en'] != null && map['en'].isNotEmpty);
     }
 
     return new Expanded(child: new Padding(
@@ -474,7 +477,8 @@ class WordDatabaseEntry {
           _isNotNullOrEmpty(notes) ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
-                fromString: '${notes[locale]}',
+                fromString: '${notes[locale] == null ?
+                  notes['en'] : notes[locale]}',
                 style: style,
                 onTap: onTap
             ),
@@ -482,7 +486,8 @@ class WordDatabaseEntry {
           _isNotNullOrEmpty(examples) ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
-            fromString: 'Examples: ${examples[locale]}',
+            fromString: 'Examples: ${examples[locale] == null ?
+              examples['en'] : examples[locale]}',
             style: style,
             onTap: onTap
             ),
