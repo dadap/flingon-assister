@@ -7,7 +7,7 @@ import 'preferences.dart';
 
 void main() => runApp(new MyApp());
 
-const String appName = 'boQwI\'';
+const String appName = '';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -282,7 +282,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return new Scaffold(
       appBar: new AppBar(
-          title: new Text(widget.title),
+          title: new Text(
+            widget.title,
+            style: widget.title == appName ?
+              new TextStyle(fontFamily: 'TNGpIqaD') : null
+          ),
           actions: [
             new IconButton(
               icon: const Icon(Icons.search),
