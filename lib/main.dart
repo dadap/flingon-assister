@@ -218,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String dbversion;
 
     if (entry == 'help') {
-      main = new ListView(children: [new Padding(
+      Widget help = new ListView(children: [new Padding(
         padding: new EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         child: new KlingonText(
           fromString: '{tlhIngan Hol boQwI\':n:nolink} '
@@ -249,12 +249,21 @@ class _MyHomePageState extends State<MyHomePage> {
             'Original {boQwI\':n:nolink} app: {De\'vID:n:name}\n'
             'Flutter port: Daniel Dadap\n'
             'Klingon-English Data: {De\'vID:n:nolink}, with help from others\n'
-            'German translations: {Quvar:n:name} (Lieven L. Litaer)\n\n'
+            'German translations: {Quvar:n:name} (Lieven L. Litaer)\n'
+            'TNG {pIqaD:n} font: Admiral {qurgh lungqIj:n:name,nolink} of the '
+            '{Klingon Assault Group:url:http://www.kag.org/}\n'
+            'DSC {pIqaD:n:nolink} font: {Quvar:n:name,nolink} '
+            '(Lieven L. Litaer)\n'
+            '{pIqaD qolqoS:n:nolink} font: Daniel Dadap\n\n'
             'Special thanks to Mark Okrand ({marq \'oqranD:n:name}) for '
             'creating the Klingon language.',
           style: Theme.of(context).textTheme.body1,
         onTap: (dest) => load(dest),
       ))]);
+
+      main = help;
+      // Reload widget after preferences are loaded to handle pIqaD settings
+      Preferences.loadPreferences().then((p) => setState(() => main = help));
     }
 
     // Lazily initialize the database and load destination entry when done.

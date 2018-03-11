@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum InputMode {tlhInganHol, xifanholkq, xifanholkQ}
+const List<String> _langs = const ['de', 'en'];
+const List<String> _fonts = const [
+  'RobotoSlab',
+  'DSCpIqaD',
+  'TNGpIqaD',
+  'pIqaDqolqoS'
+];
 
 class Preferences {
   static InputMode _inputMode = InputMode.tlhInganHol;
   static String _searchLang = "en";
+  static String _font = "RobotoSlab";
 
   static String inputModeName(InputMode im) {
     switch(im) {
@@ -27,6 +35,22 @@ class Preferences {
       return "English";
     }
     return "unknown";
+  }
+
+  static String fontName(String font) {
+    if (font == 'RobotoSlab') {
+      return 'tlhIngan Hol (Latin Transcription)';
+    }
+    if (font == 'DSCpIqaD') {
+      return 'pIqaD (DSC)';
+    }
+    if (font == 'TNGpIqaD') {
+      return 'pIqaD (TNG)';
+    }
+    if (font == 'pIqaDqolqoS') {
+      return 'pIqaD qolqoS';
+    }
+    return 'unknown';
   }
 
   // Helpers to convert InputMode to and from int, since Dart enums aren't ints
@@ -67,11 +91,19 @@ class Preferences {
   }
   static String get searchLang => _searchLang;
 
+  static void set font(String val) {
+    _font = val;
+    SharedPreferences.getInstance().then((sp) =>
+      sp.setString('font', val));
+  }
+  static String get font => _font;
+
   static loadPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     int inputMode = preferences.getInt('input_mode');
     String searchLang = preferences.getString('search_language');
+    String font = preferences.getString('font');
 
     if (inputMode != null) {
       _inputMode = _intToInputMode(inputMode);
@@ -79,6 +111,10 @@ class Preferences {
 
     if (searchLang != null) {
       _searchLang = searchLang;
+    }
+
+    if (font != null) {
+      _font = font;
     }
   }
 }
@@ -92,11 +128,13 @@ class _PreferencesPageState extends State<PreferencesPage> {
   Widget _prefsPanel;
   String _inputModeLabel = 'Input mode:';
   String _searchLanguageLabel = 'Search language:';
+  String _fontLabel = 'Klingon text display:';
 
   @override
   Widget build(BuildContext context) {
     List<PopupMenuEntry<InputMode>> inputModeMenu = [];
     List<PopupMenuEntry<String>> searchLanguageMenu = [];
+    List <PopupMenuEntry<String>> fontMenu = [];
 
     for (InputMode mode in InputMode.values) {
       inputModeMenu.add(new PopupMenuItem(
@@ -105,10 +143,17 @@ class _PreferencesPageState extends State<PreferencesPage> {
       ));
     }
 
-    for (String lang in ['en', 'de']) {
+    for (String lang in _langs) {
       searchLanguageMenu.add(new PopupMenuItem(
         value: lang,
         child: new Text(Preferences.langName(lang)),
+      ));
+    }
+
+    for (String font in _fonts) {
+      fontMenu.add(new PopupMenuItem(
+        value: font,
+        child: new Text(Preferences.fontName(font)),
       ));
     }
 
@@ -124,7 +169,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
               onSelected: (val) {
                 setState(() {
                   _inputModeLabel =
-                  'Input mode: ${Preferences.inputModeName(val)}';
+                    'Input mode: ${Preferences.inputModeName(val)}';
                 });
                 Preferences.inputMode = val;
               },
@@ -139,12 +184,27 @@ class _PreferencesPageState extends State<PreferencesPage> {
               onSelected: (val) {
                 setState(() {
                   _searchLanguageLabel =
-                  'Search language: ${Preferences.langName(val)}';
+                    'Search language: ${Preferences.langName(val)}';
                 });
                 Preferences.searchLang = val;
               },
               initialValue: Preferences.searchLang,
             ),
+            new PopupMenuButton<String>(
+              child: new ListTile(
+                title: new Text(_fontLabel),
+                leading: new Icon(Icons.more_vert),
+              ),
+              itemBuilder: (ctx) => fontMenu,
+              onSelected: (val) {
+                setState(() {
+                  _fontLabel =
+                    'Klingon text display: ${Preferences.fontName(val)}';
+                });
+                Preferences.font = val;
+              },
+              initialValue: Preferences.font,
+            )
           ],
         );
         setState(() {
@@ -152,6 +212,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
             'Input mode: ${Preferences.inputModeName(Preferences.inputMode)}';
           _searchLanguageLabel =
             'Search language: ${Preferences.langName(Preferences.searchLang)}';
+          _fontLabel =
+            'Klingon text display: ${Preferences.fontName(Preferences.font)}';
         });
       }
     );

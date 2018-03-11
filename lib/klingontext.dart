@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'preferences.dart';
 
 class KlingonText extends RichText {
   final TextStyle style;
@@ -46,6 +47,26 @@ class KlingonText extends RichText {
     return Colors.blue;
   }
 
+  static String _topIqaD(String text) {
+    // Conversion table for Latinized Klingon text to pIqaD. Process {gh}, {ng},
+    // and {tlh} first, to prevent {ngh} from being processed as {ng}*{h},
+    // {ng} from being processed as {n}*{g}, and {tlh} from being processed as
+    // {t}{l}*{h}.
+    const Map<String, String> pIqaD = const {
+      'gh' :  '', 'ng' : '',  'tlh' : '', 'a' : '', 'b' : '', 'ch' : '',
+      'D' : '', 'e' : '',  'H' : '', 'I' : '', 'j' : '', 'l' : '',
+      'm' : '', 'n' : '', 'o' : '', 'p' : '', 'q' : '', 'Q' : '',
+      'r' : '', 'S' : '', 't' : '', 'u' : '', 'v' : '', 'w' : '',
+      'y' : '', '\'' : '',
+    };
+
+    for (String letter in pIqaD.keys) {
+      text = text.replaceAll(letter, pIqaD[letter]);
+    }
+
+    return text;
+  }
+
   // Build a TextSpan containing 'src', with text {in curly braces} formatted
   // appropriately.
   static TextSpan _ProcessKlingonText(String src, Function(String) onTap,
@@ -65,7 +86,8 @@ class KlingonText extends RichText {
 
         // Klingon words (i.e., anything that's not a URL or source citation)
         // should be in a serif font, to distinguish 'I' and 'l'.
-        bool serif = textType != null && textType != 'url' && textType != 'src';
+        bool isKlingon = textType != null && textType != 'url' &&
+          textType != 'src';
 
         // Anything that's not a source citation or explicitly not a link should
         // be treated as a link. Don't process links without an onTap callback.
@@ -83,10 +105,15 @@ class KlingonText extends RichText {
           recognizer.onTap = () {onTap(klingon);};
         }
 
+        // Convert to pIqaD if the user selected a pIqaD font
+        if (isKlingon && Preferences.font.contains('pIqaD')) {
+          textOnly = _topIqaD(textOnly);
+        }
+
         ret.add(new TextSpan(
           text: textOnly,
           style: new TextStyle(
-            fontFamily: serif ? 'RobotoSlab' :
+            fontFamily: isKlingon ? Preferences.font :
                                 style == null ? null : style.fontFamily,
             decoration: link ? TextDecoration.underline : null,
             fontStyle: italic ? FontStyle.italic : null,
