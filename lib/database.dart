@@ -483,6 +483,14 @@ class WordDatabaseEntry {
                 onTap: onTap
             ),
           ) : emptyWidget,
+          hiddenNotes != null && hiddenNotes.isNotEmpty ? new Padding(
+            padding: new EdgeInsets.only(bottom: listPadding),
+            child: new KlingonText(
+              fromString: hiddenNotes,
+              style: new TextStyle(fontSize: style.fontSize * 0.8),
+              onTap: onTap,
+            ),
+          ) : emptyWidget,
           _isNotNullOrEmpty(examples) ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
