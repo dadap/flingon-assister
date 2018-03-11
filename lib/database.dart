@@ -446,13 +446,11 @@ class WordDatabaseEntry {
         children: [
           new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
-            child: new Text(
-              '$entryName',
-              style: new TextStyle(
-                fontSize: style.fontSize * 2.5,
-                fontFamily: 'RobotoSlab',
-                color: KlingonText.colorForPOS(partOfSpeech),
-              ),
+            child: new KlingonText(
+                fromString: '{$searchName}',
+                style: new TextStyle(
+                  fontSize: style.fontSize * 2.5,
+                ),
           )),
           new Padding(
               padding: new EdgeInsets.only(bottom: listPadding),
@@ -513,13 +511,7 @@ class WordDatabaseEntry {
     String locale = Preferences.searchLang;
 
     return new ListTile(
-      title: new Text(
-          entryName,
-          style: new TextStyle(
-            fontFamily: 'RobotoSlab',
-            color: KlingonText.colorForPOS(partOfSpeech),
-          ),
-      ),
+      title: new KlingonText(fromString: '{$searchName}'),
       subtitle: new KlingonText(
         fromString: definition[locale] != null ?
           definition[locale] : definition['en']
