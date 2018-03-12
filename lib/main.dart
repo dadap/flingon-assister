@@ -243,15 +243,18 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: new EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         child: new Column(children: [
           new KlingonText(fromString:
-            '{tlhIngan Hol boQwI\':n:nolink}\n"Klingon Language Assistant"',
-            style: Theme.of(context).textTheme.body1,
-            onTap: (dest) => load(dest),
+            '{tlhIngan Hol boQwI\':n:nolink}',
+            style: Theme.of(context).textTheme.headline,
+          ),
+          new Text(
+              '"Klingon Language Assistant"',
+              style: Theme.of(context).textTheme.subhead
           ),
           new Text(_dbversion),
           new KlingonText(fromString:
             '\nTo begin searching, simply press the "Search" (magnifying '
             'glass) button and type into the search box.\n\n'
-            'It is recommended to install a Klingon Keyboard. Otherwise, to '
+            'It is recommended to install a Klingon keyboard. Otherwise, to '
             'make it easier to type Klingon on a mobile keyboard, the '
             'following shorthand (called "xifan hol") can be enabled under the '
             'Preferences menu:\n'
