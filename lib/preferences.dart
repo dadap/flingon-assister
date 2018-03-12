@@ -14,6 +14,9 @@ class Preferences {
   static InputMode _inputMode = InputMode.tlhInganHol;
   static String _searchLang = "en";
   static String _font = "RobotoSlab";
+  static bool _searchEntryNames = true;
+  static bool _searchDefinitions = true;
+  static bool _searchSearchTags = true;
 
   static String inputModeName(InputMode im) {
     switch(im) {
@@ -98,6 +101,27 @@ class Preferences {
   }
   static String get font => _font;
 
+  static void set searchEntryNames(bool val) {
+    _searchEntryNames = val;
+    SharedPreferences.getInstance().then((sp) =>
+      sp.setBool('search_entry_names', val));
+  }
+  static bool get searchEntryNames => _searchEntryNames;
+
+  static void set searchDefinitions(bool val) {
+    _searchDefinitions = val;
+    SharedPreferences.getInstance().then((sp) =>
+      sp.setBool('search_definitions', val));
+  }
+  static bool get searchDefinitions => _searchDefinitions;
+
+  static void set searchSearchTags(bool val) {
+    _searchSearchTags = val;
+    SharedPreferences.getInstance().then((sp) =>
+      sp.setBool('search_search_tags', val));
+  }
+  static bool get searchSearchTags => _searchSearchTags;
+
   static loadPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -129,6 +153,9 @@ class _PreferencesPageState extends State<PreferencesPage> {
   String _inputModeLabel = 'Input mode:';
   String _searchLanguageLabel = 'Search language:';
   String _fontLabel = 'Klingon text display:';
+  bool _searchEntryNames = Preferences.searchEntryNames;
+  bool _searchDefinitions = Preferences.searchDefinitions;
+  bool _searchSearchTags = Preferences.searchSearchTags;
 
   @override
   Widget build(BuildContext context) {
@@ -158,65 +185,94 @@ class _PreferencesPageState extends State<PreferencesPage> {
     }
 
     Preferences.loadPreferences().then((p) {
-        _prefsPanel = new ListView(
-          children: [
-            new PopupMenuButton<InputMode>(
-              child: new ListTile(
-                title: new Text(_inputModeLabel),
-                leading: new Icon(Icons.more_vert),
-              ),
-              itemBuilder: (ctx) => inputModeMenu,
-              onSelected: (val) {
-                setState(() {
-                  _inputModeLabel =
-                    'Input mode: ${Preferences.inputModeName(val)}';
-                });
-                Preferences.inputMode = val;
-              },
-              initialValue: Preferences.inputMode,
+      _prefsPanel = new ListView(
+        children: [
+          new PopupMenuButton<InputMode>(
+            child: new ListTile(
+              title: new Text(_inputModeLabel),
+              leading: new Icon(Icons.more_vert),
             ),
-            new PopupMenuButton<String>(
-              child: new ListTile(
-                title: new Text(_searchLanguageLabel),
-                leading: new Icon(Icons.more_vert),
-              ),
-              itemBuilder: (ctx) => searchLanguageMenu,
-              onSelected: (val) {
-                setState(() {
-                  _searchLanguageLabel =
-                    'Search language: ${Preferences.langName(val)}';
-                });
-                Preferences.searchLang = val;
-              },
-              initialValue: Preferences.searchLang,
+            itemBuilder: (ctx) => inputModeMenu,
+            onSelected: (val) {
+              setState(() {
+                _inputModeLabel =
+                  'Input mode: ${Preferences.inputModeName(val)}';
+              });
+              Preferences.inputMode = val;
+            },
+            initialValue: Preferences.inputMode,
+          ),
+          new PopupMenuButton<String>(
+            child: new ListTile(
+              title: new Text(_searchLanguageLabel),
+              leading: new Icon(Icons.more_vert),
             ),
-            new PopupMenuButton<String>(
-              child: new ListTile(
-                title: new Text(_fontLabel),
-                leading: new Icon(Icons.more_vert),
-              ),
-              itemBuilder: (ctx) => fontMenu,
-              onSelected: (val) {
-                setState(() {
-                  _fontLabel =
-                    'Klingon text display: ${Preferences.fontName(val)}';
-                });
-                Preferences.font = val;
-              },
-              initialValue: Preferences.font,
-            )
-          ],
-        );
-        setState(() {
-          _inputModeLabel =
-            'Input mode: ${Preferences.inputModeName(Preferences.inputMode)}';
-          _searchLanguageLabel =
-            'Search language: ${Preferences.langName(Preferences.searchLang)}';
-          _fontLabel =
-            'Klingon text display: ${Preferences.fontName(Preferences.font)}';
-        });
-      }
-    );
+            itemBuilder: (ctx) => searchLanguageMenu,
+            onSelected: (val) {
+              setState(() {
+                _searchLanguageLabel =
+                  'Search language: ${Preferences.langName(val)}';
+              });
+              Preferences.searchLang = val;
+            },
+            initialValue: Preferences.searchLang,
+          ),
+          new PopupMenuButton<String>(
+            child: new ListTile(
+              title: new Text(_fontLabel),
+              leading: new Icon(Icons.more_vert),
+            ),
+            itemBuilder: (ctx) => fontMenu,
+            onSelected: (val) {
+              setState(() {
+                _fontLabel =
+                  'Klingon text display: ${Preferences.fontName(val)}';
+              });
+              Preferences.font = val;
+            },
+            initialValue: Preferences.font,
+          ),
+          new ListTile(
+            leading: new Checkbox(
+              value: _searchEntryNames,
+              onChanged: (v) {
+                setState(() => _searchEntryNames = v);
+                Preferences.searchEntryNames = v;
+              }
+            ),
+            title: new Text('Search entry names'),
+          ),
+          new ListTile(
+            leading: new Checkbox(
+              value: _searchDefinitions,
+              onChanged: (v) {
+                setState(() => _searchDefinitions = v);
+                Preferences.searchDefinitions = v;
+              }
+            ),
+            title: new Text('Search definitions'),
+          ),
+          new ListTile(
+            leading: new Checkbox(
+                value: _searchSearchTags,
+                onChanged: (v) {
+                  setState(() => _searchSearchTags = v);
+                  Preferences.searchSearchTags = v;
+                }
+            ),
+            title: new Text('Search search tags'),
+          ),
+        ],
+      );
+      setState(() {
+        _inputModeLabel =
+          'Input mode: ${Preferences.inputModeName(Preferences.inputMode)}';
+        _searchLanguageLabel =
+          'Search language: ${Preferences.langName(Preferences.searchLang)}';
+        _fontLabel =
+          'Klingon text display: ${Preferences.fontName(Preferences.font)}';
+      });
+    });
     return new Scaffold(
       appBar: new AppBar(title: new Text('Preferences')),
 

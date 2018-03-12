@@ -305,72 +305,92 @@ class WordDatabase {
     String queryLowercase = query.toLowerCase();
     query = _sanitize(query);
 
+    List <WordDatabaseEntry> ret = [];
+
     // Start with analysis results
-    List<WordDatabaseEntry> ret = _analyze(db, query);
+    if (Preferences.searchEntryNames) {
+      ret.addAll(_analyze(db, query));
+    }
 
     if (db != null && query.isNotEmpty) {
       // Search for entries whose entry name or definition exactly match the
       // query, excluding any analysis results
-      List<WordDatabaseEntry> exactMatches = db.values.where((e) =>
+      if (Preferences.searchEntryNames) {
+        List<WordDatabaseEntry> exactMatches = db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
-          e.entryName == query
-      )).toList();
-      ret.addAll(exactMatches);
+            e.entryName == query
+        )).toList();
+        ret.addAll(exactMatches);
+      }
 
-      exactMatches = db.values.where((e) =>
-      ret.where((r) => r.searchName == e.searchName).isEmpty && (
-          e.definitionLowercase[locale] == queryLowercase
-      )).toList();
-      ret.addAll(exactMatches);
+      if (Preferences.searchDefinitions) {
+        List<WordDatabaseEntry> exactMatches = db.values.where((e) =>
+        ret.where((r) => r.searchName == e.searchName).isEmpty && (
+            e.definitionLowercase[locale] == queryLowercase
+        )).toList();
+        ret.addAll(exactMatches);
+      }
 
       // Search for entries whose search tags exactly match the query,
       // excluding any already identified results
-      List<WordDatabaseEntry> tagMatches = db.values.where((e) =>
+      if (Preferences.searchSearchTags) {
+        List<WordDatabaseEntry> tagMatches = db.values.where((e) =>
+        ret.where((r) => r.searchName == e.searchName).isEmpty && (
+            e.searchTags != null && e.searchTags[locale] != null &&
+                e.searchTags[locale].contains(queryLowercase)
+        )).toList();
+        ret.addAll(tagMatches);
+      }
+
+      // Search for entries whose search tags partially match the query,
+      // excluding any already identified results
+      if (Preferences.searchSearchTags) {
+        List<WordDatabaseEntry> partialTagMatches = db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
           e.searchTags != null && e.searchTags[locale] != null &&
-          e.searchTags[locale].contains(queryLowercase)
+          e.searchTags[locale].where((t) => t.contains(query)).isNotEmpty
         )).toList();
-      ret.addAll(tagMatches);
+        ret.addAll(partialTagMatches);
+      }
 
       // Search for entries whose entry name or definition partially match the
       // query, excluding any already identified results, sorting based on which
       // partial matches most closely resembled the search query
-      List<WordDatabaseEntry> matches = db.values.where((e) =>
-        ret.where((r) => r.searchName == e.searchName).isEmpty &&
-        (query.length > 2 || _levenshtein(query, e.entryName, max: 8) < 8) &&
-        e.entryName.contains(query)
-      ).toList();
+      List<WordDatabaseEntry> partialMatches = [];
 
-      matches.addAll(db.values.where((e) =>
+      if (Preferences.searchEntryNames) {
+        partialMatches.addAll(db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty &&
-        matches.where((m) => m.searchName == e.searchName).isEmpty &&
-        e.definitionLowercase[locale] != null &&
-        (query.length > 2 ||
-          _levenshtein(query, e.definitionLowercase[locale], max: 4) < 4) &&
-        e.definitionLowercase[locale].contains(queryLowercase)
-      ).toList());
-      matches.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
+            (query.length > 2 ||
+             _levenshtein(query, e.entryName, max: 8) < 8) &&
+            e.entryName.contains(query)
+        ).toList());
+      }
+
+      if (Preferences.searchDefinitions) {
+        partialMatches.addAll(db.values.where((e) =>
+        ret.where((r) => r.searchName == e.searchName).isEmpty &&
+            partialMatches.where((m) => m.searchName == e.searchName).isEmpty &&
+            e.definitionLowercase[locale] != null &&
+            (query.length > 2 ||
+             _levenshtein(query, e.definitionLowercase[locale], max: 4) < 4) &&
+            e.definitionLowercase[locale].contains(queryLowercase)
+        ).toList());
+      }
+
+      partialMatches.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
         if (a.definitionLowercase[locale] == null ||
             b.definitionLowercase[locale] == null) {
           return _levenshtein(query, a.entryName) -
-            _levenshtein(query, b.entryName);
+                 _levenshtein(query, b.entryName);
         }
 
         return min(_levenshtein(query, a.entryName),
-            _levenshtein(query, a.definitionLowercase[locale])) -
-        min(_levenshtein(query, b.entryName),
-            _levenshtein(query, b.definitionLowercase[locale]));
+                   _levenshtein(query, a.definitionLowercase[locale])) -
+               min(_levenshtein(query, b.entryName),
+                   _levenshtein(query, b.definitionLowercase[locale]));
       });
-      ret.addAll(matches);
-
-      // Search for entries whose search tags partially match the query,
-      // excluding any already identified results
-      List<WordDatabaseEntry> partialTagMatches = db.values.where((e) =>
-      ret.where((r) => r.searchName == e.searchName).isEmpty && (
-          e.searchTags != null && e.searchTags[locale] != null &&
-              e.searchTags[locale].where((t) => t.contains(query)).isNotEmpty
-      )).toList();
-      ret.addAll(partialTagMatches);
+      ret.addAll(partialMatches);
     }
 
     return ret;
