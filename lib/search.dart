@@ -87,12 +87,12 @@ class _SearchPageState extends State<SearchPage> {
         ),
         actions: [
           new IconButton(
-            icon: new Icon(Icons.settings),
-            onPressed: () => Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new PreferencesPage())),
-          ),
-          new IconButton(
             icon: new Icon(Icons.clear),
             onPressed: onPressed,
+          ),
+          new IconButton(
+            icon: new Icon(Icons.settings),
+            onPressed: () => Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new PreferencesPage())),
           ),
         ],
       ),
