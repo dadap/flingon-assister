@@ -8,6 +8,7 @@ import 'preferences.dart';
 
 class WordDatabase {
   static Map<String, WordDatabaseEntry> db;
+  static String version = '(loading database…)';
 
   static Future<Map<String, WordDatabaseEntry>> getDatabase() async {
     if (db != null) {
@@ -18,6 +19,8 @@ class WordDatabase {
 
     final memFile = 'data/qawHaq.json';
     final doc = JSON.decode(await rootBundle.loadString(memFile));
+
+    version = doc['version'];
 
     for (String entry in doc['qawHaq'].keys) {
       db[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);

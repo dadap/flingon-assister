@@ -41,7 +41,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, WordDatabaseEntry> _db;
-  Widget _main = new Text('Please be patient while the database is loading…');
+  String _dbversion = '';
 
   /* Load an entry as the main widget */
   load(String destination, {String withTitle}) {
@@ -215,16 +215,39 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget buildHelper(BuildContext context, String entry, {String withTitle}) {
     Widget main = new CircularProgressIndicator();
-    String dbversion;
+
+    // Lazily initialize the database and load destination entry when done.
+    if (_db == null) {
+      WordDatabase.getDatabase().then((ret) {
+        _db = ret;
+        if (entry != 'help') {
+          setState(() {
+            main = getEntry(entry, context, withTitle: withTitle);
+            _dbversion = 'Database version ${WordDatabase.version}';
+          });
+        }
+      });
+    } else {
+      if (entry != 'help') {
+        main = getEntry(entry, context, withTitle: withTitle);
+      }
+      _dbversion = 'Database version ${WordDatabase.version}';
+    }
 
     if (entry == 'help') {
       Widget help = new ListView(children: [new Padding(
         padding: new EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-        child: new KlingonText(
-          fromString: '{tlhIngan Hol boQwI\':n:nolink} '
-            '"Klingon Language Assistant"\n\n'
-            'To begin searching, simply press the "Search" (magnifying glass) '
-            'button and type into the search box.\n\n'
+        child: new Column(children: [
+          new KlingonText(fromString:
+            '{tlhIngan Hol boQwI\':n:nolink} '
+            '"Klingon Language Assistant"',
+            style: Theme.of(context).textTheme.body1,
+            onTap: (dest) => load(dest),
+          ),
+          new Text(_dbversion),
+          new KlingonText(fromString:
+            '\nTo begin searching, simply press the "Search" (magnifying '
+            'glass) button and type into the search box.\n\n'
             'It is recommended to install a Klingon Keyboard. Otherwise, to '
             'make it easier to type Klingon on a mobile keyboard, the '
             'following shorthand (called "xifan hol") can be enabled under the '
@@ -258,26 +281,13 @@ class _MyHomePageState extends State<MyHomePage> {
             'Special thanks to Mark Okrand ({marq \'oqranD:n:name}) for '
             'creating the Klingon language.',
           style: Theme.of(context).textTheme.body1,
-        onTap: (dest) => load(dest),
-      ))]);
+          onTap: (dest) => load(dest),
+        ),
+      ]))]);
 
       main = help;
       // Reload widget after preferences are loaded to handle pIqaD settings
       Preferences.loadPreferences().then((p) => setState(() => main = help));
-    }
-
-    // Lazily initialize the database and load destination entry when done.
-    if (_db == null) {
-      WordDatabase.getDatabase().then((ret) {
-        _db = ret;
-        if (entry != 'help') {
-          setState(() {
-            main = getEntry(entry, context, withTitle: withTitle);
-          });
-        }
-      });
-    } else if (entry != 'help') {
-      main = getEntry(entry, context, withTitle: withTitle);
     }
 
     return new Scaffold(
