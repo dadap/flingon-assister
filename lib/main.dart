@@ -243,8 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: new EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         child: new Column(children: [
           new KlingonText(fromString:
-            '{tlhIngan Hol boQwI\':n:nolink} '
-            '"Klingon Language Assistant"',
+            '{tlhIngan Hol boQwI\':n:nolink}\n"Klingon Language Assistant"',
             style: Theme.of(context).textTheme.body1,
             onTap: (dest) => load(dest),
           ),
