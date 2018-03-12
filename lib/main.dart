@@ -176,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // Load components of an explicitly parsed phrase
       List<Widget> entries = [
         new ListTile(title: new KlingonText(
-          fromString: 'Components of: {${entry.split('@@')[0]}}',
+          fromString: 'Components of: {${entry}}',
           style: new TextStyle(fontWeight: FontWeight.bold),
         ),
         ),

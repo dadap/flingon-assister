@@ -80,7 +80,7 @@ class KlingonText extends RichText {
         int endIndex = remainder.indexOf('}');
         String klingon = remainder.substring(1, endIndex);
         List<String> klingonSplit = klingon.split(':');
-        String textOnly = klingonSplit[0];
+        String textOnly = klingonSplit[0].split('@@')[0];
         String textType = klingonSplit.length > 1 ? klingonSplit[1] : null;
         String textFlags = klingonSplit.length > 2 ? klingonSplit[2] : null;
 
