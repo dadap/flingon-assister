@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'database.dart';
 import 'main.dart';
 import 'dart:async';
+import 'preferences.dart';
 
 class SearchPage extends StatefulWidget {
   @override _SearchPageState createState() => new _SearchPageState();
@@ -85,6 +86,10 @@ class _SearchPageState extends State<SearchPage> {
           controller: controller,
         ),
         actions: [
+          new IconButton(
+            icon: new Icon(Icons.settings),
+            onPressed: () => Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new PreferencesPage())),
+          ),
           new IconButton(
             icon: new Icon(Icons.clear),
             onPressed: onPressed,
