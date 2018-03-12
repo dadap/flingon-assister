@@ -47,6 +47,9 @@ class _MyHomePageState extends State<MyHomePage> {
   load(String destination, {String withTitle}) {
     List<String> destinationSplit = destination.split(':');
     if (destinationSplit.length < 2) {
+      if (destination == 'prefix_chart') {
+        Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => buildHelper(ctx, destination)));
+      }
       return;
     }
 
@@ -77,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
       'Reference': {
         'Pronunciation' : 'QIch wab Ho\'DoS:n',
         'Prefixes' : 'moHaq:n',
+        'Prefix Chart' : 'prefix_chart',
         'Noun Suffixes' : 'DIp:n',
         'Verb Suffixes' : 'wot:n',
       },
@@ -288,6 +292,106 @@ class _MyHomePageState extends State<MyHomePage> {
       main = help;
       // Reload widget after preferences are loaded to handle pIqaD settings
       Preferences.loadPreferences().then((p) => setState(() => main = help));
+    }
+
+    if (entry == 'prefix_chart') {
+      main = new SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: new DataTable(
+          columns: [
+            new DataColumn(label: new Text('')),
+            new DataColumn(label: new Text('none')),
+            new DataColumn(label: new Text('me')),
+            new DataColumn(label: new Text('you')),
+            new DataColumn(label: new Text('him/her/it')),
+            new DataColumn(label: new Text('us')),
+            new DataColumn(label: new Text('you (pl)')),
+            new DataColumn(label: new Text('them')),
+          ],
+          rows:[
+            new DataRow(cells: [
+              new DataCell(new Text('I')),
+              new DataCell(new KlingonText(fromString: '{jI-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{qa-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{vI-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{Sa-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{vI-:v:pref}')),
+            ]),
+            new DataRow(cells: [
+              new DataCell(new Text('you')),
+              new DataCell(new KlingonText(fromString: '{bI-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{cho-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{Da-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{ju-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{Da-:v:pref}')),
+            ]),
+            new DataRow(cells: [
+              new DataCell(new Text('he/she/it')),
+              new DataCell(new Text('0')),
+              new DataCell(new KlingonText(fromString: '{mu-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{Du-:v:pref}')),
+              new DataCell(new Text('0')),
+              new DataCell(new KlingonText(fromString: '{nu-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{lI-:v:pref}')),
+              new DataCell(new Text('0')),
+            ]),
+            new DataRow(cells: [
+              new DataCell(new Text('we')),
+              new DataCell(new KlingonText(fromString: '{ma-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{pI-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{wI-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{re-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{DI-:v:pref}')),
+            ]),
+            new DataRow(cells: [
+              new DataCell(new Text('you (pl)')),
+              new DataCell(new KlingonText(fromString: '{Su-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{tu-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{bo-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{che-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{bo-:v:pref}')),
+            ]),
+            new DataRow(cells: [
+              new DataCell(new Text('they')),
+              new DataCell(new Text('0')),
+              new DataCell(new KlingonText(fromString: '{mu-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{nI-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{lu-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{nu-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{lI-:v:pref}')),
+              new DataCell(new Text('0')),
+            ]),
+            new DataRow(cells: [
+              new DataCell(new Text('you (imp)')),
+              new DataCell(new KlingonText(fromString: '{yI-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{HI-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{yI-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{gho-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{tI-:v:pref}')),
+            ]),
+            new DataRow(cells: [
+              new DataCell(new Text('you (imp,pl)')),
+              new DataCell(new KlingonText(fromString: '{pe-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{Hi-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{yI-:v:pref}')),
+              new DataCell(new KlingonText(fromString: '{gho-:v:pref}')),
+              new DataCell(new Text('-')),
+              new DataCell(new KlingonText(fromString: '{tI-:v:pref}')),
+            ]),
+          ],
+        )
+      );
     }
 
     return new Scaffold(
