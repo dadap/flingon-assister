@@ -547,7 +547,7 @@ class WordDatabaseEntry {
     String locale = Preferences.searchLang;
 
     return new ListTile(
-      title: new KlingonText(fromString: '{$searchName}'),
+      title: new KlingonText(fromString: '{$entryName:$partOfSpeech}'),
       subtitle: new KlingonText(
         fromString: definition[locale] != null ?
           definition[locale] : definition['en']
