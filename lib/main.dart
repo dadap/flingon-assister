@@ -119,14 +119,16 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.push(context, new MaterialPageRoute(
             builder: (c) => new MyHomePage('help')));
         },
+        trailing: new Icon(Icons.help),
       ),
       new ListTile(
-        title: new Text('Settings'),
+        title: new Text('Preferences'),
         onTap: () {
           Navigator.pop(context);
           Navigator.push(context, new MaterialPageRoute(
             builder: (c) => new PreferencesPage()));
         },
+        trailing: new Icon(Icons.settings),
       )
     ];
 
