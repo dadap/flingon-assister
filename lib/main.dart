@@ -7,14 +7,14 @@ import 'preferences.dart';
 
 void main() => runApp(new MyApp());
 
-const String appName = '';
+const String appNamepIqaD = '';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: appName,
+      title: 'boQwI\'',
       theme: new ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.red,
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
 
-  MyHomePage(String this.entry, {Key key, this.title: appName}) :
+  MyHomePage(String this.entry, {Key key, this.title: appNamepIqaD}) :
     super(key: key);
 
   final String title;
@@ -400,7 +400,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
           title: new Text(
             widget.title,
-            style: widget.title == appName ?
+            style: widget.title == appNamepIqaD ?
               new TextStyle(fontFamily: 'TNGpIqaD') : null
           ),
           actions: [
