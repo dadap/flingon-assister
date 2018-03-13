@@ -57,6 +57,10 @@ class _SearchPageState extends State<SearchPage> {
           List<Widget> results = [];
           Widget newMain;
 
+          if (!mounted) {
+            return;
+          }
+
           WordDatabase.match(db: _db, query: controller.text).forEach((e) {
             results.add(e.toListTile(onTap: () =>
                 Navigator.of(context).push(
@@ -64,6 +68,10 @@ class _SearchPageState extends State<SearchPage> {
                     new MyHomePage(e.searchName))
                 )));
           });
+
+          if (!mounted) {
+            return;
+          }
 
           newMain = new Column(
             children: [new Expanded(child: new ListView(children: results))
