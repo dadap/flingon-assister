@@ -17,4 +17,4 @@ line when cloning. If you forget to do that, you can do it after cloning with:
 `git submodule init; git submodule update --remote`.
 
 Make sure to generate the database before building by running:
-`data/xml2json.py > data/qawHaq.json`
+`data/xml2json.py | bzip2 > data/qawHaq.json.bz2`

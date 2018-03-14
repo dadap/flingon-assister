@@ -5,6 +5,7 @@ import 'klingontext.dart';
 import 'dart:math';
 import 'dart:convert';
 import 'preferences.dart';
+import 'package:archive/archive.dart';
 
 class WordDatabase {
   static Map<String, WordDatabaseEntry> db;
@@ -17,8 +18,12 @@ class WordDatabase {
 
     db = new Map();
 
-    final memFile = 'data/qawHaq.json';
-    final doc = JSON.decode(await rootBundle.loadString(memFile));
+    final memFile = 'data/qawHaq.json.bz2';
+    rootBundle.load(memFile);
+    String json = new String.fromCharCodes(new BZip2Decoder().decodeBuffer(
+      new InputStream(await rootBundle.load(memFile))));
+
+    final doc = JSON.decode(json);
 
     version = doc['version'];
 
