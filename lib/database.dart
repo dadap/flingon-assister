@@ -210,7 +210,7 @@ class WordDatabase {
     'A' : 'a',
     'B' : 'b',
     // 'c' only occurs as part of 'ch', and is always lowercase
-    'CH' : 'ch',
+    'C' : 'c',
     'd' : 'D',
     'E' : 'e',
     // 'g' may occur as part of 'ng' or 'gh', and is always lowercase.
@@ -285,10 +285,12 @@ class WordDatabase {
       string = string.replaceAll(letter, klingonCase[letter]);
     }
 
-    // 'h' is lowercase when part of 'gh' or 'tlh', and capital when 'H'. Make
-    // these replacements last, to allow g, l, and t to be lowercased first.
-    string.replaceAllMapped(new RegExp('(^|[^gl]|[^t]l)h'), (m) => '${m[1]}H');
-    string.replaceAllMapped(new RegExp('(^g|[^n]g|tl)H'), (m) => '${m[1]}h');
+    // 'h' is lowercase when part of 'ch', 'gh', or 'tlh', and capital when 'H'.
+    // Replace h/H last, to allow c, g, l, and t to be lowercased first.
+    string = string.replaceAllMapped(
+      new RegExp('(^|[^gl]|[^t]l)h'), (m) => '${m[1]}H');
+    string = string.replaceAllMapped(
+      new RegExp('(c|^g|[^n]g|tl)H'), (m) => '${m[1]}h');
 
     // Transliterate any pIqaD that may be present in the search query
     for (String letter in pIqaD.keys) {
