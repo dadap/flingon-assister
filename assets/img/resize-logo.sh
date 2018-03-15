@@ -3,6 +3,7 @@
 # This script resizes the logo art to the various bitmap sizes needed.
 
 iconsdir_ios=`dirname $0`/../../ios/Runner/Assets.xcassets/AppIcon.appiconset
+launchdir_ios=`dirname $0`/../../ios/Runner/Assets.xcassets/LaunchImage.imageset
 iconsdir_android=`dirname $0`/../../android/app/src/main/res
 
 resize_ios() {
@@ -10,9 +11,17 @@ resize_ios() {
     scale=$2
     scaledsize=`echo "$size * $scale" | bc`
 
-    convert -background '#333333' \
+    convert -background '#313031' \
         `dirname $0`/logo.svg -resize ${scaledsize}x${scaledsize} \
         $iconsdir_ios/Icon-App-${size}x${size}@${scale}x.png
+}
+
+resize_ios_launch() {
+    size=$1
+    scale=$2
+
+    convert -background none `dirname $0`/logo.svg -resize ${size}x${size} \
+        $launchdir_ios/LaunchImage$scale.png
 }
 
 resize_android() {
@@ -38,6 +47,10 @@ resize_ios 60 3
 resize_ios 76 1
 resize_ios 76 2
 resize_ios 83.5 2
+
+resize_ios_launch 256 ''
+resize_ios_launch 512 @2x
+resize_ios_launch 768 @3x
 
 resize_android 48 mdpi
 resize_android 72 hdpi
