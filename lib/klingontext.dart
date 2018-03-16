@@ -26,6 +26,11 @@ class KlingonText extends RichText {
   }
 
   static MaterialColor _colorForPOS(String type, String flags) {
+    // Use the default color if the text has no type
+    if (type == null) {
+      return null;
+    }
+
     // Use the default color for sentences, URLs, sources, and mailto links
     if (type == 'sen' || type == 'url' ||type == 'src' || type == 'mailto') {
       return null;
@@ -86,12 +91,12 @@ class KlingonText extends RichText {
 
         // Klingon words (i.e., anything that's not a URL or source citation)
         // should be in a serif font, to distinguish 'I' and 'l'.
-        bool isKlingon = textType != null && textType != 'url' &&
+        bool isKlingon = textType == null || textType != 'url' &&
           textType != 'src';
 
         // Anything that's not a source citation or explicitly not a link should
         // be treated as a link. Don't process links without an onTap callback.
-        bool link = onTap != null && (textType != null && textType != 'src') &&
+        bool link = onTap != null && (textType == null || textType != 'src') &&
             (textFlags == null || !textFlags.split(',').contains('nolink'));
 
         // Source citations are italicized
