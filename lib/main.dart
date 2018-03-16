@@ -49,6 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
     if (destinationSplit.length < 2) {
       if (destination == 'prefix_chart') {
         Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => buildHelper(ctx, destination)));
+      } else {
+        Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new SearchPage(query: destination)));
       }
       return;
     }
