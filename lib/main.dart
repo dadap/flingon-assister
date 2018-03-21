@@ -4,6 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'search.dart';
 import 'klingontext.dart';
 import 'preferences.dart';
+import 'dart:async';
+import 'update.dart';
 
 void main() => runApp(new MyApp());
 
@@ -40,7 +42,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Map<String, WordDatabaseEntry> _db;
   String _dbversion = '';
 
   /* Load an entry as the main widget */
@@ -158,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget getEntry(String entry, BuildContext context, {String withTitle}) {
     Widget ret;
 
-    if (_db == null) {
+    if (WordDatabase.db == null) {
       ret = const Text('Error: database not initialized!');
     } else if (entry.startsWith('*:')) {
       // Load all entries with the given category
@@ -169,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),),
       ];
 
-      _db.values.where((elem) {
+      WordDatabase.db.values.where((elem) {
         return elem.partOfSpeech == entry.substring(2);
       }).forEach((elem) {
         entries.add(elem.toListTile(onTap: () => load(elem.searchName)));
@@ -188,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       for (String component in entry.split('@@')[1].split(',')) {
         String c = component.trim();
-        entries.add(_db[c].toListTile(onTap: () => load(c)));
+        entries.add(WordDatabase.db[c].toListTile(onTap: () => load(c)));
       }
 
       ret = new Expanded(child: new ListView(children: entries,));
@@ -204,15 +205,15 @@ class _MyHomePageState extends State<MyHomePage> {
         ))
       ];
 
-      _db.values.where((e) => e.entryName == name &&
+      WordDatabase.db.values.where((e) => e.entryName == name &&
         e.partOfSpeech.startsWith(pos)).forEach((m) =>
           entries.add(m.toListTile(onTap: () => load(m.searchName))));
 
       ret = new Expanded(child: new ListView(children: entries,));
-    } else if (_db[entry] == null) {
+    } else if (WordDatabase.db[entry] == null) {
       ret = new Text('The entry {$entry} was not found in the database.');
     } else {
-      ret = _db[entry].toWidget(
+      ret = WordDatabase.db[entry].toWidget(
         Theme.of(context).textTheme.body1,
         onTap: load,
       );
@@ -225,9 +226,8 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget main = new CircularProgressIndicator();
 
     // Lazily initialize the database and load destination entry when done.
-    if (_db == null) {
+    if (WordDatabase.db == null) {
       WordDatabase.getDatabase().then((ret) {
-        _db = ret;
         if (entry != 'help') {
           setState(() {
             main = getEntry(entry, context, withTitle: withTitle);

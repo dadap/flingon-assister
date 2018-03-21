@@ -6,22 +6,41 @@ import 'dart:math';
 import 'dart:convert';
 import 'preferences.dart';
 import 'package:archive/archive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class WordDatabase {
   static Map<String, WordDatabaseEntry> db;
   static String version = '(loading database…)';
+  static String dbFile;
 
-  static Future<Map<String, WordDatabaseEntry>> getDatabase() async {
-    if (db != null) {
+  static Future<Map<String, WordDatabaseEntry>> getDatabase(
+    {bool force : false}) async {
+    if (!force && db != null) {
       return db;
     }
 
     db = new Map();
 
-    final memFile = 'data/qawHaq.json.bz2';
-    rootBundle.load(memFile);
+    // Load the database from a downloaded update if present, or the baked-in
+    // database in the application bundle otherwise.
+    final filename = 'qawHaq.json.bz2';
+    if (WordDatabase.dbFile == null) {
+      WordDatabase.dbFile =
+        '${(await getApplicationDocumentsDirectory()).path}/$filename';
+    }
+
+    var data;
+
+    File file = new File(WordDatabase.dbFile);
+    if (await file.exists()) {
+      data = await file.readAsBytes();
+    } else {
+      data = await rootBundle.load('data/$filename');
+    }
+
     String json = new String.fromCharCodes(new BZip2Decoder().decodeBuffer(
-      new InputStream(await rootBundle.load(memFile))));
+      new InputStream(data)));
 
     final doc = JSON.decode(json);
 

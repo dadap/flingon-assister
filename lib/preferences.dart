@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'update.dart';
 
 enum InputMode {tlhInganHol, xifanholkq, xifanholkQ}
 const List<String> _langs = const ['de', 'en'];
@@ -9,6 +10,7 @@ const List<String> _fonts = const [
   'TNGpIqaD',
   'pIqaDqolqoS'
 ];
+final _defaultUpdateLocation = 'https://dadap.github.io/qawHaq/';
 
 class Preferences {
   static InputMode _inputMode = InputMode.tlhInganHol;
@@ -17,6 +19,7 @@ class Preferences {
   static bool _searchEntryNames = true;
   static bool _searchDefinitions = true;
   static bool _searchSearchTags = true;
+  static String _updateLocation = _defaultUpdateLocation;
 
   static String inputModeName(InputMode im) {
     switch(im) {
@@ -122,12 +125,27 @@ class Preferences {
   }
   static bool get searchSearchTags => _searchSearchTags;
 
+  static void set updateLocation(String val) {
+    if (val.isEmpty) {
+      val = _defaultUpdateLocation;
+    }
+
+    _updateLocation = val;
+    SharedPreferences.getInstance().then((sp) =>
+      sp.setString('update_location', val));
+  }
+  static String get updateLocation => _updateLocation;
+
   static loadPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     int inputMode = preferences.getInt('input_mode');
     String searchLang = preferences.getString('search_language');
     String font = preferences.getString('font');
+    bool searchEntryNames = preferences.getBool('search_entry_names');
+    bool searchDefinitions = preferences.getBool('search_definitions');
+    bool searchSearchTags = preferences.getBool('search_search_tags');
+    String updateLocation = preferences.getString('update_location');
 
     if (inputMode != null) {
       _inputMode = _intToInputMode(inputMode);
@@ -139,6 +157,22 @@ class Preferences {
 
     if (font != null) {
       _font = font;
+    }
+
+    if (searchEntryNames != null) {
+      _searchEntryNames = searchEntryNames;
+    }
+
+    if (searchDefinitions != null) {
+      _searchDefinitions = searchDefinitions;
+    }
+
+    if (searchSearchTags != null) {
+      _searchSearchTags = searchSearchTags;
+    }
+
+    if (updateLocation != null) {
+      _updateLocation = updateLocation;
     }
   }
 }
@@ -157,11 +191,22 @@ class _PreferencesPageState extends State<PreferencesPage> {
   bool _searchDefinitions = Preferences.searchDefinitions;
   bool _searchSearchTags = Preferences.searchSearchTags;
 
+  TextEditingController _updateLocationController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     List<PopupMenuEntry<InputMode>> inputModeMenu = [];
     List<PopupMenuEntry<String>> searchLanguageMenu = [];
     List <PopupMenuEntry<String>> fontMenu = [];
+
+    if (_updateLocationController.text.isEmpty) {
+      _updateLocationController.text = Preferences.updateLocation;
+    }
+
+    _updateLocationController.addListener(() {
+      Preferences.updateLocation = _updateLocationController.text;
+    });
+
 
     for (InputMode mode in InputMode.values) {
       inputModeMenu.add(new PopupMenuItem(
@@ -254,13 +299,26 @@ class _PreferencesPageState extends State<PreferencesPage> {
           ),
           new ListTile(
             leading: new Checkbox(
-                value: _searchSearchTags,
-                onChanged: (v) {
-                  setState(() => _searchSearchTags = v);
-                  Preferences.searchSearchTags = v;
-                }
+              value: _searchSearchTags,
+              onChanged: (v) {
+                setState(() => _searchSearchTags = v);
+                Preferences.searchSearchTags = v;
+              }
             ),
             title: new Text('Search search tags'),
+          ),
+          new ExpansionTile(
+            title: new Text('Database Update Settings'),
+            children: [
+              new UpdateButton(),
+              new ListTile(
+                title: new TextField(
+                  controller: _updateLocationController,
+                  keyboardType: TextInputType.url,
+                ),
+                subtitle: new Text('Database update location'),
+              ),
+            ]
           ),
         ],
       );
