@@ -41,6 +41,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
 
   String URL;
   String version;
+  String movedTo;
   int size;
   List<int> update;
   bool done = false;
@@ -56,6 +57,15 @@ class _UpdateSheetState extends State<UpdateSheet> {
 
   @override
   Widget build (BuildContext context) {
+    // Set an error message and set the URL to empty to signal that the message
+    // should be displayed.
+    void error([String text = 'The manifest file appears to be invalid.']) {
+      setState(() {
+        msg = text;
+        URL = '';
+      });
+    };
+
     if (URL == null) {
       // URL isn't set yet: fetch the manifest and get the path to the latest db
       String manifestPath = _manifestLocation();
@@ -67,10 +77,25 @@ class _UpdateSheetState extends State<UpdateSheet> {
         final String formatVersion = '1';
         String manifest = await resp.transform(UTF8.decoder).join();
 
-        final m = JSON.decode(manifest);
-        version = m[formatVersion]['latest'];
+        Map m;
 
-        if (version != null) {
+        try {
+          m = JSON.decode(manifest);
+          if (m != null) {
+            if (m[formatVersion] != null) {
+              version = m[formatVersion]['latest'];
+            }
+            movedTo = m['moved_to'];
+          }
+        } catch (e) {
+          error();
+        }
+
+        if (m == null) {
+          error();
+        } else if (movedTo != null) {
+          setState(() => URL = '');
+        } else if (version != null) {
           setState(() {
             URL = m[formatVersion][version]['path'];
             size = m[formatVersion][version]['size'];
@@ -83,17 +108,45 @@ class _UpdateSheetState extends State<UpdateSheet> {
               }
             }
           });
+        } else {
+          error();
         }
-      }, onError: () {
-        msg = 'A failure occurred while checking for database updates.';
-      });
+      }, onError: ((e) =>
+        error('An error occurred while fetching the update manifest.'))
+      );
     } else if (update == null) {
       // Path to the update has been determined, but update hasn't started
       if (!doInstall) {
-        if (WordDatabase.version == version) {
+        if (movedTo != null) {
+          // Advertise the new update location
+          setState(() {
+            msg = 'The update location has moved to $movedTo';
+            buttons = new ButtonBar(
+              children: [
+                new FlatButton(
+                  onPressed: () {
+                    Preferences.updateLocation = movedTo;
+                    setState(() => URL = null);
+                  },
+                  child: new Text('Use new location'),
+                ),
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: new Text('Cancel'),
+                )
+              ],
+              alignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+            );
+          });
+        } else if (URL.isEmpty) {
+          // This is kind of hacky, but an empty URL signifies that a message
+          // should be displayed with a close button.
+          buttons = new CloseButton();
+        } else if (WordDatabase.version == version) {
           // Already up to date
           setState(() {
-            msg = 'No update available';
+            msg = 'The database is already the latest version ($version)';
             buttons = new CloseButton();
             done = true;
           });
@@ -115,7 +168,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
             mainAxisSize: MainAxisSize.max,
           );
         }
-      } else {
+      } else /* doInstall is true */ {
         // Fetch the update and install it
         HttpClient db = new HttpClient();
         update = [];
@@ -126,7 +179,6 @@ class _UpdateSheetState extends State<UpdateSheet> {
             update.insertAll(update.length, data);
             setState(() {
               completion = update.length / size;
-              print('$completion');
             });
           }, onDone: () async {
             File db = new File(WordDatabase.dbFile);
@@ -137,9 +189,8 @@ class _UpdateSheetState extends State<UpdateSheet> {
             WordDatabase.getDatabase(force: true);
 
             setState(() => done = true);
-          }, onError: (err) {
-            setState(() => msg = 'Failed to update database');
-          });
+          }, onError: (err) => error('Failed to update database.')
+          );
         });
       }
     } else if (done) {
