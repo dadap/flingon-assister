@@ -235,7 +235,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
           new PopupMenuButton<InputMode>(
             child: new ListTile(
               title: new Text(_inputModeLabel),
-              leading: new Icon(Icons.more_vert),
+              leading: new Center(child: new Icon(Icons.more_vert)),
             ),
             itemBuilder: (ctx) => inputModeMenu,
             onSelected: (val) {
@@ -250,7 +250,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
           new PopupMenuButton<String>(
             child: new ListTile(
               title: new Text(_searchLanguageLabel),
-              leading: new Icon(Icons.more_vert),
+              leading: new Center(child: new Icon(Icons.more_vert)),
             ),
             itemBuilder: (ctx) => searchLanguageMenu,
             onSelected: (val) {
@@ -265,7 +265,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
           new PopupMenuButton<String>(
             child: new ListTile(
               title: new Text(_fontLabel),
-              leading: new Icon(Icons.more_vert),
+              leading: new Center(child: new Icon(Icons.more_vert)),
             ),
             itemBuilder: (ctx) => fontMenu,
             onSelected: (val) {
@@ -278,33 +278,33 @@ class _PreferencesPageState extends State<PreferencesPage> {
             initialValue: Preferences.font,
           ),
           new ListTile(
-            leading: new Checkbox(
+            leading: new Center(child: new Checkbox(
               value: _searchEntryNames,
               onChanged: (v) {
                 setState(() => _searchEntryNames = v);
                 Preferences.searchEntryNames = v;
               }
-            ),
+            )),
             title: new Text('Search entry names'),
           ),
           new ListTile(
-            leading: new Checkbox(
+              leading: new Center(child: new Checkbox(
               value: _searchDefinitions,
               onChanged: (v) {
                 setState(() => _searchDefinitions = v);
                 Preferences.searchDefinitions = v;
               }
-            ),
+            )),
             title: new Text('Search definitions'),
           ),
           new ListTile(
-            leading: new Checkbox(
-              value: _searchSearchTags,
+            leading: new Center(child: new Checkbox(
+            value: _searchSearchTags,
               onChanged: (v) {
                 setState(() => _searchSearchTags = v);
                 Preferences.searchSearchTags = v;
               }
-            ),
+            )),
             title: new Text('Search search tags'),
           ),
           new ExpansionTile(
