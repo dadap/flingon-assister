@@ -16,6 +16,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget main;
 
   TextEditingController controller = new TextEditingController();
+  String debouncedQuery;
   Function onPressed;
 
   Map<String, WordDatabaseEntry> _db = WordDatabase.db;
@@ -44,7 +45,16 @@ class _SearchPageState extends State<SearchPage> {
       Timer timer;
 
       controller.addListener(() {
-        if (controller.text.isEmpty) {
+        // Debounce in case the view is re-built for any reason other than an
+        // actual change to the TextField text
+        if (debouncedQuery == controller.text) {
+          return;
+        } else {
+          debouncedQuery = controller.text;
+        }
+
+        if (debouncedQuery.isEmpty) {
+          // Deactivate the clear query button and clear the results
           setState(() {
             onPressed = null;
             main = null;
@@ -56,8 +66,8 @@ class _SearchPageState extends State<SearchPage> {
 
           // Rate limit returning query results. Wait a little longer if the
           // query is very short.
-          final int duration = controller.text.length > 3 ? 250 :
-          1500 ~/ controller.text.length;
+          final int duration = debouncedQuery.length > 3 ? 250 :
+          1500 ~/ debouncedQuery.length;
 
           timer = new Timer(new Duration(milliseconds: duration), () {
             List<Widget> results = [];
@@ -67,7 +77,7 @@ class _SearchPageState extends State<SearchPage> {
               return;
             }
 
-            WordDatabase.match(db: _db, query: controller.text).forEach((e) {
+            WordDatabase.match(db: _db, query: debouncedQuery).forEach((e) {
               results.add(e.toListTile(onTap: () =>
                   Navigator.of(context).push(
                       new MaterialPageRoute(builder: (ctx) =>
@@ -91,6 +101,7 @@ class _SearchPageState extends State<SearchPage> {
         }
       });
     } else {
+      // widget.query is not empty; i.e., this is a pre-populated search
       List<Widget> results = [];
       WordDatabase.match(db: _db, query: widget.query).forEach((e) {
         results.add(e.toListTile(onTap: () =>
@@ -100,7 +111,9 @@ class _SearchPageState extends State<SearchPage> {
           )));
       });
 
-      setState(() => main = new Column(children: [new Expanded(child: new ListView(children: results))],));
+      setState(() => main = new Column(children: [
+        new Expanded(child: new ListView(children: results))
+      ],));
     }
 
     return new Scaffold(
@@ -121,7 +134,9 @@ class _SearchPageState extends State<SearchPage> {
           ),
           new IconButton(
             icon: new Icon(Icons.settings),
-            onPressed: () => Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new PreferencesPage())),
+            onPressed: () => Navigator.of(context).push(new MaterialPageRoute(
+                builder: (ctx) => new PreferencesPage())
+            ),
           ),
         ] : [],
       ),
