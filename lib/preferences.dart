@@ -185,7 +185,7 @@ class PreferencesPage extends StatefulWidget {
 class _PreferencesPageState extends State<PreferencesPage> {
   Widget _prefsPanel;
   String _inputModeLabel = 'Input mode:';
-  String _searchLanguageLabel = 'Search language:';
+  String _searchLanguageLabel = 'Database language:';
   String _fontLabel = 'Klingon text display:';
   bool _searchEntryNames = Preferences.searchEntryNames;
   bool _searchDefinitions = Preferences.searchDefinitions;
@@ -232,83 +232,96 @@ class _PreferencesPageState extends State<PreferencesPage> {
     Preferences.loadPreferences().then((p) {
       _prefsPanel = new ListView(
         children: [
-          new PopupMenuButton<InputMode>(
-            child: new ListTile(
-              title: new Text(_inputModeLabel),
-              leading: new Center(child: new Icon(Icons.more_vert)),
-            ),
-            itemBuilder: (ctx) => inputModeMenu,
-            onSelected: (val) {
-              setState(() {
-                _inputModeLabel =
-                  'Input mode: ${Preferences.inputModeName(val)}';
-              });
-              Preferences.inputMode = val;
-            },
-            initialValue: Preferences.inputMode,
+          new ExpansionTile(
+            title: new Text('Display Settings'),
+            initiallyExpanded: true,
+            children: [
+              new PopupMenuButton<String>(
+                child: new ListTile(
+                  title: new Text(_searchLanguageLabel),
+                  leading: new Center(child: new Icon(Icons.more_vert)),
+                ),
+                itemBuilder: (ctx) => searchLanguageMenu,
+                onSelected: (val) {
+                  setState(() {
+                    _searchLanguageLabel =
+                      'Database language: ${Preferences.langName(val)}';
+                  });
+                  Preferences.searchLang = val;
+                },
+                initialValue: Preferences.searchLang,
+              ),
+              new PopupMenuButton<String>(
+                child: new ListTile(
+                  title: new Text(_fontLabel),
+                  leading: new Center(child: new Icon(Icons.more_vert)),
+                ),
+                itemBuilder: (ctx) => fontMenu,
+                onSelected: (val) {
+                  setState(() {
+                    _fontLabel =
+                      'Klingon text display: ${Preferences.fontName(val)}';
+                  });
+                  Preferences.font = val;
+                },
+                initialValue: Preferences.font,
+              ),
+            ]
           ),
-          new PopupMenuButton<String>(
-            child: new ListTile(
-              title: new Text(_searchLanguageLabel),
-              leading: new Center(child: new Icon(Icons.more_vert)),
-            ),
-            itemBuilder: (ctx) => searchLanguageMenu,
-            onSelected: (val) {
-              setState(() {
-                _searchLanguageLabel =
-                  'Search language: ${Preferences.langName(val)}';
-              });
-              Preferences.searchLang = val;
-            },
-            initialValue: Preferences.searchLang,
-          ),
-          new PopupMenuButton<String>(
-            child: new ListTile(
-              title: new Text(_fontLabel),
-              leading: new Center(child: new Icon(Icons.more_vert)),
-            ),
-            itemBuilder: (ctx) => fontMenu,
-            onSelected: (val) {
-              setState(() {
-                _fontLabel =
-                  'Klingon text display: ${Preferences.fontName(val)}';
-              });
-              Preferences.font = val;
-            },
-            initialValue: Preferences.font,
-          ),
-          new ListTile(
-            leading: new Center(child: new Checkbox(
-              value: _searchEntryNames,
-              onChanged: (v) {
-                setState(() => _searchEntryNames = v);
-                Preferences.searchEntryNames = v;
-              }
-            )),
-            title: new Text('Search entry names'),
-          ),
-          new ListTile(
-              leading: new Center(child: new Checkbox(
-              value: _searchDefinitions,
-              onChanged: (v) {
-                setState(() => _searchDefinitions = v);
-                Preferences.searchDefinitions = v;
-              }
-            )),
-            title: new Text('Search definitions'),
-          ),
-          new ListTile(
-            leading: new Center(child: new Checkbox(
-            value: _searchSearchTags,
-              onChanged: (v) {
-                setState(() => _searchSearchTags = v);
-                Preferences.searchSearchTags = v;
-              }
-            )),
-            title: new Text('Search search tags'),
+          new ExpansionTile(
+            title: new Text('Search Settings'),
+            initiallyExpanded: true,
+            children: [
+              new PopupMenuButton<InputMode>(
+                child: new ListTile(
+                  title: new Text(_inputModeLabel),
+                  leading: new Center(child: new Icon(Icons.more_vert)),
+                ),
+                itemBuilder: (ctx) => inputModeMenu,
+                onSelected: (val) {
+                  setState(() {
+                    _inputModeLabel =
+                    'Input mode: ${Preferences.inputModeName(val)}';
+                  });
+                  Preferences.inputMode = val;
+                },
+                initialValue: Preferences.inputMode,
+              ),
+              new ListTile(
+                leading: new Center(child: new Checkbox(
+                  value: _searchEntryNames,
+                  onChanged: (v) {
+                    setState(() => _searchEntryNames = v);
+                    Preferences.searchEntryNames = v;
+                  }
+                )),
+                title: new Text('Search entry names'),
+              ),
+              new ListTile(
+                  leading: new Center(child: new Checkbox(
+                  value: _searchDefinitions,
+                  onChanged: (v) {
+                    setState(() => _searchDefinitions = v);
+                    Preferences.searchDefinitions = v;
+                  }
+                )),
+                title: new Text('Search definitions'),
+              ),
+              new ListTile(
+                leading: new Center(child: new Checkbox(
+                value: _searchSearchTags,
+                  onChanged: (v) {
+                    setState(() => _searchSearchTags = v);
+                    Preferences.searchSearchTags = v;
+                  }
+                )),
+                title: new Text('Search search tags'),
+              ),
+            ],
           ),
           new ExpansionTile(
             title: new Text('Database Update Settings'),
+            initiallyExpanded: true,
             children: [
               new UpdateButton(),
               new ListTile(
@@ -326,7 +339,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
         _inputModeLabel =
           'Input mode: ${Preferences.inputModeName(Preferences.inputMode)}';
         _searchLanguageLabel =
-          'Search language: ${Preferences.langName(Preferences.searchLang)}';
+          'Database language: ${Preferences.langName(Preferences.searchLang)}';
         _fontLabel =
           'Klingon text display: ${Preferences.fontName(Preferences.font)}';
       });
