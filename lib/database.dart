@@ -271,7 +271,8 @@ class WordDatabase {
     string = string.replaceAll('’', '\'');
 
     // Strip away any non-alpha characters (pIqaD and "'" count as alpha)
-    string = string.replaceAllMapped(new RegExp('[^a-zA-Z\'- ]'), (m) => '');
+    string = string.replaceAllMapped(new RegExp('[^a-zA-ZäöüßÄÖÜẞ\'- ]'),
+                                     (m) => '');
 
     if (Preferences.inputMode != InputMode.tlhInganHol) {
       // Map xifan hol characters to tlhIngan Hol, ignoring identity mappings
