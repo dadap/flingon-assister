@@ -419,10 +419,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return new Scaffold(
       appBar: new AppBar(
-          title: new Text(
-            widget.title,
-            style: widget.title == appNamepIqaD ?
-              new TextStyle(fontFamily: 'TNGpIqaD') : null
+          title: new GestureDetector(
+            child: new Text(
+              widget.title,
+              style: widget.title == appNamepIqaD ?
+                new TextStyle(fontFamily: 'TNGpIqaD') : null,
+            ),
+            onTap: widget.title == appNamepIqaD && entry != 'help' ?
+              () => Navigator.of(context).push(
+                new MaterialPageRoute(builder: (c) => new MyHomePage('help')))
+              : null,
           ),
           actions: [
             new IconButton(
@@ -435,11 +441,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ]
       ),
-      drawer: new Drawer(
+      drawer: entry == 'help' ? new Drawer(
         child: new ListView(
           children: buildmenu(),
         ),
-      ),
+      ) : null,
       body: new Center(
         child: main,
       ),
