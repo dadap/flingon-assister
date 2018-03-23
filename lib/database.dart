@@ -469,7 +469,20 @@ class WordDatabaseEntry {
         definitionLowercase = {};
       }
 
+      // Precomputed a lowercased definition for searching
       definitionLowercase[lang] = definition[lang].toLowerCase();
+
+      // Infer that commas split lists of multiple definitions and add them as
+      // search tags to improve search relevance
+      if (definitionLowercase[lang].contains(',')) {
+        if (searchTags == null) {
+          searchTags = {};
+        }
+        if (searchTags[lang] == null) {
+          searchTags[lang] = [];
+        }
+        searchTags[lang].addAll(definitionLowercase[lang].split(', '));
+      }
     }
   }
 
