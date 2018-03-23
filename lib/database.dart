@@ -285,7 +285,7 @@ class WordDatabase {
     }
 
     // Strip away any non-alpha characters (pIqaD and "'" count as alpha)
-    string = string.replaceAllMapped(new RegExp('[^a-zA-Zß\u0308\'- ]'),
+    string = string.replaceAllMapped(new RegExp('[^a-zA-Zß\u0308\'- \-]'),
                                      (m) => '');
 
     if (Preferences.inputMode != InputMode.tlhInganHol) {
