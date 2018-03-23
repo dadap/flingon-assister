@@ -64,12 +64,8 @@ class _SearchPageState extends State<SearchPage> {
             timer.cancel();
           }
 
-          // Rate limit returning query results. Wait a little longer if the
-          // query is very short.
-          final int duration = debouncedQuery.length > 3 ? 250 :
-          1500 ~/ debouncedQuery.length;
-
-          timer = new Timer(new Duration(milliseconds: duration), () {
+          // Rate limit returning query results.
+          timer = new Timer(new Duration(milliseconds: 250), () {
             List<Widget> results = [];
             Widget newMain;
 
