@@ -10,7 +10,7 @@ const List<String> _fonts = const [
   'TNGpIqaD',
   'pIqaDqolqoS'
 ];
-final _defaultUpdateLocation = 'https://dadap.github.io/qawHaq/';
+final _defaultUpdateLocation = 'https://De7vID.github.io/qawHaq/';
 
 class Preferences {
   static InputMode _inputMode = InputMode.tlhInganHol;
