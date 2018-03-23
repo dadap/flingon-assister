@@ -266,12 +266,26 @@ class WordDatabase {
       '' : 'y', '' : '\'',
     };
 
-    // Desmartify quotes
-    string = string.replaceAll('‘', '\'');
-    string = string.replaceAll('’', '\'');
+    // Deal with Unicode black magic
+    const Map<String,String> unicodeFixes = const {
+      // Desmartify quotes
+      '‘': "'", '’' : "'",
+      // Decompose Unicode: the database is normalized to a decomposed form so
+      // that String.toLowerCase() can work on the decomposed characters
+      'Ä' : 'A\u0308', 	'ä' : 'a\u0308',
+      'Ö' : 'O\u0308', 	'ö' : 'o\u0308',
+      'Ü' : 'U\u0308', 	'ü' : 'u\u0308',
+      // We will probably never see a capital Eszett, but lowercase it anyway,
+      // since String.toLowerCase() probably won't do it for us
+      'ẞ' : 'ß'
+    };
+
+    for (String fixKey in unicodeFixes.keys) {
+      string = string.replaceAll(fixKey, unicodeFixes[fixKey]);
+    }
 
     // Strip away any non-alpha characters (pIqaD and "'" count as alpha)
-    string = string.replaceAllMapped(new RegExp('[^a-zA-ZäöüßÄÖÜẞ\'- ]'),
+    string = string.replaceAllMapped(new RegExp('[^a-zA-Zß\u0308\'- ]'),
                                      (m) => '');
 
     if (Preferences.inputMode != InputMode.tlhInganHol) {
