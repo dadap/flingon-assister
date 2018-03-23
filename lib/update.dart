@@ -74,7 +74,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
       HttpClient http = new HttpClient();
       http.getUrl(Uri.parse(manifestPath)).then((req) => req.close()).then((
           resp) async {
-        final String formatVersion = '1';
+        final String formatVersion = 'iOS-1';
         String manifest = await resp.transform(UTF8.decoder).join();
 
         Map m;
