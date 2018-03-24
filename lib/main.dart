@@ -116,15 +116,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     List<Widget> ret = [
       new ListTile(
-        title: new Text('Help'),
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.push(context, new MaterialPageRoute(
-            builder: (c) => new MyHomePage('help')));
-        },
-        trailing: new Icon(Icons.help),
-      ),
-      new ListTile(
         title: new Text('Preferences'),
         onTap: () {
           Navigator.pop(context);
