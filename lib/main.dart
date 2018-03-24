@@ -304,13 +304,13 @@ class _MyHomePageState extends State<MyHomePage> {
       main = new SingleChildScrollView(scrollDirection: Axis.horizontal,child: new Table(
         columnWidths: {
           0 : new FixedColumnWidth(80.0),
-          1 : new FixedColumnWidth(50.0),
-          2 : new FixedColumnWidth(50.0),
-          3 : new FixedColumnWidth(50.0),
-          4 : new FixedColumnWidth(50.0),
-          5 : new FixedColumnWidth(50.0),
-          6 : new FixedColumnWidth(50.0),
-          7 : new FixedColumnWidth(50.0)},
+          1 : new FixedColumnWidth(34.0),
+          2 : new FixedColumnWidth(34.0),
+          3 : new FixedColumnWidth(34.0),
+          4 : new FixedColumnWidth(34.0),
+          5 : new FixedColumnWidth(34.0),
+          6 : new FixedColumnWidth(34.0),
+          7 : new FixedColumnWidth(34.0)},
         defaultVerticalAlignment: TableCellVerticalAlignment.bottom,
         children:[
           new TableRow(children: [
@@ -318,9 +318,9 @@ class _MyHomePageState extends State<MyHomePage> {
             new Text('none', textAlign: TextAlign.center,),
             new Text('me', textAlign: TextAlign.center,),
             new Text('you', textAlign: TextAlign.center,),
-            new Text('him/\nher/\nit', textAlign: TextAlign.center,),
+            new Text('him / her / it', textAlign: TextAlign.center,),
             new Text('us', textAlign: TextAlign.center,),
-            new Text('you\n(pl)', textAlign: TextAlign.center,),
+            new Text('you (pl)', textAlign: TextAlign.center,),
             new Text('them', textAlign: TextAlign.center,),
           ]),
           new TableRow(children: [
@@ -344,7 +344,7 @@ class _MyHomePageState extends State<MyHomePage> {
             new Center(child: new KlingonText(fromString: '{Da-:v:pref}')),
           ]),
           new TableRow(children: [
-            new Text('he/she/it', textAlign: TextAlign.right,),
+            new Text('he / she / it', textAlign: TextAlign.right,),
             new Center(child: new Text('0')),
             new Center(child: new KlingonText(fromString: '{mu-:v:pref}')),
             new Center(child: new KlingonText(fromString: '{Du-:v:pref}')),
