@@ -12,11 +12,11 @@ class KlingonText extends RichText {
   // style: The default style to apply to non-braced text
 
   KlingonText({String fromString, Function(String) onTap, this.style}) : super(
-    text: _ProcessKlingonText(fromString, onTap, style),
+    text: _processKlingonText(fromString, onTap, style),
   );
 
-  static MaterialColor colorForPOS(String POS) {
-    List<String> posSplit = POS.split(':');
+  static MaterialColor colorForPOS(String pos) {
+    List<String> posSplit = pos.split(':');
 
     if (posSplit.length < 1) {
       return null;
@@ -74,7 +74,7 @@ class KlingonText extends RichText {
 
   // Build a TextSpan containing 'src', with text {in curly braces} formatted
   // appropriately.
-  static TextSpan _ProcessKlingonText(String src, Function(String) onTap,
+  static TextSpan _processKlingonText(String src, Function(String) onTap,
       TextStyle style) {
     List<TextSpan> ret = [];
     String remainder = src;
@@ -102,7 +102,7 @@ class KlingonText extends RichText {
         // Source citations are italicized
         bool italic = textType != null && textType == 'src';
 
-        TapGestureRecognizer recognizer = new TapGestureRecognizer();;
+        TapGestureRecognizer recognizer = new TapGestureRecognizer();
 
         remainder = remainder.substring(endIndex + 1);
 

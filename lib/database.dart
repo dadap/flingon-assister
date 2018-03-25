@@ -42,7 +42,7 @@ class WordDatabase {
     String json = new String.fromCharCodes(new BZip2Decoder().decodeBuffer(
       new InputStream(data)));
 
-    final doc = JSON.decode(json);
+    final doc = jsonDecode(json);
 
     version = doc['version'];
 

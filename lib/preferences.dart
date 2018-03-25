@@ -83,49 +83,49 @@ class Preferences {
     }
   }
 
-  static void set inputMode(InputMode val) {
+  static set inputMode(InputMode val) {
     _inputMode = val;
     SharedPreferences.getInstance().then((sp) =>
       sp.setInt('input_mode', _inputModeToInt(val)));
   }
   static InputMode get inputMode => _inputMode;
 
-  static void set searchLang(String val) {
+  static set searchLang(String val) {
     _searchLang = val;
     SharedPreferences.getInstance().then((sp) =>
       sp.setString('search_language', val));
   }
   static String get searchLang => _searchLang;
 
-  static void set font(String val) {
+  static set font(String val) {
     _font = val;
     SharedPreferences.getInstance().then((sp) =>
       sp.setString('font', val));
   }
   static String get font => _font;
 
-  static void set searchEntryNames(bool val) {
+  static set searchEntryNames(bool val) {
     _searchEntryNames = val;
     SharedPreferences.getInstance().then((sp) =>
       sp.setBool('search_entry_names', val));
   }
   static bool get searchEntryNames => _searchEntryNames;
 
-  static void set searchDefinitions(bool val) {
+  static set searchDefinitions(bool val) {
     _searchDefinitions = val;
     SharedPreferences.getInstance().then((sp) =>
       sp.setBool('search_definitions', val));
   }
   static bool get searchDefinitions => _searchDefinitions;
 
-  static void set searchSearchTags(bool val) {
+  static set searchSearchTags(bool val) {
     _searchSearchTags = val;
     SharedPreferences.getInstance().then((sp) =>
       sp.setBool('search_search_tags', val));
   }
   static bool get searchSearchTags => _searchSearchTags;
 
-  static void set updateLocation(String val) {
+  static set updateLocation(String val) {
     if (val.isEmpty) {
       val = _defaultUpdateLocation;
     }

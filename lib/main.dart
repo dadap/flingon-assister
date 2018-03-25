@@ -4,8 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'search.dart';
 import 'klingontext.dart';
 import 'preferences.dart';
-import 'dart:async';
-import 'update.dart';
 
 void main() => runApp(new MyApp());
 
@@ -30,7 +28,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
 
-  MyHomePage(String this.entry, {Key key, this.title: appNamepIqaD}) :
+  MyHomePage(this.entry, {Key key, this.title: appNamepIqaD}) :
     super(key: key);
 
   final String title;
@@ -171,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // Load components of an explicitly parsed phrase
       List<Widget> entries = [
         new ListTile(title: new KlingonText(
-          fromString: 'Components of: {${entry}}',
+          fromString: 'Components of: {$entry}',
           style: new TextStyle(fontWeight: FontWeight.bold),
         ),
         ),
@@ -190,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       List<Widget> entries = [
         new ListTile(title: new KlingonText(
-          fromString: 'Homophones for: {${entry}} ($pos)',
+          fromString: 'Homophones for: {$entry} ($pos)',
           style: new TextStyle(fontWeight: FontWeight.bold)
         ))
       ];

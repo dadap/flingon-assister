@@ -39,7 +39,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
   Widget buttons;
   double completion;
 
-  String URL;
+  String url;
   String version;
   String movedTo;
   int size;
@@ -62,11 +62,11 @@ class _UpdateSheetState extends State<UpdateSheet> {
     void error([String text = 'The manifest file appears to be invalid.']) {
       setState(() {
         msg = text;
-        URL = '';
+        url = '';
       });
-    };
+    }
 
-    if (URL == null) {
+    if (url == null) {
       // URL isn't set yet: fetch the manifest and get the path to the latest db
       String manifestPath = _manifestLocation();
       msg = 'Checking for updates';
@@ -75,12 +75,12 @@ class _UpdateSheetState extends State<UpdateSheet> {
       http.getUrl(Uri.parse(manifestPath)).then((req) => req.close()).then((
           resp) async {
         final String formatVersion = 'iOS-1';
-        String manifest = await resp.transform(UTF8.decoder).join();
+        String manifest = await resp.transform(utf8.decoder).join();
 
         Map m;
 
         try {
-          m = JSON.decode(manifest);
+          m = jsonDecode(manifest);
           if (m != null) {
             if (m[formatVersion] != null) {
               version = m[formatVersion]['latest'];
@@ -94,17 +94,17 @@ class _UpdateSheetState extends State<UpdateSheet> {
         if (m == null) {
           error();
         } else if (movedTo != null) {
-          setState(() => URL = '');
+          setState(() => url = '');
         } else if (version != null) {
           setState(() {
-            URL = m[formatVersion][version]['path'];
+            url = m[formatVersion][version]['path'];
             size = m[formatVersion][version]['size'];
 
             // Figure out if the path is absolute or relative and canonicalize
-            if (URL != null && size != null) {
-              if (!URL.contains('://')) {
-                URL = '${manifestPath.substring(
-                  0, manifestPath.lastIndexOf('/'))}/$URL';
+            if (url != null && size != null) {
+              if (!url.contains('://')) {
+                url = '${manifestPath.substring(
+                  0, manifestPath.lastIndexOf('/'))}/$url';
               }
             }
           });
@@ -126,7 +126,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
                 new FlatButton(
                   onPressed: () {
                     Preferences.updateLocation = movedTo;
-                    setState(() => URL = null);
+                    setState(() => url = null);
                   },
                   child: new Text('Use new location'),
                 ),
@@ -139,7 +139,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
               mainAxisSize: MainAxisSize.max,
             );
           });
-        } else if (URL.isEmpty) {
+        } else if (url.isEmpty) {
           // This is kind of hacky, but an empty URL signifies that a message
           // should be displayed with a close button.
           buttons = new CloseButton();
@@ -174,7 +174,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
         update = [];
         msg = 'Downloading database update $version';
 
-        db.getUrl(Uri.parse(URL)).then((r) => r.close()).then((resp) async {
+        db.getUrl(Uri.parse(url)).then((r) => r.close()).then((resp) async {
           resp.listen((data) {
             update.insertAll(update.length, data);
             setState(() {
@@ -201,7 +201,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
 
     Widget status;
 
-    if (URL != null && !doInstall) {
+    if (url != null && !doInstall) {
       status = buttons;
     } else {
       status = new LinearProgressIndicator(value: completion);
