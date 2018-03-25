@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         primaryColor: Colors.red[700],
         accentColor: Colors.redAccent,
-        highlightColor: Colors.red,
       ),
       home: new MyHomePage("help"),
     );
