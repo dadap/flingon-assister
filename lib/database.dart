@@ -530,7 +530,7 @@ class WordDatabaseEntry {
           new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
-                fromString: '{$searchName}',
+                fromString: '{$entryName:$partOfSpeech}',
                 style: new TextStyle(
                   fontSize: style.fontSize * 2.5,
                 ),
