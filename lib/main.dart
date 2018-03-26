@@ -132,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.pop(context);
             load(menu[category][name], withTitle: name);
           },
+          trailing: KlingonText.iconFromLink(menu[category][name]),
         ));
       }
       ret.add(new ExpansionTile(

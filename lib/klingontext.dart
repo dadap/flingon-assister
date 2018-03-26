@@ -127,6 +127,10 @@ class KlingonText extends RichText {
           ),
           recognizer: recognizer,
         ));
+
+        if (iconFromLink(klingon) != null) {
+          ret.add(iconToText(iconFromLink(klingon)));
+        }
       } else {
         int endIndex = remainder.indexOf('{');
 
@@ -138,5 +142,47 @@ class KlingonText extends RichText {
     ret.add(new TextSpan(text: remainder));
 
     return new TextSpan(children: ret, style: style);
+  }
+
+  // Convert a Material icon into a TextSpan
+  static TextSpan iconToText(Icon icon) {
+    if (icon == null) {
+      return null;
+    }
+
+    return new TextSpan(
+      text: new String.fromCharCode(icon.icon.codePoint),
+      style: new TextStyle(fontFamily: icon.icon.fontFamily),
+    );
+  }
+
+  // Choose an appropriate icon for an external link
+  static Icon iconFromLink(String link) {
+    List<String> linkSplit = link.split(':');
+
+    if (linkSplit.length > 3) {
+      if (linkSplit[1] == 'url') {
+        if (linkSplit[2].startsWith('http')) {
+          List<String> urlSplit = linkSplit[3].split('/');
+          if (urlSplit.length > 2) {
+            if(urlSplit[2] == 'www.youtube.com') {
+              // YouTube playlist
+              return new Icon(Icons.video_library);
+            } else if (urlSplit[2] == 'youtu.be') {
+              // Individual YouTube video
+              return new Icon(Icons.play_circle_outline);
+            }
+          }
+        } else if (linkSplit[2] == 'mailto') {
+          // mailto: link
+          return new Icon(Icons.mail);
+        }
+        // Generic URL
+        return new Icon(Icons.open_in_browser);
+      }
+    }
+
+    // No icon
+    return null;
   }
 }
