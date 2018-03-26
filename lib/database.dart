@@ -442,6 +442,21 @@ class WordDatabase {
 }
 
 class WordDatabaseEntry {
+  // Copy a map of string values parsed from JSON to a map of strings
+  static Map<String, String> _localizedMapFromJSON(Map<String, dynamic> json) {
+    if (json == null) {
+      return null;
+    }
+
+    Map<String, String> ret = {};
+
+    for (String lang in json.keys) {
+      ret[lang] = json[lang];
+    }
+
+    return ret;
+  }
+
   WordDatabaseEntry.fromJSON(Map json) {
     try {
       id = int.parse(json['id']);
@@ -451,18 +466,26 @@ class WordDatabaseEntry {
     }
     entryName = json['entry_name'];
     partOfSpeech = json['part_of_speech'];
-    definition = json['definition'];
     synonyms = json['synonyms'];
     antonyms = json['antonyms'];
     seeAlso = json['see_also'];
-    notes = json['notes'];
     hiddenNotes = json['hidden_notes'];
     components = json['components'];
-    examples = json['examples'];
-    searchTags = json['search_tags'];
     source = json['source'];
 
     searchName = normalizeSearchName('$entryName:$partOfSpeech');
+
+    definition = _localizedMapFromJSON(json['definition']);
+    notes = _localizedMapFromJSON(json['notes']);
+    examples = _localizedMapFromJSON(json['examples']);
+
+    if (json['search_tags'] != null) {
+      searchTags = {};
+
+      for (String lang in json['search_tags'].keys) {
+        searchTags[lang] = json[lang];
+      }
+    }
 
     for (String lang in definition.keys) {
       if (definitionLowercase == null) {
@@ -489,7 +512,7 @@ class WordDatabaseEntry {
   int id;
   String entryName;
   String partOfSpeech;
-  Map<String,String> definition;
+  Map<String, String> definition;
   Map<String, String> definitionLowercase;
   String synonyms;
   String antonyms;
