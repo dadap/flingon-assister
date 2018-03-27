@@ -143,7 +143,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
           // This is kind of hacky, but an empty URL signifies that a message
           // should be displayed with a close button.
           buttons = new CloseButton();
-        } else if (WordDatabase.version == version) {
+        } else if (WordDatabase.verCmp(WordDatabase.version, version) >= 0) {
           // Already up to date
           setState(() {
             msg = 'The database is already the latest version ($version)';
@@ -187,6 +187,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
 
             await db.writeAsBytes(update);
             WordDatabase.getDatabase(force: true);
+            Preferences.dbUpdateVersion = version;
 
             setState(() => done = true);
           }, onError: (err) => error('Failed to update database.')

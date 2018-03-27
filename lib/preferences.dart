@@ -20,6 +20,7 @@ class Preferences {
   static bool _searchDefinitions = true;
   static bool _searchSearchTags = true;
   static String _updateLocation = _defaultUpdateLocation;
+  static String _dbUpdateVersion;
 
   static String inputModeName(InputMode im) {
     switch(im) {
@@ -136,6 +137,13 @@ class Preferences {
   }
   static String get updateLocation => _updateLocation;
 
+  static set dbUpdateVersion(String val) {
+    _dbUpdateVersion = val;
+    SharedPreferences.getInstance().then((sp) =>
+      sp.setString('db_update_version', val));
+  }
+  static String get dbUpdateVersion => _dbUpdateVersion;
+
   static loadPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -146,6 +154,7 @@ class Preferences {
     bool searchDefinitions = preferences.getBool('search_definitions');
     bool searchSearchTags = preferences.getBool('search_search_tags');
     String updateLocation = preferences.getString('update_location');
+    String dbUpdateVersion = preferences.getString('db_update_version');
 
     if (inputMode != null) {
       _inputMode = _intToInputMode(inputMode);
@@ -173,6 +182,10 @@ class Preferences {
 
     if (updateLocation != null) {
       _updateLocation = updateLocation;
+    }
+
+    if (dbUpdateVersion != null) {
+      _dbUpdateVersion = dbUpdateVersion;
     }
   }
 }
