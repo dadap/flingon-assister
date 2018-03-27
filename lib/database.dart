@@ -284,7 +284,9 @@ class WordDatabase {
       'Ü' : 'U\u0308', 	'ü' : 'u\u0308',
       // We will probably never see a capital Eszett, but lowercase it anyway,
       // since String.toLowerCase() probably won't do it for us
-      'ẞ' : 'ß'
+      'ẞ' : 'ß',
+      // Decompose Eszett to "ss" to support Swiss German spelling in search
+      'ß' : 'ss',
     };
 
     for (String fixKey in unicodeFixes.keys) {
@@ -353,8 +355,8 @@ class WordDatabase {
 
     // Sanitize query for use in Klingon text searches, and create a lowercase
     // version for use in non-Klingon text searches
-    String queryLowercase = query.toLowerCase();
     query = _sanitize(query);
+    String queryLowercase = query.toLowerCase();
 
     List <WordDatabaseEntry> ret = [];
 
@@ -526,8 +528,10 @@ class WordDatabaseEntry {
         definitionLowercase = {};
       }
 
-      // Precomputed a lowercased definition for searching
-      definitionLowercase[lang] = definition[lang].toLowerCase();
+      // Precomputed a lowercased definition for searching. Also decompose "ß"
+      // to "ss" to support Swiss German spelling in search.
+      definitionLowercase[lang] =
+        definition[lang].toLowerCase().replaceAll('ß', 'ss');
 
       // Infer that commas split lists of multiple definitions and add them as
       // search tags to improve search relevance
