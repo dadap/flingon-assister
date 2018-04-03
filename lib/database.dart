@@ -33,12 +33,13 @@ class WordDatabase {
     final filename = 'qawHaq.json.bz2';
     var data;
 
+    if (WordDatabase.dbFile == null) {
+      WordDatabase.dbFile =
+      '${(await getApplicationDocumentsDirectory()).path}/$filename';
+    }
+
     if (Preferences.dbUpdateVersion != null &&
         verCmp(Preferences.dbUpdateVersion, builtInDbVersion) > 0) {
-      if (WordDatabase.dbFile == null) {
-        WordDatabase.dbFile =
-        '${(await getApplicationDocumentsDirectory()).path}/$filename';
-      }
       File file = new File(WordDatabase.dbFile);
       if (await file.exists()) {
         data = await file.readAsBytes();
