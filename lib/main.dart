@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'database.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'search.dart';
 import 'klingontext.dart';
 import 'preferences.dart';
-import 'dart:async';
-import 'update.dart';
+import 'package:flutter/services.dart';
+
 
 void main() => runApp(new MyApp());
 
@@ -43,6 +42,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _dbversion = '';
 
+  _launch(String uri) {
+    // TODO implement for Android
+    MethodChannel('platform').invokeMethod('openURL', uri);
+  }
+
   /* Load an entry as the main widget */
   load(String destination, {String withTitle}) {
     List<String> destinationSplit = destination.split(':');
@@ -56,12 +60,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (destinationSplit[1].contains('url') && destinationSplit.length > 3) {
-      launch(destinationSplit.skip(2).join(':'));
+      _launch(destinationSplit.skip(2).join(':'));
       return;
     }
 
     if (destinationSplit[1].contains('mailto') && destinationSplit.length > 2) {
-      launch(destinationSplit.skip(1).join(':'));
+      _launch(destinationSplit.skip(1).join(':'));
       return;
     }
 

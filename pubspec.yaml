@@ -5,7 +5,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  url_launcher: any
   shared_preferences: any
   archive: any
   path_provider: any
