@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Today View Controller-->
+        <scene sceneID="cwh-vc-ff4">
+            <objects>
+                <viewController id="M4Y-Lb-cyx" customClass="TodayViewController" customModule="Klingon_Word_of_the_Day" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" simulatedAppContext="notificationCenter" id="S3S-Oj-5AN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text=" jajvam mu' Samlu'lI'" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GcN-lo-r42">
+                                <rect key="frame" x="24" y="0.0" width="291" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="gHG-9r-UhR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mu' SamtaHvIS yIloS" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nRd-JX-VnK">
+                                <rect key="frame" x="24" y="40" width="291" height="19"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vW4-lk-6KY">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+                                <connections>
+                                    <action selector="buttonPressed:" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="8je-gB-hEr"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="GcN-lo-r42" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" constant="24" id="6Vq-gs-PHe"/>
+                            <constraint firstItem="nRd-JX-VnK" firstAttribute="leading" secondItem="GcN-lo-r42" secondAttribute="leading" id="6rD-mK-uee"/>
+                            <constraint firstItem="nRd-JX-VnK" firstAttribute="top" secondItem="GcN-lo-r42" secondAttribute="bottom" id="KKx-Sl-B8D"/>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="GcN-lo-r42" secondAttribute="trailing" constant="5" id="L8K-9R-egU"/>
+                            <constraint firstItem="vW4-lk-6KY" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="OjP-tj-223"/>
+                            <constraint firstItem="nRd-JX-VnK" firstAttribute="trailing" secondItem="GcN-lo-r42" secondAttribute="trailing" id="RGl-Wd-YeR"/>
+                            <constraint firstItem="vW4-lk-6KY" firstAttribute="trailing" secondItem="ssy-KU-ocm" secondAttribute="trailing" id="SYk-4m-gpK"/>
+                            <constraint firstItem="vW4-lk-6KY" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" id="Xcu-lT-exn"/>
+                            <constraint firstItem="GcN-lo-r42" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="mYS-Cv-VNx"/>
+                            <constraint firstItem="nRd-JX-VnK" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" constant="-5" id="r35-gC-dL6"/>
+                            <constraint firstItem="vW4-lk-6KY" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="wFu-RO-4Rh"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ssy-KU-ocm"/>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="64"/>
+                    <connections>
+                        <outlet property="definition" destination="nRd-JX-VnK" id="1CN-0d-pbn"/>
+                        <outlet property="word" destination="GcN-lo-r42" id="xns-c1-dEy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="34.782608695652179" y="99.456521739130437"/>
+        </scene>
+    </scenes>
+</document>
