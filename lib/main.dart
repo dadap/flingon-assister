@@ -4,7 +4,7 @@ import 'search.dart';
 import 'klingontext.dart';
 import 'preferences.dart';
 import 'package:flutter/services.dart';
-
+import 'dart:async';
 
 void main() => runApp(new MyApp());
 
@@ -40,7 +40,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const BasicMessageChannel<String> messageChannel =
+    const BasicMessageChannel<String>("load", const StringCodec());
+
   String _dbversion = '';
+
+  @override
+
+  void loadURI(String uri) async {
+    if (context == null) {
+      // If the context isn't ready, try again in a little bit
+      new Timer(const Duration(milliseconds: 100), () => loadURI(uri));
+      return;
+    }
+    List<String> uriSplit = uri.split('/');
+    if (uriSplit.length > 4) {
+      if (uriSplit[0].endsWith('content:') &&
+          uriSplit[1].isEmpty && uriSplit[2] ==
+          'org.tlhInganHol.android.klingonassistant.KlingonContentProvider') {
+        if (uriSplit[3] == 'lookup') {
+          await WordDatabase.getDatabase();
+          load(Uri.decodeComponent(uriSplit[4]));
+        }
+      }
+    }
+  }
+
+  void initState() {
+    super.initState();
+    messageChannel.setMessageHandler((msg) async {
+      loadURI(msg);
+      return '';
+    });
+  }
 
   _launch(String uri) {
     // TODO implement for Android

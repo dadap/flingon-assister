@@ -18,4 +18,12 @@
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+    FlutterBasicMessageChannel *messageChannel = [FlutterBasicMessageChannel messageChannelWithName:@"load" binaryMessenger: (FlutterViewController *) self.window.rootViewController codec: [FlutterStringCodec sharedInstance]];
+    [messageChannel sendMessage: url.absoluteString];
+    return YES;
+}
+
 @end
