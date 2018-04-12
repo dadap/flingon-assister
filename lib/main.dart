@@ -48,18 +48,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
 
   void loadURI(String uri) async {
-    if (context == null) {
-      // If the context isn't ready, try again in a little bit
-      new Timer(const Duration(milliseconds: 100), () => loadURI(uri));
-      return;
-    }
+    await WordDatabase.getDatabase();
     List<String> uriSplit = uri.split('/');
     if (uriSplit.length > 4) {
       if (uriSplit[0].endsWith('content:') &&
           uriSplit[1].isEmpty && uriSplit[2] ==
           'org.tlhInganHol.android.klingonassistant.KlingonContentProvider') {
         if (uriSplit[3] == 'lookup') {
-          await WordDatabase.getDatabase();
           load(Uri.decodeComponent(uriSplit[4]));
         }
       }

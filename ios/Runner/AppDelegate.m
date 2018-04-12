@@ -18,11 +18,28 @@
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
+- (void)sendURI:(NSURL*) uri {
+    FlutterBasicMessageChannel *channel = [FlutterBasicMessageChannel messageChannelWithName:@"load" binaryMessenger: (FlutterViewController *) self.window.rootViewController codec: [FlutterStringCodec sharedInstance]];
+
+    __block bool replied = NO;
+    [channel sendMessage: @"ping" reply:^(id  _Nullable reply) {
+        replied = YES;
+    }];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(50000)), dispatch_get_main_queue(), ^{
+        if (replied) {
+            [channel sendMessage: uri.absoluteString];
+        } else {
+            // If the channel isn't responding yet, try again in a little bit.
+            [self sendURI: uri];
+        }
+    });
+}
+
 - (BOOL)application:(UIApplication *)app
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
-    FlutterBasicMessageChannel *messageChannel = [FlutterBasicMessageChannel messageChannelWithName:@"load" binaryMessenger: (FlutterViewController *) self.window.rootViewController codec: [FlutterStringCodec sharedInstance]];
-    [messageChannel sendMessage: url.absoluteString];
+    [self sendURI: url];
     return YES;
 }
 
