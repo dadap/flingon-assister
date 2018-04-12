@@ -14,6 +14,9 @@ class WordDatabase {
   static String version = '(loading database…)';
   static String dbFile;
 
+  // TODO pull this in automatically from data/VERSION
+  static final builtInDbVersion = '2018.03.21a';
+
   static Future<Map<String, WordDatabaseEntry>> getDatabase(
     {bool force : false}) async {
     if (!force && db != null) {
@@ -22,19 +25,27 @@ class WordDatabase {
 
     db = new Map();
 
-    // Load the database from a downloaded update if present, or the baked-in
-    // database in the application bundle otherwise.
-    final filename = 'qawHaq.json.bz2';
-    if (WordDatabase.dbFile == null) {
-      WordDatabase.dbFile =
-        '${(await getApplicationDocumentsDirectory()).path}/$filename';
-    }
+    await Preferences.loadPreferences();
 
+    // Load the database from a downloaded update if present and newer than the
+    // baked-in database in the application bundle, or the baked-in database
+    // otherwise.
+    final filename = 'qawHaq.json.bz2';
     var data;
 
-    File file = new File(WordDatabase.dbFile);
-    if (await file.exists()) {
-      data = await file.readAsBytes();
+    if (WordDatabase.dbFile == null) {
+      WordDatabase.dbFile =
+      '${(await getApplicationDocumentsDirectory()).path}/$filename';
+    }
+
+    if (Preferences.dbUpdateVersion != null &&
+        verCmp(Preferences.dbUpdateVersion, builtInDbVersion) > 0) {
+      File file = new File(WordDatabase.dbFile);
+      if (await file.exists()) {
+        data = await file.readAsBytes();
+      } else {
+        data = await rootBundle.load('data/$filename');
+      }
     } else {
       data = await rootBundle.load('data/$filename');
     }
@@ -42,16 +53,13 @@ class WordDatabase {
     String json = new String.fromCharCodes(new BZip2Decoder().decodeBuffer(
       new InputStream(data)));
 
-    final doc = JSON.decode(json);
+    final doc = jsonDecode(json);
 
     version = doc['version'];
 
     for (String entry in doc['qawHaq'].keys) {
       db[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
     }
-
-    // Load the preferences so we can be aware of the currently selected locale
-    await Preferences.loadPreferences();
 
     return db;
   }
@@ -440,6 +448,33 @@ class WordDatabase {
     }
 
     return ret;
+  }
+
+  // Compare two version numbers. Return 0 if version numbers are equal.
+  // Return negative if version b is newer than version a.
+  // Return positive if version a is newer than version b.
+  // Treat versions with more fields as newer than versions with fewer fields.
+  // Treat longer version fields as newer than shorter version fields.
+  static int verCmp(String a, String b) {
+    List<String> aSplit = a.split('.');
+    List<String> bSplit = b.split('.');
+
+    if (a.length != b.length) {
+      return a.length - b.length;
+    }
+
+    for (int i = 0; i < aSplit.length; i++) {
+      if (aSplit[i].length != bSplit[i].length) {
+        return aSplit[i].length - bSplit[i].length;
+      }
+
+      int cmp = aSplit[i].compareTo(bSplit[i]);
+      if (cmp != 0) {
+        return cmp;
+      }
+    }
+
+    return 0;
   }
 }
 
