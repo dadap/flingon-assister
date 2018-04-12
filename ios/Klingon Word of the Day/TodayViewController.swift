@@ -13,6 +13,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 
     @IBOutlet weak var word: UILabel!
     @IBOutlet weak var definition: UILabel!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
 
     @IBAction func buttonPressed(_ sender: Any) {
         let path = "content://org.tlhInganHol.android.klingonassistant.KlingonContentProvider/lookup/\(word.text?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? "")"
@@ -27,6 +28,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         if UserDefaults.standard.string(forKey: "kwotd_word") != nil {
             word.text = UserDefaults.standard.string(forKey: "kwotd_word")
             definition.text = UserDefaults.standard.string(forKey: "kwotd_definition")
+            spinner.stopAnimating()
         }
     }
 
@@ -64,7 +66,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
                 if let json = try? JSONSerialization.jsonObject(with: body!, options: []) as! NSDictionary {
                     if (self.word.text == json["kword"] as? String) {
                         completionHandler(NCUpdateResult.noData)
-                        return
                     } else {
                         if (json["kword"] as? String != nil && json["eword"] as? String != nil) {
                             self.word.text = json["kword"] as? String
@@ -72,9 +73,12 @@ class TodayViewController: UIViewController, NCWidgetProviding {
                             UserDefaults.standard.set(self.word.text, forKey: "kwotd_word")
                             UserDefaults.standard.set(self.definition.text, forKey: "kwotd_definition")
                             completionHandler(NCUpdateResult.newData)
-                            return
+                        } else {
+                            completionHandler(NCUpdateResult.failed)
                         }
                     }
+                    self.spinner.stopAnimating()
+                    return
                 }
 
                 completionHandler(NCUpdateResult.failed)

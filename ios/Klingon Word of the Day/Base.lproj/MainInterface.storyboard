@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text=" jajvam mu' Samlu'lI'" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GcN-lo-r42">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GcN-lo-r42">
                                 <rect key="frame" x="24" y="0.0" width="291" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="gHG-9r-UhR"/>
@@ -27,7 +27,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mu' SamtaHvIS yIloS" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nRd-JX-VnK">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nRd-JX-VnK">
                                 <rect key="frame" x="24" y="40" width="291" height="19"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <nil key="textColor"/>
@@ -39,6 +39,9 @@
                                     <action selector="buttonPressed:" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="8je-gB-hEr"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6ZL-ZA-t2U">
+                                <rect key="frame" x="150" y="22" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="GcN-lo-r42" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" constant="24" id="6Vq-gs-PHe"/>
@@ -47,9 +50,11 @@
                             <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="GcN-lo-r42" secondAttribute="trailing" constant="5" id="L8K-9R-egU"/>
                             <constraint firstItem="vW4-lk-6KY" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="OjP-tj-223"/>
                             <constraint firstItem="nRd-JX-VnK" firstAttribute="trailing" secondItem="GcN-lo-r42" secondAttribute="trailing" id="RGl-Wd-YeR"/>
+                            <constraint firstItem="6ZL-ZA-t2U" firstAttribute="centerX" secondItem="ssy-KU-ocm" secondAttribute="centerX" id="SC4-Qa-vgx"/>
                             <constraint firstItem="vW4-lk-6KY" firstAttribute="trailing" secondItem="ssy-KU-ocm" secondAttribute="trailing" id="SYk-4m-gpK"/>
                             <constraint firstItem="vW4-lk-6KY" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" id="Xcu-lT-exn"/>
                             <constraint firstItem="GcN-lo-r42" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="mYS-Cv-VNx"/>
+                            <constraint firstItem="6ZL-ZA-t2U" firstAttribute="centerY" secondItem="ssy-KU-ocm" secondAttribute="centerY" id="owh-dm-DQX"/>
                             <constraint firstItem="nRd-JX-VnK" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" constant="-5" id="r35-gC-dL6"/>
                             <constraint firstItem="vW4-lk-6KY" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="wFu-RO-4Rh"/>
                         </constraints>
@@ -60,6 +65,7 @@
                     <size key="freeformSize" width="320" height="64"/>
                     <connections>
                         <outlet property="definition" destination="nRd-JX-VnK" id="1CN-0d-pbn"/>
+                        <outlet property="spinner" destination="6ZL-ZA-t2U" id="ywW-z5-r1b"/>
                         <outlet property="word" destination="GcN-lo-r42" id="xns-c1-dEy"/>
                     </connections>
                 </viewController>
