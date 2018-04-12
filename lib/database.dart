@@ -15,7 +15,7 @@ class WordDatabase {
   static String dbFile;
 
   // TODO pull this in automatically from data/VERSION
-  static final builtInDbVersion = '2018.03.21a';
+  static final builtInDbVersion = '2018.04.06a';
 
   static Future<Map<String, WordDatabaseEntry>> getDatabase(
     {bool force : false}) async {
