@@ -26,15 +26,19 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         super.viewDidLoad()
 
         if UserDefaults.standard.string(forKey: "kwotd_word") != nil {
-            word.text = UserDefaults.standard.string(forKey: "kwotd_word")
-            definition.text = UserDefaults.standard.string(forKey: "kwotd_definition")
-            spinner.stopAnimating()
+            updateText()
         }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    func updateText() {
+        word.text = UserDefaults.standard.string(forKey: "kwotd_word")
+        definition.text = "(\(UserDefaults.standard.string(forKey: "kwotd_pos") ?? "")) \(UserDefaults.standard.string(forKey: "kwotd_definition") ?? "")"
+        spinner.stopAnimating()
     }
 
     func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
@@ -68,16 +72,15 @@ class TodayViewController: UIViewController, NCWidgetProviding {
                         completionHandler(NCUpdateResult.noData)
                     } else {
                         if (json["kword"] as? String != nil && json["eword"] as? String != nil) {
-                            self.word.text = json["kword"] as? String
-                            self.definition.text = json["eword"] as? String
-                            UserDefaults.standard.set(self.word.text, forKey: "kwotd_word")
-                            UserDefaults.standard.set(self.definition.text, forKey: "kwotd_definition")
+                            UserDefaults.standard.set(json["kword"], forKey: "kwotd_word")
+                            UserDefaults.standard.set(json["eword"], forKey: "kwotd_definition")
+                            UserDefaults.standard.set(json["type"], forKey: "kwotd_pos")
+                            self.updateText()
                             completionHandler(NCUpdateResult.newData)
                         } else {
                             completionHandler(NCUpdateResult.failed)
                         }
                     }
-                    self.spinner.stopAnimating()
                     return
                 }
 
