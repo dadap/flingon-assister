@@ -43,8 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const BasicMessageChannel<String>("load", const StringCodec());
 
   String _dbversion = '';
-
-  @override
+  static bool loadHandlerRegistered = false;
 
   void loadURI(String uri) async {
     await WordDatabase.getDatabase();
@@ -60,12 +59,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  @override
   void initState() {
     super.initState();
-    messageChannel.setMessageHandler((msg) async {
-      loadURI(msg);
-      return '';
-    });
+    if (!loadHandlerRegistered) {
+      messageChannel.setMessageHandler((msg) async {
+        loadURI(msg);
+        return '';
+      });
+      loadHandlerRegistered = true;
+    }
   }
 
   _launch(String uri) {
