@@ -72,7 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _launch(String uri) {
-    // TODO implement for Android
     MethodChannel('platform').invokeMethod('openURL', uri);
   }
 
