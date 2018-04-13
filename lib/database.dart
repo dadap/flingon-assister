@@ -8,6 +8,7 @@ import 'preferences.dart';
 import 'package:archive/archive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:mutex/mutex.dart';
 
 class WordDatabase {
   static Map<String, WordDatabaseEntry> db;
@@ -16,50 +17,56 @@ class WordDatabase {
 
   // TODO pull this in automatically from data/VERSION
   static final builtInDbVersion = '2018.04.06a';
+  static Mutex mutex;
 
   static Future<Map<String, WordDatabaseEntry>> getDatabase(
     {bool force : false}) async {
-    if (!force && db != null) {
-      return db;
+    if (mutex == null) {
+      mutex = new Mutex();
     }
 
-    db = new Map();
+    await mutex.acquire();
 
-    await Preferences.loadPreferences();
+    if (force || db == null) {
+      db = new Map();
 
-    // Load the database from a downloaded update if present and newer than the
-    // baked-in database in the application bundle, or the baked-in database
-    // otherwise.
-    final filename = 'qawHaq.json.bz2';
-    var data;
+      await Preferences.loadPreferences();
 
-    if (WordDatabase.dbFile == null) {
-      WordDatabase.dbFile =
-      '${(await getApplicationDocumentsDirectory()).path}/$filename';
-    }
+      // Load the database from a downloaded update if present and newer than the
+      // baked-in database in the application bundle, or the baked-in database
+      // otherwise.
+      final filename = 'qawHaq.json.bz2';
+      var data;
 
-    if (Preferences.dbUpdateVersion != null &&
-        verCmp(Preferences.dbUpdateVersion, builtInDbVersion) > 0) {
-      File file = new File(WordDatabase.dbFile);
-      if (await file.exists()) {
-        data = await file.readAsBytes();
+      if (WordDatabase.dbFile == null) {
+        WordDatabase.dbFile =
+        '${(await getApplicationDocumentsDirectory()).path}/$filename';
+      }
+
+      if (Preferences.dbUpdateVersion != null &&
+          verCmp(Preferences.dbUpdateVersion, builtInDbVersion) > 0) {
+        File file = new File(WordDatabase.dbFile);
+        if (await file.exists()) {
+          data = await file.readAsBytes();
+        } else {
+          data = await rootBundle.load('data/$filename');
+        }
       } else {
         data = await rootBundle.load('data/$filename');
       }
-    } else {
-      data = await rootBundle.load('data/$filename');
+
+      String json = new String.fromCharCodes(new BZip2Decoder().decodeBuffer(
+          new InputStream(data)));
+
+      final doc = jsonDecode(json);
+
+      version = doc['version'];
+
+      for (String entry in doc['qawHaq'].keys) {
+        db[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
+      }
     }
-
-    String json = new String.fromCharCodes(new BZip2Decoder().decodeBuffer(
-      new InputStream(data)));
-
-    final doc = jsonDecode(json);
-
-    version = doc['version'];
-
-    for (String entry in doc['qawHaq'].keys) {
-      db[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
-    }
+    mutex.release();
 
     return db;
   }
