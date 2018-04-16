@@ -14,8 +14,7 @@ class WordDatabase {
   static String version = '(loading database…)';
   static String dbFile;
 
-  // TODO pull this in automatically from data/VERSION
-  static final builtInDbVersion = '2018.04.06a';
+  static String builtInDbVersion = '';
 
   static Future<Map<String, WordDatabaseEntry>> getDatabase(
     {bool force : false}) async {
@@ -36,6 +35,10 @@ class WordDatabase {
     if (WordDatabase.dbFile == null) {
       WordDatabase.dbFile =
       '${(await getApplicationDocumentsDirectory()).path}/$filename';
+    }
+
+    if (builtInDbVersion.isEmpty) {
+      builtInDbVersion = (await rootBundle.loadString('data/VERSION')).trim();
     }
 
     if (Preferences.dbUpdateVersion != null &&
