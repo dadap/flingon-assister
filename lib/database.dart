@@ -419,7 +419,8 @@ class WordDatabase {
         List<WordDatabaseEntry> partialTagMatches = db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
           e.searchTags != null && e.searchTags[locale] != null &&
-          e.searchTags[locale].where((t) => t.contains(query)).isNotEmpty
+          e.searchTags[locale].where((t) =>
+            t.contains(queryLowercase)).isNotEmpty
         )).toList();
         ret.addAll(partialTagMatches);
       }
