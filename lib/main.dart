@@ -4,6 +4,8 @@ import 'search.dart';
 import 'klingontext.dart';
 import 'preferences.dart';
 import 'package:flutter/services.dart';
+import 'l10n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(new MyApp());
 
@@ -22,6 +24,15 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.redAccent,
       ),
       home: new MyHomePage("help"),
+      localizationsDelegates: [
+        const L10nDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''),
+        const Locale('de', ''),
+      ],
     );
   }
 }
@@ -111,43 +122,43 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> buildmenu() {
     /* List of menu categories, items, and destinations */
     final Map<String, Map<String, String>> menu = {
-      'Reference': {
-        'Pronunciation' : 'QIch wab Ho\'DoS:n',
-        'Prefixes' : 'moHaq:n',
-        'Prefix Chart' : 'prefix_chart',
-        'Noun Suffixes' : 'DIp:n',
-        'Verb Suffixes' : 'wot:n',
+      'ref': {
+        'pronunciation' : 'QIch wab Ho\'DoS:n',
+        'prefix' : 'moHaq:n',
+        'prefixchart' : 'prefix_chart',
+        'nounsuffix' : 'DIp:n',
+        'verbsuffix' : 'wot:n',
       },
-      'Useful Phrases' : {
-        'Beginner\'s Conversation' : '*:sen:bc',
-        'Jokes and Funny Stories' : '*:sen:joke',
-        'Rite of Ascension' : '*:sen:nt',
-        'QI\'lop Holiday' : '*:sen:Ql',
-        'Toasts' : '*:sen:toast',
-        'Lyrics' : '*:sen:lyr',
-        'Curse Warfare' : '*:sen:mv',
-        'Replacement Proverbs' : '*:sen:rp',
-        'Secrecy Proverbs' : '*:sen:sp',
-        'Empire Union Day' : '*:sen:eu',
-        'Rejecting a Suitor' : '*:sen:rej',
+      'phr' : {
+        'beginner' : '*:sen:bc',
+        'jokes' : '*:sen:joke',
+        'ascension' : '*:sen:nt',
+        'Ql' : '*:sen:Ql',
+        'toasts' : '*:sen:toast',
+        'lyrics' : '*:sen:lyr',
+        'curses' : '*:sen:mv',
+        'replproverbs' : '*:sen:rp',
+        'secrproverbs' : '*:sen:sp',
+        'empunday' : '*:sen:eu',
+        'reject' : '*:sen:rej',
       },
-      'Media' : {
-        'Klingon Lessons' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0OcaX5G6_5TCuIisvS4Xed6',
-        'Conversational Phrases' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0MazOxYJq47Eqdsa9F2glPg',
-        'Battle Commands' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0Mwfo-f1YJv1VC7pNgiqicp',
-        'Other Commands' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0PuQHLzrhp0n4TXsOZVzYzo',
-        'Curses' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0NHU5zsb7rd7Vz0Ed_4hLhg',
-        'Other Words and Phrases' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0MsVYmwqMCXp8rwDjSKZzWC',
+      'media' : {
+        'lessons' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0OcaX5G6_5TCuIisvS4Xed6',
+        'conversation' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0MazOxYJq47Eqdsa9F2glPg',
+        'battlecomm' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0Mwfo-f1YJv1VC7pNgiqicp',
+        'othercomm' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0PuQHLzrhp0n4TXsOZVzYzo',
+        'curses' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0NHU5zsb7rd7Vz0Ed_4hLhg',
+        'other' : ':url:http://www.youtube.com/playlist?list=PLJrTr05h0I0MsVYmwqMCXp8rwDjSKZzWC',
       },
-      'Klingon Language Institute' : {
-        'Online Lessons' : ':url:http://www.kli.org/learn-klingon-online/',
-        'Ask Questions!' : ':url:http://www.kli.org/questions/categories/',
+      'kli' : {
+        'lessons' : ':url:http://www.kli.org/learn-klingon-online/',
+        'questions' : ':url:http://www.kli.org/questions/categories/',
       },
     };
 
     List<Widget> ret = [
       new ListTile(
-        title: new Text('Preferences'),
+        title: new Text(L7dStrings.of(context).l6e('menu_prefs')),
         onTap: () {
           Navigator.pop(context);
           Navigator.push(context, new MaterialPageRoute(
@@ -161,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
       List<ListTile> options = [];
       for (String name in menu[category].keys) {
         options.add(new ListTile(
-          title: new Text(name),
+          title: new Text(L7dStrings.of(context).l6e('menu_${category}_${name}')),
           onTap: () {
             Navigator.pop(context);
             load(menu[category][name], withTitle: name);
@@ -170,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
       }
       ret.add(new ExpansionTile(
-        title: new Text(category),
+        title: new Text(L7dStrings.of(context).l6e('menu_$category')),
         children: options,
         initiallyExpanded: true,
       ));
