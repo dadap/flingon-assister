@@ -313,6 +313,10 @@ class WordDatabase {
     };
 
     if (Preferences.inputMode != InputMode.tlhInganHol) {
+      // Normalize string to be transliterated to lowercase before attempting
+      // xifan hol transliteration
+      string = string.toLowerCase();
+
       // Map xifan hol characters to tlhIngan Hol, ignoring identity mappings
       // and incorrect casing. Process 'h' first to avoid turning "ng" into
       // "ngH" instead of "ngh". Process 'g' before 'f' to avoid turning 'f'
