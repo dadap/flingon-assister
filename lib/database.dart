@@ -275,15 +275,6 @@ class WordDatabase {
 
   // Sanitize input
   static String _sanitize(String string) {
-    // Map pIqaD characters to tlhIngan Hol
-    const Map<String, String> pIqaD = const {
-      '' : 'a', '' : 'b', '' : 'ch', '' : 'D', '' : 'e', '' : 'gh',
-      '' : 'H', '' : 'I', '' : 'j', '' : 'l', '' : 'm', '' : 'n',
-      '' : 'ng', '' : 'o', '' : 'p', '' : 'q', '' : 'Q', '' : 'r',
-      '' : 'S', '' : 't', '' : 'tlh', '' : 'u', '' : 'v', '' : 'w',
-      '' : 'y', '' : '\'',
-    };
-
     // Deal with Unicode black magic
     const Map<String,String> unicodeFixes = const {
       // Desmartify quotes
@@ -307,6 +298,19 @@ class WordDatabase {
     // Strip away any non-alpha characters (pIqaD and "'" count as alpha)
     string = string.replaceAllMapped(new RegExp('[^a-zA-Zß\u0308\'- \-]'),
                                      (m) => '');
+
+    return string;
+  }
+
+  static String _transliterate(String string) {
+    // Map pIqaD characters to tlhIngan Hol
+    const Map<String, String> pIqaD = const {
+      '' : 'a', '' : 'b', '' : 'ch', '' : 'D', '' : 'e', '' : 'gh',
+      '' : 'H', '' : 'I', '' : 'j', '' : 'l', '' : 'm', '' : 'n',
+      '' : 'ng', '' : 'o', '' : 'p', '' : 'q', '' : 'Q', '' : 'r',
+      '' : 'S', '' : 't', '' : 'tlh', '' : 'u', '' : 'v', '' : 'w',
+      '' : 'y', '' : '\'',
+    };
 
     if (Preferences.inputMode != InputMode.tlhInganHol) {
       // Map xifan hol characters to tlhIngan Hol, ignoring identity mappings
@@ -364,10 +368,13 @@ class WordDatabase {
     // when the database was initialized.
     String locale = Preferences.searchLang;
 
-    // Sanitize query for use in Klingon text searches, and create a lowercase
-    // version for use in non-Klingon text searches
+    // Sanitize query, create a lowercase version for use in non-Klingon text
+    // searches, and a transliterated (if appropriate) and Klingon-cased version
+    // for Klingon text searches. Perform the Klingon transliteration last, to
+    // prevent xifan hol transliterations from affecting non-Klingon search.
     query = _sanitize(query);
     String queryLowercase = query.toLowerCase();
+    query = _transliterate(query);
 
     List <WordDatabaseEntry> ret = [];
 
