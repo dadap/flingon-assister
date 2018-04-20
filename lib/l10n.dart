@@ -23,7 +23,7 @@ class L10nDelegate extends LocalizationsDelegate<L7dStrings> {
 class L7dStrings {
   L7dStrings(this.locale);
 
-  final Locale locale;
+  Locale locale;
 
   static L7dStrings of (BuildContext context) {
     return Localizations.of<L7dStrings>(context, L7dStrings);

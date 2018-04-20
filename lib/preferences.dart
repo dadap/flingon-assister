@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'update.dart';
+import 'l10n.dart';
 
 enum InputMode {tlhInganHol, xifanholkq, xifanholkQ}
 const List<String> _langs = const ['de', 'en'];
@@ -15,6 +16,7 @@ final _defaultUpdateLocation = 'https://De7vID.github.io/qawHaq/';
 class Preferences {
   static InputMode _inputMode = InputMode.tlhInganHol;
   static String _searchLang = "en";
+  static String _uiLang = "en";
   static String _font = "RobotoSlab";
   static bool _searchEntryNames = true;
   static bool _searchDefinitions = true;
@@ -98,6 +100,13 @@ class Preferences {
   }
   static String get searchLang => _searchLang;
 
+  static set uiLang(String val) {
+    _uiLang = val;
+    SharedPreferences.getInstance().then((sp) =>
+      sp.setString('user_interface_language', val));
+  }
+  static String get uiLang => _uiLang;
+
   static set font(String val) {
     _font = val;
     SharedPreferences.getInstance().then((sp) =>
@@ -149,6 +158,7 @@ class Preferences {
 
     int inputMode = preferences.getInt('input_mode');
     String searchLang = preferences.getString('search_language');
+    String uiLang = preferences.getString('user_interface_language');
     String font = preferences.getString('font');
     bool searchEntryNames = preferences.getBool('search_entry_names');
     bool searchDefinitions = preferences.getBool('search_definitions');
@@ -162,6 +172,10 @@ class Preferences {
 
     if (searchLang != null) {
       _searchLang = searchLang;
+    }
+
+    if (uiLang != null) {
+      _uiLang = uiLang;
     }
 
     if (font != null) {
@@ -199,6 +213,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   Widget _prefsPanel;
   String _inputModeLabel = 'Input mode:';
   String _searchLanguageLabel = 'Database language:';
+  String _uiLanguageLabel = 'User interface language:';
   String _fontLabel = 'Klingon text display:';
   bool _searchEntryNames = Preferences.searchEntryNames;
   bool _searchDefinitions = Preferences.searchDefinitions;
@@ -210,6 +225,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   Widget build(BuildContext context) {
     List<PopupMenuEntry<InputMode>> inputModeMenu = [];
     List<PopupMenuEntry<String>> searchLanguageMenu = [];
+    List<PopupMenuEntry<String>> uiLanguageMenu = [];
     List <PopupMenuEntry<String>> fontMenu = [];
 
     if (_updateLocationController.text.isEmpty) {
@@ -230,6 +246,10 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
     for (String lang in _langs) {
       searchLanguageMenu.add(new PopupMenuItem(
+        value: lang,
+        child: new Text(Preferences.langName(lang)),
+      ));
+      uiLanguageMenu.add(new PopupMenuItem(
         value: lang,
         child: new Text(Preferences.langName(lang)),
       ));
@@ -263,6 +283,21 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   Preferences.searchLang = val;
                 },
                 initialValue: Preferences.searchLang,
+              ),
+              new PopupMenuButton<String>(
+                child: new ListTile(
+                  title: new Text(_uiLanguageLabel),
+                  leading: new Center(child: new Icon(Icons.more_vert)),
+                ),
+                itemBuilder: (ctx) => uiLanguageMenu,
+                onSelected: (val) {
+                  Preferences.uiLang = val;
+                  L7dStrings.of(context).locale = new Locale(val);
+                  setState(() {
+                    _uiLanguageLabel =
+                      'User interface language: ${Preferences.langName(val)}';
+                  });
+                },
               ),
               new PopupMenuButton<String>(
                 child: new ListTile(
@@ -353,6 +388,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
           'Input mode: ${Preferences.inputModeName(Preferences.inputMode)}';
         _searchLanguageLabel =
           'Database language: ${Preferences.langName(Preferences.searchLang)}';
+        _uiLanguageLabel =
+          'User interface language: ${Preferences.langName(Preferences.uiLang)}';
         _fontLabel =
           'Klingon text display: ${Preferences.fontName(Preferences.font)}';
       });
