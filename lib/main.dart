@@ -158,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     List<Widget> ret = [
       new ListTile(
-        title: new Text(L7dStrings.of(context).l6e('menu_prefs')),
+        title: new Text(L7dStrings.of(context).l6e('prefs')),
         onTap: () {
           Navigator.pop(context);
           Navigator.push(context, new MaterialPageRoute(

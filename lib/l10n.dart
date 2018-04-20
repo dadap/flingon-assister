@@ -34,9 +34,57 @@ class L7dStrings {
   }
 
   static final Map<String, Map<String, String>> _strings = {
-    'menu_prefs' : {
+    'prefs' : {
       'en' : 'Preferences',
       'de' : 'Einstellungen',
+    },
+    'prefs_disp' : {
+      'en' : 'Display Settings',
+      'de' : 'Anzeigeeinstellungen',
+    },
+    'prefs_disp_dblang' : {
+      'en' : 'Database language',
+      'de' : 'Datenbanksprache',
+    },
+    'prefs_disp_uilang' : {
+      'en' : 'User interface language',
+      'de' : 'Benutzeroberflächensprache',
+    },
+    'prefs_disp_tlhdisp' : {
+      'en' : 'Klingon text display',
+      'de' : 'Klingonische Textanzeige',
+    },
+    'prefs_search' : {
+      'en' : 'Search Settings',
+      'de' : 'Sucheinstellungen',
+    },
+    'prefs_search_inputmode' : {
+      'en' : 'Input mode',
+      'de' : 'Eingabemodus',
+    },
+    'prefs_search_ent' : {
+      'en' : 'Search entry names',
+      'de' : 'Suche nach Einstragnamen',
+    },
+    'prefs_search_def' : {
+      'en' : 'Search definitions',
+      'de' : 'Suche nach Definitionen',
+    },
+    'prefs_search_tags' : {
+      'en' : 'Search search tags',
+      'de' : 'Suche nach Such-Tags',
+    },
+    'prefs_dbupdate' : {
+      'en' : 'Database Update Settings',
+      'de' : 'Datenbankaktualisierungeinstellungen',
+    },
+    'prefs_dbupdate_location' : {
+      'en' : 'Database update location',
+      'de' : 'Databankaktualisierungsspeicherort',
+    },
+    'dbupdate_check' : {
+      'en' : 'Check for updates now',
+      'de' : 'Nach Updates suchen',
     },
     'menu_ref' : {
       'en' : 'Reference',

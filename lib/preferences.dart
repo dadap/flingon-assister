@@ -211,10 +211,10 @@ class PreferencesPage extends StatefulWidget {
 
 class _PreferencesPageState extends State<PreferencesPage> {
   Widget _prefsPanel;
-  String _inputModeLabel = 'Input mode:';
-  String _searchLanguageLabel = 'Database language:';
-  String _uiLanguageLabel = 'User interface language:';
-  String _fontLabel = 'Klingon text display:';
+  String _inputModeLabel = '';
+  String _searchLanguageLabel = '';
+  String _uiLanguageLabel = '';
+  String _fontLabel = '';
   bool _searchEntryNames = Preferences.searchEntryNames;
   bool _searchDefinitions = Preferences.searchDefinitions;
   bool _searchSearchTags = Preferences.searchSearchTags;
@@ -266,7 +266,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
       _prefsPanel = new ListView(
         children: [
           new ExpansionTile(
-            title: new Text('Display Settings'),
+            title: new Text(L7dStrings.of(context).l6e('prefs_disp')),
             initiallyExpanded: true,
             children: [
               new PopupMenuButton<String>(
@@ -278,7 +278,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 onSelected: (val) {
                   setState(() {
                     _searchLanguageLabel =
-                      'Database language: ${Preferences.langName(val)}';
+                      '${L7dStrings.of(context).l6e('prefs_disp_dblang')}: ${
+                        Preferences.langName(val)}';
                   });
                   Preferences.searchLang = val;
                 },
@@ -295,7 +296,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   L7dStrings.of(context).locale = new Locale(val);
                   setState(() {
                     _uiLanguageLabel =
-                      'User interface language: ${Preferences.langName(val)}';
+                      '${L7dStrings.of(context).l6e('prefs_disp_uilang')}: ${
+                        Preferences.langName(val)}';
                   });
                 },
               ),
@@ -308,7 +310,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 onSelected: (val) {
                   setState(() {
                     _fontLabel =
-                      'Klingon text display: ${Preferences.fontName(val)}';
+                      '${L7dStrings.of(context).l6e('prefs_disp_tlhdisp')}: ${
+                        Preferences.fontName(val)}';
                   });
                   Preferences.font = val;
                 },
@@ -317,7 +320,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
             ]
           ),
           new ExpansionTile(
-            title: new Text('Search Settings'),
+            title: new Text(L7dStrings.of(context).l6e('prefs_search')),
             initiallyExpanded: true,
             children: [
               new PopupMenuButton<InputMode>(
@@ -329,7 +332,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 onSelected: (val) {
                   setState(() {
                     _inputModeLabel =
-                    'Input mode: ${Preferences.inputModeName(val)}';
+                    '${L7dStrings.of(context).l6e('prefs_search_inputmode')}: ${
+                      Preferences.inputModeName(val)}';
                   });
                   Preferences.inputMode = val;
                 },
@@ -343,7 +347,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     Preferences.searchEntryNames = v;
                   }
                 )),
-                title: new Text('Search entry names'),
+                title: new Text(L7dStrings.of(context).l6e('prefs_search_ent')),
               ),
               new ListTile(
                   leading: new Center(child: new Checkbox(
@@ -353,7 +357,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     Preferences.searchDefinitions = v;
                   }
                 )),
-                title: new Text('Search definitions'),
+                title: new Text(L7dStrings.of(context).l6e('prefs_search_def')),
               ),
               new ListTile(
                 leading: new Center(child: new Checkbox(
@@ -363,12 +367,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     Preferences.searchSearchTags = v;
                   }
                 )),
-                title: new Text('Search search tags'),
+                title: new Text(L7dStrings.of(context).l6e('prefs_search_tags')),
               ),
             ],
           ),
           new ExpansionTile(
-            title: new Text('Database Update Settings'),
+            title: new Text(L7dStrings.of(context).l6e('prefs_dbupdate')),
             initiallyExpanded: true,
             children: [
               new UpdateButton(),
@@ -377,7 +381,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   controller: _updateLocationController,
                   keyboardType: TextInputType.url,
                 ),
-                subtitle: new Text('Database update location'),
+                subtitle: new Text(L7dStrings.of(context).l6e(
+                  'prefs_dbupdate_location')),
               ),
             ]
           ),
@@ -385,17 +390,21 @@ class _PreferencesPageState extends State<PreferencesPage> {
       );
       setState(() {
         _inputModeLabel =
-          'Input mode: ${Preferences.inputModeName(Preferences.inputMode)}';
+          '${L7dStrings.of(context).l6e('prefs_search_inputmode')}: ${
+            Preferences.inputModeName(Preferences.inputMode)}';
         _searchLanguageLabel =
-          'Database language: ${Preferences.langName(Preferences.searchLang)}';
+          '${L7dStrings.of(context).l6e('prefs_disp_dblang')}: ${
+            Preferences.langName(Preferences.searchLang)}';
         _uiLanguageLabel =
-          'User interface language: ${Preferences.langName(Preferences.uiLang)}';
+          '${L7dStrings.of(context).l6e('prefs_disp_uilang')}: ${
+            Preferences.langName(Preferences.uiLang)}';
         _fontLabel =
-          'Klingon text display: ${Preferences.fontName(Preferences.font)}';
+          '${L7dStrings.of(context).l6e('prefs_disp_tlhdisp')}: ${
+            Preferences.fontName(Preferences.font)}';
       });
     });
     return new Scaffold(
-      appBar: new AppBar(title: new Text('Preferences')),
+      appBar: new AppBar(title: new Text(L7dStrings.of(context).l6e('prefs'))),
 
       body: new Center(child: _prefsPanel),
     );
