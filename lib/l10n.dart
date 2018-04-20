@@ -198,5 +198,90 @@ class L7dStrings {
       'en' : 'Ask Questions!',
       'de' : 'Frage stellen',
     },
+    'appname_translation' : {
+      'en' : '"Klingon Language Assitant"',
+      'de' : '"Klingonisch-Assistent"'
+    },
+    'database_version' : {
+      'en' : 'Database version',
+      'de' : 'Datenbank version',
+    },
+    'helptext' : {
+      'en' :
+        '\nTo begin searching, simply press the "Search" (magnifying '
+        'glass) button and type into the search box.\n\n'
+        'It is recommended to install a Klingon keyboard. Otherwise, to '
+        'make it easier to type Klingon on a mobile keyboard, the '
+        'following shorthand (called "xifan hol") can be enabled under the '
+        'Preferences menu:\n'
+        'c ▶ {ch:sen:nolink} / d ▶ {D:sen:nolink} / f ▶ {ng:sen:nolink} / '
+        'g ▶ {gh:sen:nolink} / h ▶ {H:sen:nolink} /\n'
+        'i ▶ {I:sen:nolink} / k ▶ {Q:sen:nolink} / s ▶ {S:sen:nolink} / '
+        'x ▶ {tlh:sen:nolink} / z ▶ {\':sen:nolink}\n'
+        'It is also possible to choose the alternate keymapping:\n'
+        'k ▶ {q:sen:nolink} / q ▶ {Q:sen:nolink}\n\n'
+        'If you encounter any problems, or have any suggestions, please '
+        '{file an issue on GitHub:url:'
+        'http://github.com/dadap/flingon-assister/issues}'
+        ' or {send an e-mail:url:mailto:daniel@dadap.net?'
+        'subject=boQwI%27%20feedback}.\n\n'
+        'Please support the Klingon language by purchasing '
+        '{The Klingon Dictionary:src}, '
+        '{Klingon for the Galactic Traveler:src}, {The Klingon Way:src}, '
+        '{Conversational Klingon:src}, {Power Klingon:src}, and other '
+        'Klingon- and Star Trek-related products from Pocket Books, Simon '
+        '& Schuster, and Paramount/Viacom/CBS Entertainment.\n\n'
+        'Klingon, Star Trek, and related marks are trademarks of CBS '
+        'Studios, Inc., and are used under "fair use" guidelines.\n\n'
+        'Original {boQwI\':n:nolink} app: {De\'vID:n:name}\n'
+        'Flutter (iOS) port: Daniel Dadap\n'
+        'Klingon-English Data: {De\'vID:n:nolink}, with help from others\n'
+        'German translations: {Quvar:n:name} (Lieven L. Litaer)\n'
+        'TNG {pIqaD:n} font: Admiral {qurgh lungqIj:n:name,nolink} of the '
+        '{Klingon Assault Group:url:http://www.kag.org/}\n'
+        'DSC {pIqaD:n:nolink} font: {Quvar:n:name,nolink} '
+        '(Lieven L. Litaer)\n'
+        '{pIqaD qolqoS:n:nolink} font: Daniel Dadap\n\n'
+        'Special thanks to Mark Okrand ({marq \'oqranD:n:name}) for '
+        'creating the Klingon language.'
+        ,
+      'de' :
+        '\nUm eine Suche zu starten, Klicke auf das Suchsymbol (die Lupe) und '
+        'gib etwas in das Suchfeld ein.\n\n'
+        'Es wird empfohlen, ein klingonische Tastatur zu installieren. Um auf '
+        'einer kleinen Tastatur einfacher Klingonisch einzugeben, kann in den '
+        'Einstellungen die folgende vereinfachte Eingabemethode ("xifan hol" '
+        'genannt) aktiviert werden:\n'
+        'c ▶ {ch:sen:nolink} / d ▶ {D:sen:nolink} / f ▶ {ng:sen:nolink} / '
+        'g ▶ {gh:sen:nolink} / h ▶ {H:sen:nolink} /\n'
+        'i ▶ {I:sen:nolink} / k ▶ {Q:sen:nolink} / s ▶ {S:sen:nolink} / '
+        'x ▶ {tlh:sen:nolink} / z ▶ {\':sen:nolink}\n'
+        'Zusätzlich kann auch die folgende Tastenbelegung ausgewählt werden:\n'
+        'k ▶ {q:sen:nolink} / q ▶ {Q:sen:nolink}\n\n'
+        'Bei Problemen oder Vorschlägen, bitte gib ein {Problem auf GitHub'
+        ':url:http://github.com/dadap/flingon-assister/issues} oder {sende eine'
+        ' E-Mail:url:mailto:daniel@dadap.net?subject=boQwI%27%20feedback}.\n\n'
+        'Bitte unterstütze die klingonische Sprache durch den Erwerb der '
+        'Bücher {The Klingon Dictionary:src}, '
+        '{Klingon for the Galactic Traveler:src}, {The Klingon Way:src}, '
+        '{Conversational Klingon:src}, {Power Klingon:src}, sowie der anderen '
+        'Klingonen- oder Star-Trek-bezogenen Produkte von Pocket Books, Simon '
+        '&amp; Schuster, und Paramount/Viacom/CBS Entertainment.\n\n'
+        'Klingon, Star Trek, und verwandte Begriffe sind Schutzmarken von CBS '
+        'Studios, Inc., und werden unter "fair use" verwendet.\n\n'
+        'Android Programmierung: {De\'vID:n:name}\n'
+        'Flutter (iOS) Portierung: Daniel Dadap\n'
+        'Klingonisch-Englische Informationen: {De\'vID:n:name,nolink}, mit '
+        'Unterstützung von Anderen\n'
+        'Deutsche Übersetzung: {Quvar:n:name} (Lieven L. Litaer)\n'
+        'TNG {pIqaD:n} Schriftart: Admiral {qurgh lungqIj:n:name,nolink} von '
+        'der {Klingon Assault Group:url:http://www.kag.org/}\n'
+        'DSC {pIqaD:n:nolink} Schriftart: {Quvar:n:name,nolink} '
+        '(Lieven L. Litaer)\n'
+        '{pIqaD qolqoS:n:nolink} Schriftart: Daniel Dadap\n\n'
+        'Ein besonderer Dank richtet sich an Marc Okrand '
+        '({marq \'oqranD:n:name}) für das Erschaffen der klingonischen Sprache.'
+        ,
+    }
   };
 }

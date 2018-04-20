@@ -265,7 +265,8 @@ class _MyHomePageState extends State<MyHomePage> {
         if (entry != 'help') {
           setState(() {
             main = getEntry(entry, context, withTitle: withTitle);
-            _dbversion = 'Database version ${WordDatabase.version}';
+            _dbversion = '${L7dStrings.of(context).l6e('database_version')} ${
+              WordDatabase.version}';
           });
         }
       });
@@ -273,7 +274,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if (entry != 'help') {
         main = getEntry(entry, context, withTitle: withTitle);
       }
-      _dbversion = 'Database version ${WordDatabase.version}';
+      _dbversion = '${L7dStrings.of(context).l6e('database_version')} ${
+        WordDatabase.version}';
     }
 
     if (entry == 'help') {
@@ -285,47 +287,11 @@ class _MyHomePageState extends State<MyHomePage> {
             style: Theme.of(context).textTheme.headline,
           ),
           new Text(
-              '"Klingon Language Assistant"',
+              L7dStrings.of(context).l6e('appname_translation'),
               style: Theme.of(context).textTheme.subhead
           ),
           new Text(_dbversion),
-          new KlingonText(fromString:
-            '\nTo begin searching, simply press the "Search" (magnifying '
-            'glass) button and type into the search box.\n\n'
-            'It is recommended to install a Klingon keyboard. Otherwise, to '
-            'make it easier to type Klingon on a mobile keyboard, the '
-            'following shorthand (called "xifan hol") can be enabled under the '
-            'Preferences menu:\n'
-            'c ▶ {ch:sen:nolink} / d ▶ {D:sen:nolink} / f ▶ {ng:sen:nolink} / '
-            'g ▶ {gh:sen:nolink} / h ▶ {H:sen:nolink} /\n'
-            'i ▶ {I:sen:nolink} / k ▶ {Q:sen:nolink} / s ▶ {S:sen:nolink} / '
-            'x ▶ {tlh:sen:nolink} / z ▶ {\':sen:nolink}\n'
-            'It is also possible to choose the alternate keymapping:\n'
-            'k ▶ {q:sen:nolink} / q ▶ {Q:sen:nolink}\n\n'
-            'If you encounter any problems, or have any suggestions, please '
-            '{file an issue on GitHub:url:'
-            'http://github.com/dadap/flingon-assister/issues}'
-            ' or {send an e-mail:url:mailto:daniel@dadap.net?'
-            'subject=boQwI%27%20feedback}.\n\n'
-            'Please support the Klingon language by purchasing '
-            '{The Klingon Dictionary:src}, '
-            '{Klingon for the Galactic Traveler:src}, {The Klingon Way:src}, '
-            '{Conversational Klingon:src}, {Power Klingon:src}, and other '
-            'Klingon- and Star Trek-related products from Pocket Books, Simon '
-            '& Schuster, and Paramount/Viacom/CBS Entertainment.\n\n'
-            'Klingon, Star Trek, and related marks are trademarks of CBS '
-            'Studios, Inc., and are used under "fair use" guidelines.\n\n'
-            'Original {boQwI\':n:nolink} app: {De\'vID:n:name}\n'
-            'Flutter (iOS) port: Daniel Dadap\n'
-            'Klingon-English Data: {De\'vID:n:nolink}, with help from others\n'
-            'German translations: {Quvar:n:name} (Lieven L. Litaer)\n'
-            'TNG {pIqaD:n} font: Admiral {qurgh lungqIj:n:name,nolink} of the '
-            '{Klingon Assault Group:url:http://www.kag.org/}\n'
-            'DSC {pIqaD:n:nolink} font: {Quvar:n:name,nolink} '
-            '(Lieven L. Litaer)\n'
-            '{pIqaD qolqoS:n:nolink} font: Daniel Dadap\n\n'
-            'Special thanks to Mark Okrand ({marq \'oqranD:n:name}) for '
-            'creating the Klingon language.',
+          new KlingonText(fromString: L7dStrings.of(context).l6e('helptext'),
           style: Theme.of(context).textTheme.body1,
           onTap: (dest) => load(dest),
         ),
