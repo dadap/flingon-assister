@@ -490,8 +490,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Preferences.loadPreferences();
-
+    L7dStrings.of(context).locale = new Locale(Preferences.uiLang);
     return buildHelper(context, widget.entry);
   }
 }
