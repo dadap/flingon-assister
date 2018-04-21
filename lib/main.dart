@@ -176,7 +176,10 @@ class _MyHomePageState extends State<MyHomePage> {
             L7dStrings.of(context).l6e('menu_${category}_${name}')),
           onTap: () {
             Navigator.pop(context);
-            load(menu[category][name], withTitle: name);
+            load(
+              menu[category][name],
+              withTitle: L7dStrings.of(context).l6e('menu_${category}_${name}'),
+            );
           },
           trailing: KlingonText.iconFromLink(menu[category][name]),
         ));
@@ -202,8 +205,8 @@ class _MyHomePageState extends State<MyHomePage> {
     } else if (entry.startsWith('*:')) {
       // Load all entries with the given category
       List<Widget> entries = [
-        new ListTile(title: new Text(
-          withTitle,
+        new ListTile(title: new KlingonText(
+          fromString: withTitle,
           style: new TextStyle(fontWeight: FontWeight.bold),
         ),),
       ];
