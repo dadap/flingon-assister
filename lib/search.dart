@@ -99,7 +99,11 @@ class _SearchPageState extends State<SearchPage> {
     } else {
       // widget.query is not empty; i.e., this is a pre-populated search
       List<Widget> results = [];
-      WordDatabase.match(db: _db, query: widget.query).forEach((e) {
+      WordDatabase.match(
+        db: _db,
+        query: widget.query,
+        inputMode: InputMode.tlhInganHol // Don't use xifan hol for pre-pop
+      ).forEach((e) {
         results.add(e.toListTile(onTap: () =>
           Navigator.of(context).push(
             new MaterialPageRoute(builder: (ctx) =>

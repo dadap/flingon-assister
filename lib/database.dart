@@ -302,7 +302,7 @@ class WordDatabase {
     return string;
   }
 
-  static String _transliterate(String string) {
+  static String _transliterate(String string, InputMode inputMode) {
     // Map pIqaD characters to tlhIngan Hol
     const Map<String, String> pIqaD = const {
       '' : 'a', '' : 'b', '' : 'ch', '' : 'D', '' : 'e', '' : 'gh',
@@ -312,7 +312,7 @@ class WordDatabase {
       '' : 'y', '' : '\'',
     };
 
-    if (Preferences.inputMode != InputMode.tlhInganHol) {
+    if (inputMode != InputMode.tlhInganHol) {
       // Normalize string to be transliterated to lowercase before attempting
       // xifan hol transliteration
       string = string.toLowerCase();
@@ -334,11 +334,11 @@ class WordDatabase {
         string = string.replaceAll(letter, xifanCommon[letter]);
       }
 
-      if (Preferences.inputMode == InputMode.xifanholkq) {
+      if (inputMode == InputMode.xifanholkq) {
         for (String letter in xifankq.keys) {
           string = string.replaceAll(letter, xifankq[letter]);
         }
-      } else if (Preferences.inputMode == InputMode.xifanholkQ) {
+      } else if (inputMode == InputMode.xifanholkQ) {
         for (String letter in xifankQ.keys) {
           string = string.replaceAll(letter, xifankQ[letter]);
         }
@@ -367,10 +367,14 @@ class WordDatabase {
 
   // Analyze a query and search for matching non-analyzed database entries
   static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
-    String query}) {
+    String query, InputMode inputMode}) {
     // Get the current locale. Preferences should have already been initialized
     // when the database was initialized.
     String locale = Preferences.searchLang;
+
+    if (inputMode == null) {
+      inputMode = Preferences.inputMode;
+    }
 
     // Sanitize query, create a lowercase version for use in non-Klingon text
     // searches, and a transliterated (if appropriate) and Klingon-cased version
@@ -378,7 +382,7 @@ class WordDatabase {
     // prevent xifan hol transliterations from affecting non-Klingon search.
     query = _sanitize(query);
     String queryLowercase = query.toLowerCase();
-    query = _transliterate(query);
+    query = _transliterate(query, inputMode);
 
     List <WordDatabaseEntry> ret = [];
 
