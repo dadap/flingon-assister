@@ -4,6 +4,7 @@ import 'preferences.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'l10n.dart';
+import 'klingontext.dart';
 
 // TODO: add support for automatic checking for updates and "moved" in manifest
 
@@ -18,7 +19,8 @@ class _UpdateButtonState extends State<UpdateButton> {
   @override
   Widget build(BuildContext context) {
     return new ListTile(
-      title: new Text(L7dStrings.of(context).l6e('dbupdate_check')),
+      title: new KlingonText(fromString:
+        L7dStrings.of(context).l6e('dbupdate_check')),
       leading: new Center(child: new Icon(Icons.update)),
       onTap: () => UpdateSheet.doUpdate(context),
     );

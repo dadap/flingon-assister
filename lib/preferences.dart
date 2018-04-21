@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'update.dart';
 import 'l10n.dart';
+import 'klingontext.dart';
 
 enum InputMode {tlhInganHol, xifanholkq, xifanholkQ}
 const List<String> _langs = const ['de', 'en'];
@@ -42,6 +43,9 @@ class Preferences {
     }
     if (shortName == 'en') {
       return "English";
+    }
+    if (shortName == 'tlh') {
+      return "{tlhIngan Hol}";
     }
     return "unknown";
   }
@@ -254,11 +258,15 @@ class _PreferencesPageState extends State<PreferencesPage> {
         child: new Text(Preferences.langName(lang)),
       ));
     }
+    uiLanguageMenu.add(new PopupMenuItem(
+      value: 'tlh',
+      child: new KlingonText(fromString: Preferences.langName('tlh')),
+    ));
 
     for (String font in _fonts) {
       fontMenu.add(new PopupMenuItem(
         value: font,
-        child: new Text(Preferences.fontName(font)),
+        child: new KlingonText(fromString: Preferences.fontName(font)),
       ));
     }
 
@@ -266,12 +274,15 @@ class _PreferencesPageState extends State<PreferencesPage> {
       _prefsPanel = new ListView(
         children: [
           new ExpansionTile(
-            title: new Text(L7dStrings.of(context).l6e('prefs_disp')),
+            title: new KlingonText(
+              fromString: L7dStrings.of(context).l6e('prefs_disp'),
+              style: new TextStyle(color: Colors.red),
+            ),
             initiallyExpanded: true,
             children: [
               new PopupMenuButton<String>(
                 child: new ListTile(
-                  title: new Text(_searchLanguageLabel),
+                  title: new KlingonText(fromString: _searchLanguageLabel),
                   leading: new Center(child: new Icon(Icons.more_vert)),
                 ),
                 itemBuilder: (ctx) => searchLanguageMenu,
@@ -287,7 +298,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
               ),
               new PopupMenuButton<String>(
                 child: new ListTile(
-                  title: new Text(_uiLanguageLabel),
+                  title: new KlingonText(fromString: _uiLanguageLabel),
                   leading: new Center(child: new Icon(Icons.more_vert)),
                 ),
                 itemBuilder: (ctx) => uiLanguageMenu,
@@ -303,7 +314,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
               ),
               new PopupMenuButton<String>(
                 child: new ListTile(
-                  title: new Text(_fontLabel),
+                  title: new KlingonText(fromString: _fontLabel),
                   leading: new Center(child: new Icon(Icons.more_vert)),
                 ),
                 itemBuilder: (ctx) => fontMenu,
@@ -320,12 +331,15 @@ class _PreferencesPageState extends State<PreferencesPage> {
             ]
           ),
           new ExpansionTile(
-            title: new Text(L7dStrings.of(context).l6e('prefs_search')),
+            title: new KlingonText(
+              fromString: L7dStrings.of(context).l6e('prefs_search'),
+              style: new TextStyle(color: Colors.red),
+            ),
             initiallyExpanded: true,
             children: [
               new PopupMenuButton<InputMode>(
                 child: new ListTile(
-                  title: new Text(_inputModeLabel),
+                  title: new KlingonText(fromString: _inputModeLabel),
                   leading: new Center(child: new Icon(Icons.more_vert)),
                 ),
                 itemBuilder: (ctx) => inputModeMenu,
@@ -347,7 +361,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     Preferences.searchEntryNames = v;
                   }
                 )),
-                title: new Text(L7dStrings.of(context).l6e('prefs_search_ent')),
+                title: new KlingonText(fromString:
+                  L7dStrings.of(context).l6e('prefs_search_ent')),
               ),
               new ListTile(
                   leading: new Center(child: new Checkbox(
@@ -357,7 +372,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     Preferences.searchDefinitions = v;
                   }
                 )),
-                title: new Text(L7dStrings.of(context).l6e('prefs_search_def')),
+                title: new KlingonText(fromString:
+                  L7dStrings.of(context).l6e('prefs_search_def')),
               ),
               new ListTile(
                 leading: new Center(child: new Checkbox(
@@ -367,12 +383,16 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     Preferences.searchSearchTags = v;
                   }
                 )),
-                title: new Text(L7dStrings.of(context).l6e('prefs_search_tags')),
+                title: new KlingonText(fromString:
+                  L7dStrings.of(context).l6e('prefs_search_tags')),
               ),
             ],
           ),
           new ExpansionTile(
-            title: new Text(L7dStrings.of(context).l6e('prefs_dbupdate')),
+            title: new KlingonText(
+              fromString: L7dStrings.of(context).l6e('prefs_dbupdate'),
+              style: new TextStyle(color: Colors.red),
+            ),
             initiallyExpanded: true,
             children: [
               new UpdateButton(),
@@ -381,8 +401,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   controller: _updateLocationController,
                   keyboardType: TextInputType.url,
                 ),
-                subtitle: new Text(L7dStrings.of(context).l6e(
-                  'prefs_dbupdate_location')),
+                subtitle: new KlingonText(fromString:
+                  L7dStrings.of(context).l6e('prefs_dbupdate_location')),
               ),
             ]
           ),
@@ -404,7 +424,9 @@ class _PreferencesPageState extends State<PreferencesPage> {
       });
     });
     return new Scaffold(
-      appBar: new AppBar(title: new Text(L7dStrings.of(context).l6e('prefs'))),
+      appBar: new AppBar(
+        title: new KlingonText(fromString: L7dStrings.of(context).l6e('prefs'))
+      ),
 
       body: new Center(child: _prefsPanel),
     );

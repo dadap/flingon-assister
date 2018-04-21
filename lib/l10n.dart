@@ -37,174 +37,217 @@ class L7dStrings {
     'prefs' : {
       'en' : 'Preferences',
       'de' : 'Einstellungen',
+      'tlh' : '{SeHlaw}',
     },
     'prefs_disp' : {
       'en' : 'Display Settings',
       'de' : 'Anzeigeeinstellungen',
+      'tlh' : '{HaSta DuHmey}',
     },
     'prefs_disp_dblang' : {
       'en' : 'Database language',
       'de' : 'Datenbanksprache',
+      'tlh' : '{qawHaq Hol}',
     },
     'prefs_disp_uilang' : {
       'en' : 'User interface language',
       'de' : 'Benutzeroberflächensprache',
+      'tlh' : '{HaSta Hol}', // XXX need better translation
     },
     'prefs_disp_tlhdisp' : {
       'en' : 'Klingon text display',
       'de' : 'Klingonische Textanzeige',
+      'tlh' : '{tlhIngan Hol ngutlh tu\'qom}',
     },
     'prefs_search' : {
       'en' : 'Search Settings',
       'de' : 'Sucheinstellungen',
+      'tlh' : '{nejmeH DuHmey}',
     },
     'prefs_search_inputmode' : {
       'en' : 'Input mode',
       'de' : 'Eingabemodus',
+      'tlh' : '{chay\' ghItlh}',
     },
     'prefs_search_ent' : {
       'en' : 'Search entry names',
       'de' : 'Suche nach Einstragnamen',
+      'tlh' : '{tlhIngan Hol mu\'mey tISam}',
     },
     'prefs_search_def' : {
       'en' : 'Search definitions',
       'de' : 'Suche nach Definitionen',
+      'tlh' : '{nov Hol jIyweSmey tISam}',
     },
     'prefs_search_tags' : {
       'en' : 'Search search tags',
       'de' : 'Suche nach Such-Tags',
+      'tlh' : '{mu\' SammeH permey tISam}',
     },
     'prefs_dbupdate' : {
       'en' : 'Database Update Settings',
       'de' : 'Datenbankaktualisierungeinstellungen',
+      'tlh' : '{qawHaqvaD De\' chu\' DuHmey}',
     },
     'prefs_dbupdate_location' : {
       'en' : 'Database update location',
       'de' : 'Databankaktualisierungsspeicherort',
+      'tlh' : '{qawHaqvaD De\' chu\' Daq}',
     },
     'dbupdate_check' : {
       'en' : 'Check for updates now',
       'de' : 'Nach Updates suchen',
+      'tlh' : '{DaH qawHaqvaD De\' chu\' yInej}',
     },
     'menu_ref' : {
       'en' : 'Reference',
       'de' : 'Allgemein',
+      'tlh' : '{De\' lI\'}',
     },
     'menu_ref_pronunciation' : {
       'en' : 'Pronunciation',
       'de' : 'Aussprache',
+      'tlh' : '{QIch wab Ho\'DoS}',
     },
     'menu_ref_prefix' : {
       'en' : 'Prefixes',
       'de' : 'Vorsilben',
+      'tlh' : '{moHaq}',
     },
     'menu_ref_prefixchart' : {
       'en' : 'Prefix Chart',
       'de' : 'Vorsilben-Tabelle',
+      'tlh' : '{moHaq DaH}',
     },
     'menu_ref_nounsuffix' : {
       'en' : 'Noun Suffixes',
       'de' : 'Nomensuffixe',
+      'tlh' : '{DIp mojaq}',
     },
     'menu_ref_verbsuffix' : {
       'en' : 'Verb Suffixes',
       'de' : 'Verbsuffixe',
+      'tlh' : '{wot mojaq}',
     },
     'menu_phr' : {
       'en' : 'Useful Phrases',
       'de' : 'Nützliche Sätze',
+      'tlh' : '{mu\'tlheghmey lI\'}',
     },
     'menu_phr_beginner' : {
       'en' : 'Beginner\'s Conversation',
       'de' : 'Sätze für Anfänger',
+      'tlh' : '{ghojchoHwI\' mu\'tlheghmey}',
     },
     'menu_phr_jokes' : {
       'en' : 'Jokes and Funny Stories',
       'de' : 'Witze',
+      'tlh' : '{qIDmey, lutmey tlhaQ je}',
     },
     'menu_phr_ascension' : {
       'en' : 'Rite of Ascension',
       'de' : 'Ritus des Aufsteigens',
+      'tlh' : '{nentay}',
     },
     'menu_phr_Ql' : {
       'en' : 'QI\'lop Holiday',
       'de' : 'QI\'lop',
+      'tlh' : '{QI\'lop}',
     },
     'menu_phr_toasts' : {
       'en' : 'Toasts',
       'de' : 'Trinksprüche',
+      'tlh' : '{tlhutlhwI\' mu\'tlheghmey}',
     },
     'menu_phr_lyrics' : {
       'en' : 'Lyrics',
       'de' : 'Liedtexte',
+      'tlh' : '{bom mu\'}',
     },
     'menu_phr_curses' : {
       'en' : 'Curse Warfare',
       'de' : 'Wettfluchen',
+      'tlh' : '{mu\'qaD veS}',
     },
     'menu_phr_replproverbs' : {
       'en' : 'Replacement Proverbs',
       'de' : 'Ersatz-Sprichwörter',
+      'tlh' : '{qa\'meH vIttlheghmey}',
     },
     'menu_phr_secrproverbs' : {
       'en' : 'Secrecy Proverbs',
       'de' : 'Geheimnis-Sprichwörter',
+      'tlh' : '{peghmey vIttlheghmey}',
     },
     'menu_phr_empunday' : {
       'en' : 'Empire Union Day',
       'de' : 'Reichsfeiertag',
+      'tlh' : '{wo\' boq jaj}',
     },
     'menu_phr_reject' : {
       'en' : 'Rejecting a Suitor',
       'de' : 'Ablehnen einer Anmache',
+      'tlh' : '{nga\'chuq \'e\' lajQo\'}',
     },
     'menu_media' : {
       'en' : 'Media',
       'de' : 'Medien',
+      'tlh' : '{HaSta tamey}',
     },
     'menu_media_lessons' : {
       'en' : 'Klingon Lessons',
       'de' : 'Klingonischkurs',
+      'tlh' : '{tlhIngan Hol ghojmoHmeH SoQmey}',
     },
     'menu_media_conversation' : {
       'en' : 'Conversational Phrases',
       'de' : 'Konversation',
+      'tlh' : '{ja\'chuq}',
     },
     'menu_media_battlecomm' : {
       'en' : 'Battle Commands',
       'de' : 'Kampfbefehle',
+      'tlh' : '{may\'Daq ra\'meH mu\'tlheghmey}',
     },
     'menu_media_othercomm' : {
       'en' : 'Other Commands',
       'de' : 'Andere Befehle',
+      'tlh' : '{ra\'meH latlh mu\'tlheghmey}',
     },
     'menu_media_curses' : {
       'en' : 'Curses',
       'de' : 'Flüche',
+      'tlh' : '{mu\'qaDmey}',
     },
     'menu_media_other' : {
       'en' : 'Other Words and Phrases',
       'de' : 'Andere Wörter und Sätze',
+      'tlh' : '{latlh mu\'mey mu\'tlheghmey je}',
     },
     'menu_kli' : {
       'en' : 'Klingon Language Institute',
       'de' : 'Klingonisch-Institut',
+      'tlh' : '{tlhIngan Hol yejHaD}',
     },
     'menu_kli_lessons' : {
       'en' : 'Online Lessons',
       'de' : 'Onlinekurs',
+      'tlh' : '{ghojmeH mIw bonlu\'pu\'bogh}',
     },
     'menu_kli_questions' : {
       'en' : 'Ask Questions!',
-      'de' : 'Frage stellen',
+      'de' : 'Frage stellen!',
+      'tlh' : '{yIghel!}',
     },
     'appname_translation' : {
       'en' : '"Klingon Language Assitant"',
-      'de' : '"Klingonisch-Assistent"'
+      'de' : '"Klingonisch-Assistent"',
+      'tlh' : '', // The line above already says "tlhIngan Hol boQwI'"
     },
     'database_version' : {
       'en' : 'Database version',
       'de' : 'Datenbank version',
+      'tlh' : '{qawHaq mI\'}',
     },
     'helptext' : {
       'en' :
@@ -282,6 +325,21 @@ class L7dStrings {
         'Ein besonderer Dank richtet sich an Marc Okrand '
         '({marq \'oqranD:n:name}) für das Erschaffen der klingonischen Sprache.'
         ,
+      'tlh' :
+        '\n{mu\'mey Danej \'e\' DaneHchugh, vaj nejmeH Degh yIwIv.:sen:nolink}'
+        '\n\n{Qaghmey Dangu\'chugh qoj bIghelnISchugh, vaj HIja\'. :sen:nolink}'
+        '{GitHub:url:https://github.com/dadap/flingon-assister/issues}{Daq '
+        'Qagh DaDellaH, qoj :sen:nolink}{QIn:url:mailto:mailto:daniel@dadap.net?'
+        'subject=boQwI\'%20feedback}{ DalI\'laH.:sen:nolink}\n\n'
+        '{taHjaj tlhIngan Hol. tlhIngan Hol paqmey yIje\'.:sen:nolink}\n\n'
+        '{boQwI\' wa\'DIch ghunlI\' De\'vID:sen:nolink}\n'
+        '{boQwI\'vam ghunlI\' De\'nIl DapDap tuq:sen:nolink}\n'
+        '{qawHaq gherlI\' De\'vID, latlh ghot je:sen:nolink}\n'
+        '{DoyIchlan Hol mughwI\' ghaH Quvar\'e\':sen:nolink}\n'
+        '{puq puH veb pIqaD ngutlh tu\'qom renta\' qurgh lungqIj \'aj:sen:nolink}'
+        '\n{DISqa\'vI\'rIy pIqaD ngutlh tu\'qom renta\' Quvar:sen:nolink}\n'
+        '{pIqaD qolqoS ngutlh tu\'qom renta\' De\'nIl:sen:nolink}\n\n'
+        '{tlhIngan Hol chenmoHmo\' pe\'vIl marq \'oqranD wItlho\'.:sen:nolink}'
     }
   };
 }

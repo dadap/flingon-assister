@@ -158,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     List<Widget> ret = [
       new ListTile(
-        title: new Text(L7dStrings.of(context).l6e('prefs')),
+        title: new KlingonText(fromString: L7dStrings.of(context).l6e('prefs')),
         onTap: () {
           Navigator.pop(context);
           Navigator.push(context, new MaterialPageRoute(
@@ -172,7 +172,8 @@ class _MyHomePageState extends State<MyHomePage> {
       List<ListTile> options = [];
       for (String name in menu[category].keys) {
         options.add(new ListTile(
-          title: new Text(L7dStrings.of(context).l6e('menu_${category}_${name}')),
+          title: new KlingonText(fromString:
+            L7dStrings.of(context).l6e('menu_${category}_${name}')),
           onTap: () {
             Navigator.pop(context);
             load(menu[category][name], withTitle: name);
@@ -181,7 +182,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
       }
       ret.add(new ExpansionTile(
-        title: new Text(L7dStrings.of(context).l6e('menu_$category')),
+        title: new KlingonText(
+          fromString: L7dStrings.of(context).l6e('menu_$category'),
+          style: new TextStyle(color: Colors.red),
+        ),
         children: options,
         initiallyExpanded: true,
       ));
@@ -290,10 +294,13 @@ class _MyHomePageState extends State<MyHomePage> {
               L7dStrings.of(context).l6e('appname_translation'),
               style: Theme.of(context).textTheme.subhead
           ),
-          new Text(_dbversion),
+          new KlingonText(
+            fromString: _dbversion,
+            style: Theme.of(context).textTheme.caption,
+          ),
           new KlingonText(fromString: L7dStrings.of(context).l6e('helptext'),
-          style: Theme.of(context).textTheme.body1,
-          onTap: (dest) => load(dest),
+            style: Theme.of(context).textTheme.body1,
+            onTap: (dest) => load(dest),
         ),
       ]))]);
 
