@@ -365,6 +365,32 @@ class WordDatabase {
     return string;
   }
 
+  // Determine the minimum Levenshtein distance between a query and the entry
+  // name, definition, or search tags of an entry.
+  static int _minLeven(String query, String querylc, WordDatabaseEntry entry) {
+    int result = 999999999;
+
+    if (Preferences.searchDefinitions &&
+        entry.definitionLowercase[Preferences.searchLang] != null) {
+      result = min(result, _levenshtein(querylc,
+        entry.definitionLowercase[Preferences.searchLang]));
+    }
+
+    if (Preferences.searchEntryNames) {
+      result = min(result, _levenshtein(query, entry.entryName));
+    }
+
+    if (Preferences.searchSearchTags &&
+        entry.searchTags != null &&
+        entry.searchTags[Preferences.searchLang] != null) {
+      for (String tag in entry.searchTags[Preferences.searchLang]) {
+        result = min(result, _levenshtein(querylc, tag));
+      }
+    }
+
+    return result;
+  }
+
   // Analyze a query and search for matching non-analyzed database entries
   static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
     String query, InputMode inputMode}) {
@@ -421,23 +447,22 @@ class WordDatabase {
         ret.addAll(tagMatches);
       }
 
+      List<WordDatabaseEntry> partialMatches = [];
+
       // Search for entries whose search tags partially match the query,
       // excluding any already identified results
       if (Preferences.searchSearchTags) {
-        List<WordDatabaseEntry> partialTagMatches = db.values.where((e) =>
+        partialMatches.addAll(db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
           e.searchTags != null && e.searchTags[locale] != null &&
           e.searchTags[locale].where((t) =>
             t.contains(queryLowercase)).isNotEmpty
-        )).toList();
-        ret.addAll(partialTagMatches);
+        )).toList());
       }
 
       // Search for entries whose entry name or definition partially match the
       // query, excluding any already identified results, sorting based on which
       // partial matches most closely resembled the search query
-      List<WordDatabaseEntry> partialMatches = [];
-
       if (Preferences.searchEntryNames) {
         partialMatches.addAll(db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty &&
@@ -459,16 +484,8 @@ class WordDatabase {
       }
 
       partialMatches.sort((WordDatabaseEntry a, WordDatabaseEntry b) {
-        if (a.definitionLowercase[locale] == null ||
-            b.definitionLowercase[locale] == null) {
-          return _levenshtein(query, a.entryName) -
-                 _levenshtein(query, b.entryName);
-        }
-
-        return min(_levenshtein(query, a.entryName),
-                   _levenshtein(query, a.definitionLowercase[locale])) -
-               min(_levenshtein(query, b.entryName),
-                   _levenshtein(query, b.definitionLowercase[locale]));
+        return _minLeven(query, queryLowercase, a) -
+          _minLeven(query, queryLowercase, b);
       });
       ret.addAll(partialMatches);
     }
