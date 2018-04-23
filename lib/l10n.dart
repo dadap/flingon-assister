@@ -59,6 +59,11 @@ class L7dStrings {
       'de' : 'Klingonische Textanzeige',
       'tlh' : '{tlhIngan Hol ngutlh tu\'qom}',
     },
+    'prefs_disp_poscolors' : {
+      'en' : 'Color-code words based on part of speech',
+      'de' : 'Zeige Wörter mit Farbe',
+      'tlh' : '{mu\'mey nguv}',
+    },
     'prefs_search' : {
       'en' : 'Search Settings',
       'de' : 'Sucheinstellungen',

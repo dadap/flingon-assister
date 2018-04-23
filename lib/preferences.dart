@@ -19,6 +19,7 @@ class Preferences {
   static String _searchLang = "en";
   static String _uiLang = "en";
   static String _font = "RobotoSlab";
+  static bool _partOfSpeechColors = true;
   static bool _searchEntryNames = true;
   static bool _searchDefinitions = true;
   static bool _searchSearchTags = true;
@@ -118,6 +119,13 @@ class Preferences {
   }
   static String get font => _font;
 
+  static set partOfSpeechColors(bool val) {
+    _partOfSpeechColors = val;
+    SharedPreferences.getInstance().then((sp) =>
+      sp.setBool('part_of_speech_colors', val));
+  }
+  static bool get partOfSpeechColors => _partOfSpeechColors;
+
   static set searchEntryNames(bool val) {
     _searchEntryNames = val;
     SharedPreferences.getInstance().then((sp) =>
@@ -164,6 +172,7 @@ class Preferences {
     String searchLang = preferences.getString('search_language');
     String uiLang = preferences.getString('user_interface_language');
     String font = preferences.getString('font');
+    bool partOfSpeechColors = preferences.getBool('part_of_speech_colors');
     bool searchEntryNames = preferences.getBool('search_entry_names');
     bool searchDefinitions = preferences.getBool('search_definitions');
     bool searchSearchTags = preferences.getBool('search_search_tags');
@@ -184,6 +193,10 @@ class Preferences {
 
     if (font != null) {
       _font = font;
+    }
+
+    if (partOfSpeechColors != null) {
+      _partOfSpeechColors = partOfSpeechColors;
     }
 
     if (searchEntryNames != null) {
@@ -219,6 +232,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   String _searchLanguageLabel = '';
   String _uiLanguageLabel = '';
   String _fontLabel = '';
+  bool _partOfSpeechColors = Preferences.partOfSpeechColors;
   bool _searchEntryNames = Preferences.searchEntryNames;
   bool _searchDefinitions = Preferences.searchDefinitions;
   bool _searchSearchTags = Preferences.searchSearchTags;
@@ -328,6 +342,18 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 },
                 initialValue: Preferences.font,
               ),
+              new ListTile(
+                leading: new Center(child: new Checkbox(
+                    value: _partOfSpeechColors,
+                    onChanged: (v) {
+                      setState(() => _partOfSpeechColors = v);
+                      Preferences.partOfSpeechColors = v;
+                    }
+                )),
+                title: new KlingonText(fromString:
+                L7dStrings.of(context).l6e('prefs_disp_poscolors')),
+              ),
+
             ]
           ),
           new ExpansionTile(

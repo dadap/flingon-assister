@@ -26,6 +26,11 @@ class KlingonText extends RichText {
   }
 
   static MaterialColor _colorForPOS(String type, String flags) {
+    // Use the default color if color is disabled
+    if (!Preferences.partOfSpeechColors) {
+      return null;
+    }
+
     // Use the default color if the text has no type
     if (type == null) {
       return null;
