@@ -37,7 +37,8 @@ class KlingonText extends RichText {
     }
 
     // Use the default color for sentences, URLs, sources, and mailto links
-    if (type == 'sen' || type == 'url' ||type == 'src' || type == 'mailto') {
+    if (type == 'sen' || type == 'url' || type == 'tlhurl' ||type == 'src' ||
+        type == 'mailto') {
       return null;
     }
 
@@ -167,7 +168,7 @@ class KlingonText extends RichText {
     List<String> linkSplit = link.split(':');
 
     if (linkSplit.length > 3) {
-      if (linkSplit[1] == 'url') {
+      if (linkSplit[1] == 'url' || linkSplit[1] == 'tlhurl') {
         if (linkSplit[2].startsWith('http')) {
           List<String> urlSplit = linkSplit[3].split('/');
           if (urlSplit.length > 2) {
