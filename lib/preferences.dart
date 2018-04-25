@@ -299,7 +299,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<String>(
                 child: new ListTile(
                   title: new KlingonText(fromString: _searchLanguageLabel),
-                  leading: new Center(child: new Icon(Icons.more_vert)),
+                  leading: new Center(child: new Icon(Icons.search)),
                 ),
                 itemBuilder: (ctx) => searchLanguageMenu,
                 onSelected: (val) {
@@ -315,7 +315,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<String>(
                 child: new ListTile(
                   title: new KlingonText(fromString: _uiLanguageLabel),
-                  leading: new Center(child: new Icon(Icons.more_vert)),
+                  leading: new Center(child: new Icon(Icons.language)),
                 ),
                 itemBuilder: (ctx) => uiLanguageMenu,
                 onSelected: (val) {
@@ -331,7 +331,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<String>(
                 child: new ListTile(
                   title: new KlingonText(fromString: _fontLabel),
-                  leading: new Center(child: new Icon(Icons.more_vert)),
+                  leading: new Center(child: new Icon(Icons.font_download)),
                 ),
                 itemBuilder: (ctx) => fontMenu,
                 onSelected: (val) {
@@ -368,7 +368,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<InputMode>(
                 child: new ListTile(
                   title: new KlingonText(fromString: _inputModeLabel),
-                  leading: new Center(child: new Icon(Icons.more_vert)),
+                  leading: new Center(child: new Icon(Icons.keyboard)),
                 ),
                 itemBuilder: (ctx) => inputModeMenu,
                 onSelected: (val) {
