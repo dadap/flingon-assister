@@ -29,7 +29,7 @@ class Preferences {
   static String inputModeName(InputMode im) {
     switch(im) {
       case InputMode.tlhInganHol:
-        return "tlhIngan Hol";
+        return "{tlhIngan Hol}";
       case InputMode.xifanholkq:
         return "xifan hol (k=q; q=Q)";
       case InputMode.xifanholkQ:
@@ -53,16 +53,18 @@ class Preferences {
 
   static String fontName(String font) {
     if (font == 'RobotoSlab') {
+      // This is deliberately not "{tlhIngan Hol}", to make sure that it always
+      // displays with Latin characters as opposed to pIqaD.
       return 'tlhIngan Hol (Latin Transcription)';
     }
     if (font == 'DSCpIqaD') {
-      return 'pIqaD (DSC)';
+      return '{pIqaD} (DSC)';
     }
     if (font == 'TNGpIqaD') {
-      return 'pIqaD (TNG)';
+      return '{pIqaD} (TNG)';
     }
     if (font == 'pIqaDqolqoS') {
-      return 'pIqaD qolqoS';
+      return '{pIqaD qolqoS}';
     }
     return 'unknown';
   }
@@ -258,7 +260,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
     for (InputMode mode in InputMode.values) {
       inputModeMenu.add(new PopupMenuItem(
         value: mode,
-        child: new Text(Preferences.inputModeName(mode)),
+        child: new KlingonText(fromString: Preferences.inputModeName(mode)),
       ));
     }
 
