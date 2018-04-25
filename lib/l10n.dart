@@ -336,7 +336,11 @@ class L7dStrings {
         '{ghItHubDaq Qagh yIDel:tlhurl:'
         'https://github.com/dadap/flingon-assister/issues}{, qoj :sen:nolink}'
         '{QIn yIlI\':tlhurl:mailto:daniel@dadap.net?subject=boQwI\'%20feedback}'
-        '\n\n{taHjaj tlhIngan Hol. tlhIngan Hol paqmey yIje\'.:sen:nolink}\n\n'
+        '\n\n{taHjaj tlhIngan Hol. tlhIngan Hol paqmey yIje\'. :sen:nolink}'
+        "{tlhIngan Hol mu'ghom, qIb lengwI'vaD tlhIngan Hol, tlhIngan Ho'DoS, "
+        "jatlhchuqmeH tlhIngan Hol, HoS tlhIngan Hol, latlh tlhIngan Hol "
+        "bopbogh paqmey je yIje'. tlhIngan Hol, Hov leng je ghajwI'pu' maHbe' "
+        "boQwI' ghunwI'pu''e'. mu'meyvam wIlo' net may.:sen:nolink}\n\n"
         '{boQwI\' wa\'DIch ghunlI\' :sen:nolink}{De\'vID:n:name}\n'
         '{boQwI\'vam ghunlI\' :sen:nolink}{De\'nIl DapDap tuq:n:name,nolink}\n'
         '{qawHaq gherlI\' :sen:nolink}{De\'vID:n:name,nolink}'
