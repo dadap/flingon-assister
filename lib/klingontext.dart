@@ -107,11 +107,12 @@ class KlingonText extends RichText {
         // Source citations are italicized
         bool italic = textType != null && textType == 'src';
 
-        TapGestureRecognizer recognizer = new TapGestureRecognizer();
+        TapGestureRecognizer recognizer = null;
 
         remainder = remainder.substring(endIndex + 1);
 
         if (link && onTap != null) {
+          recognizer = new TapGestureRecognizer();
           recognizer.onTap = () {onTap(klingon);};
         }
 
