@@ -58,10 +58,10 @@ class Preferences {
       return 'tlhIngan Hol (Latin Transcription)';
     }
     if (font == 'DSCpIqaD') {
-      return '{pIqaD} (DSC)';
+      return '{DISqa\'vI\'rIy pIqaD}';
     }
     if (font == 'TNGpIqaD') {
-      return '{pIqaD} (TNG)';
+      return '{qurgh pIqaD}';
     }
     if (font == 'pIqaDqolqoS') {
       return '{pIqaD qolqoS}';
