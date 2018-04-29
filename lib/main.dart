@@ -6,6 +6,7 @@ import 'preferences.dart';
 import 'package:flutter/services.dart';
 import 'l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'dart:async';
 
 void main() => runApp(new MyApp());
 
@@ -39,10 +40,12 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
 
-  MyHomePage(this.entry, {Key key, this.title: appNamepIqaD}) :
+  MyHomePage(this.entry,
+             {Key key, this.title: appNamepIqaD, this.secondTitle: ""}) :
     super(key: key);
 
   final String title;
+  final String secondTitle;
   final String entry;
 
   @override
@@ -50,6 +53,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<IconButton> _actions = [];
+
   static const BasicMessageChannel<String> messageChannel =
     const BasicMessageChannel<String>("load", const StringCodec());
 
@@ -86,12 +91,17 @@ class _MyHomePageState extends State<MyHomePage> {
     MethodChannel('platform').invokeMethod('openURL', uri);
   }
 
+  Future<bool> _ttsAvailable() async {
+    bool ret = await MethodChannel('platform').invokeMethod('ttsAvailable');
+    return ret;
+  }
+
   /* Load an entry as the main widget */
   load(String destination, {String withTitle}) {
     List<String> destinationSplit = destination.split(':');
     if (destinationSplit.length < 2) {
       if (destination == 'prefix_chart') {
-        Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => buildHelper(ctx, destination)));
+        Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new MyHomePage(destination)));
       } else {
         Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new SearchPage(query: destination)));
       }
@@ -113,9 +123,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     Navigator.of(context).push(new MaterialPageRoute(
-        builder: (BuildContext ctx) {
-          return buildHelper(ctx, destination, withTitle: withTitle);
-        }));
+        builder: (c) => new MyHomePage(destination, secondTitle: withTitle,),
+    ));
   }
 
   /* Build the navigation menu for the drawer. */
@@ -197,6 +206,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return ret;
   }
 
+  void _search() {
+    Navigator.of(context).push(new MaterialPageRoute(
+        builder: (c) => new SearchPage()));
+  }
+
   Widget getEntry(String entry, BuildContext context, {String withTitle}) {
     Widget ret;
 
@@ -265,6 +279,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget buildHelper(BuildContext context, String entry, {String withTitle}) {
     Widget main = new CircularProgressIndicator();
+
+    if (_actions.isEmpty) {
+      _actions.add(new IconButton(
+        icon: const Icon(Icons.search),
+        onPressed: _search,
+      ));
+    }
+
+    _ttsAvailable().then((available) {
+      if (available && entry.contains(':') && !entry.startsWith('*')) {
+        if (_actions[0].onPressed == _search) {
+          _actions.insert(0, new IconButton(
+              icon: const Icon(Icons.chat_bubble),
+              onPressed: () {
+                print(widget.entry.split(':').first);
+                MethodChannel('platform').invokeMethod('speak',
+                  widget.entry.split(':').first);
+              }
+          ));
+        }
+      } else {
+        if (_actions[0].onPressed != _search) {
+          _actions.removeAt(0);
+        }
+      }
+      setState(() {});
+    });
 
     // Lazily initialize the database and load destination entry when done.
     if (WordDatabase.db == null) {
@@ -442,16 +483,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 new MaterialPageRoute(builder: (c) => new MyHomePage('help')))
               : null,
           ),
-          actions: [
-            new IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                Navigator.of(context).push(
-                  new MaterialPageRoute(builder: (ctx) => new SearchPage())
-                );
-              },
-            ),
-          ]
+          actions: _actions,
       ),
       drawer: entry == 'help' ? new Drawer(
         child: new ListView(
@@ -467,6 +499,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     L7dStrings.of(context).locale = new Locale(Preferences.uiLang);
-    return buildHelper(context, widget.entry);
+    return buildHelper(context, widget.entry, withTitle: widget.secondTitle);
   }
 }

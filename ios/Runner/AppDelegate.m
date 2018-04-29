@@ -10,6 +10,10 @@
     [methodChannel setMethodCallHandler:^(FlutterMethodCall * _Nonnull call, FlutterResult  _Nonnull result) {
         if ([@"openURL" isEqualToString: call.method]) {
             [[UIApplication sharedApplication] openURL: [NSURL URLWithString: (NSString *) call.arguments]];
+        } else if ([@"ttsAvailable" isEqualToString: call.method]) {
+            result(@([UIApplication.sharedApplication canOpenURL: [NSURL URLWithString: @"klingontts://speak/"]]));
+        } else if ([@"speak" isEqualToString: call.method]) {
+            [[UIApplication sharedApplication] openURL: [NSURL URLWithString: [@"klingontts://speak/" stringByAppendingString:[(NSString *) call.arguments stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]]]];
         } else {
             result(FlutterMethodNotImplemented);
         }
