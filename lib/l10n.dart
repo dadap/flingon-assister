@@ -347,7 +347,7 @@ class L7dStrings {
         '{QIn yIlI\':tlhurl:mailto:daniel@dadap.net?subject=boQwI\'%20feedback}'
         '\n\n{taHjaj tlhIngan Hol. tlhIngan Hol paqmey yIje\'. :sen:nolink}'
         "{tlhIngan Hol mu'ghom, qIb lengwI'vaD tlhIngan Hol, tlhIngan Ho'DoS, "
-        "jatlhchuqmeH tlhIngan Hol, HoS tlhIngan Hol, latlh tlhIngan Hol "
+        "ja'chuqmeH tlhIngan Hol, HoS tlhIngan Hol, latlh tlhIngan Hol "
         "bopbogh paqmey je yIje'. tlhIngan Hol, Hov leng je ghajwI'pu' maHbe' "
         "boQwI' ghunwI'pu''e'. mu'meyvam wIlo' net may.:sen:nolink}\n\n"
         '{boQwI\' wa\'DIch ghunlI\' :sen:nolink}{De\'vID:n:name}\n'
