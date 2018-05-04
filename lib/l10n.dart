@@ -258,6 +258,9 @@ class L7dStrings {
       'en' :
         '\nTo begin searching, simply press the "Search" (magnifying '
         'glass) button and type into the search box.\n\n'
+        'To hear the sounds of Klingon, you need to install a '
+        '{Klingon Text to Speech app:url:'
+        'https://itunes.apple.com/us/app/hija/id1366951358}\n\n'
         'It is recommended to install a Klingon keyboard. Otherwise, to '
         'make it easier to type Klingon on a mobile keyboard, the '
         'following shorthand (called "xifan hol") can be enabled under the '
@@ -296,6 +299,9 @@ class L7dStrings {
       'de' :
         '\nUm eine Suche zu starten, Klicke auf das Suchsymbol (die Lupe) und '
         'gib etwas in das Suchfeld ein.\n\n'
+        'Um die klingonischen Wörter zu hören, muss die {klingonisch '
+        'Vorlesesoftware:url:https://itunes.apple.com/us/app/hija/id1366951358}'
+        ' installiert werden.\n\n'
         'Es wird empfohlen, ein klingonische Tastatur zu installieren. Um auf '
         'einer kleinen Tastatur einfacher Klingonisch einzugeben, kann in den '
         'Einstellungen die folgende vereinfachte Eingabemethode ("xifan hol" '
@@ -331,8 +337,11 @@ class L7dStrings {
         '({marq \'oqranD:n:name}) für das Erschaffen der klingonischen Sprache.'
         ,
       'tlh' :
-        '\n{mu\'mey Danej \'e\' DaneHchugh, vaj nejmeH Degh yIwIv.:sen:nolink}'
-        '\n\n{Qaghmey Dangu\'chugh qoj bIghelnISchugh, vaj HIja\'. :sen:nolink}'
+        '\n{mu\'mey Danej DaneHchugh, vaj nejmeH Degh yIwIv.:sen:nolink}\n\n'
+        '{tlhIngan Hol QIch wabmey DaQoy DaneHchugh, vaj :sen:nolink}'
+        '{QIch nIqHom:tlhurl:https://itunes.apple.com/us/app/hija/id1366951358}'
+        ' {DaSuqnIS.:sen:nolink}\n\n'
+        '{Qaghmey Dangu\'chugh qoj bIghelnISchugh, vaj :sen:nolink}'
         '{ghItHubDaq Qagh yIDel:tlhurl:'
         'https://github.com/dadap/flingon-assister/issues}{, qoj :sen:nolink}'
         '{QIn yIlI\':tlhurl:mailto:daniel@dadap.net?subject=boQwI\'%20feedback}'
