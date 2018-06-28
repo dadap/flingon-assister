@@ -3,10 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'dart:async';
 
 class L10nDelegate extends LocalizationsDelegate<L7dStrings> {
+  static List<String> supportedLocales = ['en', 'de', 'tlh'];
   const L10nDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['en', 'de'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+    supportedLocales.contains(locale.languageCode);
 
   @override
   Future<L7dStrings> load(Locale locale) {

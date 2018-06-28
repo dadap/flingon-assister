@@ -268,15 +268,14 @@ class _PreferencesPageState extends State<PreferencesPage> {
         value: lang,
         child: new Text(Preferences.langName(lang)),
       ));
+    }
+
+    for (String lang in L10nDelegate.supportedLocales) {
       uiLanguageMenu.add(new PopupMenuItem(
         value: lang,
-        child: new Text(Preferences.langName(lang)),
+        child: new KlingonText(fromString: Preferences.langName(lang)),
       ));
     }
-    uiLanguageMenu.add(new PopupMenuItem(
-      value: 'tlh',
-      child: new KlingonText(fromString: Preferences.langName('tlh')),
-    ));
 
     for (String font in _fonts) {
       fontMenu.add(new PopupMenuItem(
