@@ -5,7 +5,6 @@ import 'l10n.dart';
 import 'klingontext.dart';
 
 enum InputMode {tlhInganHol, xifanholkq, xifanholkQ}
-const List<String> _langs = const ['de', 'en'];
 const List<String> _fonts = const [
   'RobotoSlab',
   'DSCpIqaD',
@@ -25,6 +24,7 @@ class Preferences {
   static bool _searchSearchTags = true;
   static String _updateLocation = _defaultUpdateLocation;
   static String _dbUpdateVersion;
+  static Map <String, String> langs;
 
   static String inputModeName(InputMode im) {
     switch(im) {
@@ -39,15 +39,14 @@ class Preferences {
   }
 
   static String langName(String shortName) {
-    if (shortName == 'de') {
-      return "Deutsch";
-    }
-    if (shortName == 'en') {
-      return "English";
-    }
     if (shortName == 'tlh') {
       return "{tlhIngan Hol}";
     }
+
+    if (langs != null && langs.keys.contains(shortName)) {
+      return langs[shortName];
+    }
+
     return "unknown";
   }
 
@@ -264,7 +263,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
       ));
     }
 
-    for (String lang in _langs) {
+    for (String lang in Preferences.langs.keys) {
       searchLanguageMenu.add(new PopupMenuItem(
         value: lang,
         child: new Text(Preferences.langName(lang)),

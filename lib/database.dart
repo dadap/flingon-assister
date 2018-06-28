@@ -64,6 +64,10 @@ class WordDatabase {
       final doc = jsonDecode(json);
 
       version = doc['version'];
+      Preferences.langs = {};
+      for (String lang in doc['locales'].keys) {
+        Preferences.langs[lang] = doc['locales'][lang];
+      }
 
       for (String entry in doc['qawHaq'].keys) {
         db[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
