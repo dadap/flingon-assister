@@ -21,7 +21,12 @@ class _UpdateButtonState extends State<UpdateButton> {
     return new ListTile(
       title: new KlingonText(fromString:
         L7dStrings.of(context).l6e('dbupdate_check')),
-      leading: new Icon(Icons.update),
+      leading: new Container(
+        child: new Icon(Icons.update),
+        alignment: Alignment.center,
+        width: 20.0,
+        height: 20.0,
+      ),
       onTap: () => UpdateSheet.doUpdate(context),
     );
   }

@@ -297,7 +297,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<String>(
                 child: new ListTile(
                   title: new KlingonText(fromString: _searchLanguageLabel),
-                  leading: new Icon(Icons.search),
+                  leading: new Container(
+                    child: new Icon(Icons.search),
+                    alignment: Alignment.center,
+                    width: 20.0,
+                    height: 20.0,
+                  ),
                 ),
                 itemBuilder: (ctx) => searchLanguageMenu,
                 onSelected: (val) {
@@ -313,7 +318,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<String>(
                 child: new ListTile(
                   title: new KlingonText(fromString: _uiLanguageLabel),
-                  leading: new Icon(Icons.language),
+                  leading: new Container(
+                    child: new Icon(Icons.language),
+                    alignment: Alignment.center,
+                    width: 20.0,
+                    height: 20.0,
+                  ),
                 ),
                 itemBuilder: (ctx) => uiLanguageMenu,
                 onSelected: (val) {
@@ -329,7 +339,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<String>(
                 child: new ListTile(
                   title: new KlingonText(fromString: _fontLabel),
-                  leading: new Icon(Icons.font_download),
+                  leading: new Container(
+                    child: new Icon(Icons.font_download),
+                    alignment: Alignment.center,
+                    width: 20.0,
+                    height: 20.0,
+                  ),
                 ),
                 itemBuilder: (ctx) => fontMenu,
                 onSelected: (val) {
@@ -343,12 +358,17 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 initialValue: Preferences.font,
               ),
               new ListTile(
-                leading: new Checkbox(
+                leading: new Container(
+                  child: new Checkbox(
                     value: _partOfSpeechColors,
                     onChanged: (v) {
                       setState(() => _partOfSpeechColors = v);
                       Preferences.partOfSpeechColors = v;
                     }
+                  ),
+                  alignment: Alignment.center,
+                  width: 20.0,
+                  height: 20.0,
                 ),
                 title: new KlingonText(fromString:
                 L7dStrings.of(context).l6e('prefs_disp_poscolors')),
@@ -366,7 +386,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<InputMode>(
                 child: new ListTile(
                   title: new KlingonText(fromString: _inputModeLabel),
-                  leading: new Icon(Icons.keyboard),
+                  leading: new Container(
+                    child: new Icon(Icons.keyboard),
+                    alignment: Alignment.center,
+                    width: 20.0,
+                    height: 20.0,
+                  ),
                 ),
                 itemBuilder: (ctx) => inputModeMenu,
                 onSelected: (val) {
@@ -380,34 +405,49 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 initialValue: Preferences.inputMode,
               ),
               new ListTile(
-                leading: new Checkbox(
-                  value: _searchEntryNames,
-                  onChanged: (v) {
-                    setState(() => _searchEntryNames = v);
-                    Preferences.searchEntryNames = v;
-                  }
+                leading: new Container(
+                  child: new Checkbox(
+                    value: _searchEntryNames,
+                    onChanged: (v) {
+                      setState(() => _searchEntryNames = v);
+                      Preferences.searchEntryNames = v;
+                    }
+                  ),
+                  alignment: Alignment.center,
+                  width: 20.0,
+                  height: 20.0,
                 ),
                 title: new KlingonText(fromString:
                   L7dStrings.of(context).l6e('prefs_search_ent')),
               ),
               new ListTile(
-                  leading: new Checkbox(
-                  value: _searchDefinitions,
-                  onChanged: (v) {
-                    setState(() => _searchDefinitions = v);
-                    Preferences.searchDefinitions = v;
-                  }
+                leading: new Container(
+                  child: new Checkbox(
+                    value: _searchDefinitions,
+                    onChanged: (v) {
+                      setState(() => _searchDefinitions = v);
+                      Preferences.searchDefinitions = v;
+                    }
+                  ),
+                  alignment: Alignment.center,
+                  width: 20.0,
+                  height: 20.0,
                 ),
                 title: new KlingonText(fromString:
                   L7dStrings.of(context).l6e('prefs_search_def')),
               ),
               new ListTile(
-                leading: new Checkbox(
-                value: _searchSearchTags,
-                  onChanged: (v) {
-                    setState(() => _searchSearchTags = v);
-                    Preferences.searchSearchTags = v;
-                  }
+                leading: new Container(
+                child: new Checkbox(
+                  value: _searchSearchTags,
+                    onChanged: (v) {
+                      setState(() => _searchSearchTags = v);
+                      Preferences.searchSearchTags = v;
+                    }
+                  ),
+                  alignment: Alignment.center,
+                  width: 20.0,
+                  height: 20.0,
                 ),
                 title: new KlingonText(fromString:
                   L7dStrings.of(context).l6e('prefs_search_tags')),
