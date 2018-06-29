@@ -252,7 +252,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<String>(
                 child: new ListTile(
                   title: new Text(_searchLanguageLabel),
-                  leading: new Center(child: new Icon(Icons.more_vert)),
+                  leading: new Container(
+                    child: new Icon(Icons.more_vert),
+                    alignment: Alignment.center,
+                    width: 20.0,
+                    height: 20.0,
+                  ),
                 ),
                 itemBuilder: (ctx) => searchLanguageMenu,
                 onSelected: (val) {
@@ -267,7 +272,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<String>(
                 child: new ListTile(
                   title: new Text(_fontLabel),
-                  leading: new Center(child: new Icon(Icons.more_vert)),
+                  leading: new Container(
+                    child: new Icon(Icons.more_vert),
+                    alignment: Alignment.center,
+                    width: 20.0,
+                    height: 20.0,
+                  ),
                 ),
                 itemBuilder: (ctx) => fontMenu,
                 onSelected: (val) {
@@ -288,7 +298,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
               new PopupMenuButton<InputMode>(
                 child: new ListTile(
                   title: new Text(_inputModeLabel),
-                  leading: new Center(child: new Icon(Icons.more_vert)),
+                  leading: new Container(
+                    child: new Icon(Icons.more_vert),
+                    alignment: Alignment.center,
+                    width: 20.0,
+                    height: 20.0,
+                  ),
                 ),
                 itemBuilder: (ctx) => inputModeMenu,
                 onSelected: (val) {
@@ -301,33 +316,48 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 initialValue: Preferences.inputMode,
               ),
               new ListTile(
-                leading: new Center(child: new Checkbox(
-                  value: _searchEntryNames,
-                  onChanged: (v) {
-                    setState(() => _searchEntryNames = v);
-                    Preferences.searchEntryNames = v;
-                  }
-                )),
+                leading: new Container(
+                  child: new Checkbox(
+                    value: _searchEntryNames,
+                    onChanged: (v) {
+                      setState(() => _searchEntryNames = v);
+                      Preferences.searchEntryNames = v;
+                    }
+                  ),
+                  alignment: Alignment.center,
+                  width: 20.0,
+                  height: 20.0,
+                ),
                 title: new Text('Search entry names'),
               ),
               new ListTile(
-                  leading: new Center(child: new Checkbox(
-                  value: _searchDefinitions,
-                  onChanged: (v) {
-                    setState(() => _searchDefinitions = v);
-                    Preferences.searchDefinitions = v;
-                  }
-                )),
+                leading: new Container(
+                  child: new Checkbox(
+                    value: _searchDefinitions,
+                    onChanged: (v) {
+                      setState(() => _searchDefinitions = v);
+                      Preferences.searchDefinitions = v;
+                    }
+                  ),
+                  alignment: Alignment.center,
+                  width: 20.0,
+                  height: 20.0,
+                ),
                 title: new Text('Search definitions'),
               ),
               new ListTile(
-                leading: new Center(child: new Checkbox(
-                value: _searchSearchTags,
-                  onChanged: (v) {
-                    setState(() => _searchSearchTags = v);
-                    Preferences.searchSearchTags = v;
-                  }
-                )),
+                leading: new Container(
+                  child: new Checkbox(
+                    value: _searchSearchTags,
+                    onChanged: (v) {
+                      setState(() => _searchSearchTags = v);
+                      Preferences.searchSearchTags = v;
+                    }
+                  ),
+                  alignment: Alignment.center,
+                  width: 20.0,
+                  height: 20.0,
+                ),
                 title: new Text('Search search tags'),
               ),
             ],

@@ -18,7 +18,12 @@ class _UpdateButtonState extends State<UpdateButton> {
   Widget build(BuildContext context) {
     return new ListTile(
       title: new Text('Check for updates now'),
-      leading: new Center(child: new Icon(Icons.update)),
+      leading: new Container(
+        child: new Icon(Icons.update),
+        alignment: Alignment.center,
+        width: 20.0,
+        height: 20.0,
+      ),
       onTap: () => UpdateSheet.doUpdate(context),
     );
   }
