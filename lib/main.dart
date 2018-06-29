@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         primaryColor: Colors.red[700],
         accentColor: Colors.redAccent,
+        toggleableActiveColor: Colors.redAccent,
       ),
       home: new MyHomePage("help"),
       localizationsDelegates: [
