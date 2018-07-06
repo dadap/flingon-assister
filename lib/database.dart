@@ -133,6 +133,10 @@ class WordDatabase {
     }
 
     for (String word in query.split(' ')) {
+      // Strip away any non-alpha characters (pIqaD and "'" count as alpha)
+      word = word.replaceAllMapped(new RegExp('[^a-zA-Z\'-\-]'),
+        (m) => '');
+
       results.insertAll(results.length, _analyzeWord(db, word));
     }
 
@@ -298,10 +302,6 @@ class WordDatabase {
     for (String fixKey in unicodeFixes.keys) {
       string = string.replaceAll(fixKey, unicodeFixes[fixKey]);
     }
-
-    // Strip away any non-alpha characters (pIqaD and "'" count as alpha)
-    string = string.replaceAllMapped(new RegExp('[^a-zA-Zß\u0308\'- \-]'),
-                                     (m) => '');
 
     return string;
   }
