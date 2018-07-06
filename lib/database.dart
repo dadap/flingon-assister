@@ -567,7 +567,11 @@ class WordDatabaseEntry {
       searchTags = {};
 
       for (String lang in json['search_tags'].keys) {
-        searchTags[lang] = json[lang];
+        searchTags[lang] = [];
+
+        for (String tag in json['search_tags'][lang]) {
+          searchTags[lang].add(tag);
+        }
       }
     }
 
