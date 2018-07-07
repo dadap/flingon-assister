@@ -67,7 +67,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
   Widget build (BuildContext context) {
     // Set an error message and set the URL to empty to signal that the message
     // should be displayed.
-    void error([String text = 'The manifest file appears to be invalid.']) {
+    void error(String text) {
       setState(() {
         msg = text;
         url = '';
@@ -77,7 +77,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
     if (url == null) {
       // URL isn't set yet: fetch the manifest and get the path to the latest db
       String manifestPath = _manifestLocation();
-      msg = 'Checking for updates';
+      msg = L7dStrings.of(context).l6e('dbupdates_checking');
 
       HttpClient http = new HttpClient();
       http.getUrl(Uri.parse(manifestPath)).then((req) => req.close()).then((
@@ -96,11 +96,11 @@ class _UpdateSheetState extends State<UpdateSheet> {
             movedTo = m['moved_to'];
           }
         } catch (e) {
-          error();
+          error(L7dStrings.of(context).l6e('dbupdate_badmanifest'));
         }
 
         if (m == null) {
-          error();
+          error(L7dStrings.of(context).l6e('dbupdate_badmanifest'));
         } else if (movedTo != null) {
           setState(() => url = '');
         } else if (version != null) {
@@ -117,10 +117,10 @@ class _UpdateSheetState extends State<UpdateSheet> {
             }
           });
         } else {
-          error();
+          error(L7dStrings.of(context).l6e('dbupdate_badmanifest'));
         }
       }, onError: ((e) =>
-        error('An error occurred while fetching the update manifest.'))
+        error(L7dStrings.of(context).l6e('dbupdate_manifetcherr')))
       );
     } else if (update == null) {
       // Path to the update has been determined, but update hasn't started

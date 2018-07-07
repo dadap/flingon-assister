@@ -111,6 +111,21 @@ class L7dStrings {
       'de' : 'Nach Updates suchen',
       'tlh' : '{DaH qawHaqvaD De\' chu\' yInej}',
     },
+    'dbupdate_badmanifest' : {
+      'en' : 'The manifest appears to be invalid.',
+      'de' : 'Das Manifest scheint ungültig zu sein.',
+      'tlh' : '{qawHaq De\' chu\' DelHa\'lu\'law\'}',
+    },
+    'dbupdate_checking' : {
+      'en' : 'Checking for updates',
+      'de' : 'Nach Updates suchen',
+      'tlh' : '{qawHaq De\' chu\' vInejtaH}',
+    },
+    'dbupdate_manifetcherr' : {
+      'en' : 'An error occurred while fetching the update manifest',
+      'de' : 'Beim Abrufen des Update-Manifests ist ein Fehler aufgetreten',
+      'tlh' : '{qawHaq De\' chu\' Delbogh ghItlh vIlI\'taHvIS, qaSpu\' Qagh}',
+    },
     'menu_ref' : {
       'en' : 'Reference',
       'de' : 'Allgemein',
