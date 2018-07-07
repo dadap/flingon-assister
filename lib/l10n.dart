@@ -51,6 +51,11 @@ class L7dStrings {
       'de' : 'Datenbanksprache',
       'tlh' : '{qawHaq Hol}',
     },
+    'prefs_disp_alldblangs' : {
+      'en' : 'Enable incomplete database languages',
+      'de' : 'Aktivieren unvollständige Datenbanksprachen',
+      'tlh' : '{qawHaq Holmey naQHa\' yIDuHmoH}',
+    },
     'prefs_disp_uilang' : {
       'en' : 'User interface language',
       'de' : 'Benutzeroberflächensprache',

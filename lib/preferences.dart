@@ -22,9 +22,11 @@ class Preferences {
   static bool _searchEntryNames = true;
   static bool _searchDefinitions = true;
   static bool _searchSearchTags = true;
+  static bool _enableIncompleteLanguages = false;
   static String _updateLocation = _defaultUpdateLocation;
   static String _dbUpdateVersion;
   static Map <String, String> langs;
+  static List<String> supportedLangs;
 
   static String inputModeName(InputMode im) {
     switch(im) {
@@ -148,6 +150,13 @@ class Preferences {
   }
   static bool get searchSearchTags => _searchSearchTags;
 
+  static set enableIncompleteLanguages(bool val) {
+    _enableIncompleteLanguages = val;
+    SharedPreferences.getInstance().then((sp) =>
+      sp.setBool('enable_incomplete_languages', val));
+  }
+  static bool get enableIncompleteLanguages => _enableIncompleteLanguages;
+
   static set updateLocation(String val) {
     if (val.isEmpty) {
       val = _defaultUpdateLocation;
@@ -177,6 +186,8 @@ class Preferences {
     bool searchEntryNames = preferences.getBool('search_entry_names');
     bool searchDefinitions = preferences.getBool('search_definitions');
     bool searchSearchTags = preferences.getBool('search_search_tags');
+    bool enableIncompleteLanguages =
+      preferences.getBool('enable_incomplete_languages');
     String updateLocation = preferences.getString('update_location');
     String dbUpdateVersion = preferences.getString('db_update_version');
 
@@ -212,6 +223,10 @@ class Preferences {
       _searchSearchTags = searchSearchTags;
     }
 
+    if (enableIncompleteLanguages != null) {
+      _enableIncompleteLanguages = enableIncompleteLanguages;
+    }
+
     if (updateLocation != null) {
       _updateLocation = updateLocation;
     }
@@ -237,6 +252,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   bool _searchEntryNames = Preferences.searchEntryNames;
   bool _searchDefinitions = Preferences.searchDefinitions;
   bool _searchSearchTags = Preferences.searchSearchTags;
+  bool _enableIncompleteLanguages = Preferences.enableIncompleteLanguages;
 
   TextEditingController _updateLocationController = new TextEditingController();
 
@@ -264,10 +280,13 @@ class _PreferencesPageState extends State<PreferencesPage> {
     }
 
     for (String lang in Preferences.langs.keys) {
-      searchLanguageMenu.add(new PopupMenuItem(
-        value: lang,
-        child: new Text(Preferences.langName(lang)),
-      ));
+      if (Preferences.enableIncompleteLanguages ||
+          Preferences.supportedLangs.contains(lang)) {
+        searchLanguageMenu.add(new PopupMenuItem(
+          value: lang,
+          child: new Text(Preferences.langName(lang)),
+        ));
+      }
     }
 
     for (String lang in L10nDelegate.supportedLocales) {
@@ -314,6 +333,22 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   Preferences.searchLang = val;
                 },
                 initialValue: Preferences.searchLang,
+              ),
+              new ListTile(
+                leading: new Container(
+                  child: new Checkbox(
+                      value: _enableIncompleteLanguages,
+                      onChanged: (v) {
+                        setState(() => _enableIncompleteLanguages = v);
+                        Preferences.enableIncompleteLanguages = v;
+                      }
+                  ),
+                  alignment: Alignment.center,
+                  width: 20.0,
+                  height: 20.0,
+                ),
+                title: new KlingonText(fromString:
+                L7dStrings.of(context).l6e('prefs_disp_alldblangs')),
               ),
               new PopupMenuButton<String>(
                 child: new ListTile(

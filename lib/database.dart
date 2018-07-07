@@ -69,6 +69,11 @@ class WordDatabase {
         Preferences.langs[lang] = doc['locales'][lang];
       }
 
+      Preferences.supportedLangs = [];
+      for (String lang in doc['supported_locales']) {
+        Preferences.supportedLangs.add(lang);
+      }
+
       for (String entry in doc['qawHaq'].keys) {
         db[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
       }
