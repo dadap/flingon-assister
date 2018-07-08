@@ -294,6 +294,7 @@ class WordDatabase {
       '‘': "'", '’' : "'",
       // Decompose Unicode: the database is normalized to a decomposed form so
       // that String.toLowerCase() can work on the decomposed characters
+      'Å' : 'A\u030a', 	'å' : 'a\u030a',
       'Ä' : 'A\u0308', 	'ä' : 'a\u0308',
       'Ö' : 'O\u0308', 	'ö' : 'o\u0308',
       'Ü' : 'U\u0308', 	'ü' : 'u\u0308',
