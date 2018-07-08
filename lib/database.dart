@@ -302,6 +302,8 @@ class WordDatabase {
       'ẞ' : 'ß',
       // Decompose Eszett to "ss" to support Swiss German spelling in search
       'ß' : 'ss',
+      // Convert all ё to е to normalize for searches
+      'ё' : 'е', 'е\u0308' : 'е', 'Ё' : 'Е', 'Е\u0308' : 'Е',
     };
 
     for (String fixKey in unicodeFixes.keys) {
@@ -586,9 +588,11 @@ class WordDatabaseEntry {
       }
 
       // Precomputed a lowercased definition for searching. Also decompose "ß"
-      // to "ss" to support Swiss German spelling in search.
+      // to "ss" to support Swiss German spelling in search, and replace 'ё'
+      // with 'е' to make searches agnostic of the presence of a diaresis
       definitionLowercase[lang] =
-        definition[lang].toLowerCase().replaceAll('ß', 'ss');
+        definition[lang].toLowerCase().
+          replaceAll('ß', 'ss').replaceAll('ё', 'е');
 
       // Infer that commas split lists of multiple definitions and add them as
       // search tags to improve search relevance
