@@ -42,6 +42,8 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.io/assets-and-images/#from-packages
 
+
+  # See https://github.com/flutter/flutter/wiki/Desktop-shells#fonts
   fonts:
     - family: RobotoSlab
       fonts:

@@ -4,11 +4,17 @@ import 'search.dart';
 import 'klingontext.dart';
 import 'preferences.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride;
 import 'l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:async';
 
-void main() => runApp(new MyApp());
+void main() {
+  // See https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
+  debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  runApp(new MyApp());
+}
 
 const String appNamepIqaD = '';
 
