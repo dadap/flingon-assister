@@ -77,7 +77,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
     if (url == null) {
       // URL isn't set yet: fetch the manifest and get the path to the latest db
       String manifestPath = _manifestLocation();
-      msg = L7dStrings.of(context).l6e('dbupdates_checking');
+      msg = L7dStrings.of(context).l6e('dbupdate_checking');
 
       HttpClient http = new HttpClient();
       http.getUrl(Uri.parse(manifestPath)).then((req) => req.close()).then((
