@@ -131,9 +131,10 @@ class WordDatabase {
     List<WordDatabaseEntry> results = [];
 
     if (!_analysisReady) {
-      _verbprefixes = db.values.where((e) => e.partOfSpeech == 'v:pref');
-      _verbsuffixes = db.values.where((e) => e.partOfSpeech == 'v:suff');
-      _nounsuffixes = db.values.where((e) => e.partOfSpeech == 'n:suff');
+      // TODO: Handle cases like 'v:pref,klcp1' properly.
+      _verbprefixes = db.values.where((e) => e.partOfSpeech.startsWith('v:pref'));
+      _verbsuffixes = db.values.where((e) => e.partOfSpeech.startsWith('v:suff'));
+      _nounsuffixes = db.values.where((e) => e.partOfSpeech.startsWith('n:suff'));
       _analysisReady = true;
     }
 
