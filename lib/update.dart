@@ -131,14 +131,14 @@ class _UpdateSheetState extends State<UpdateSheet> {
             msg = 'The update location has moved to $movedTo';
             buttons = new ButtonBar(
               children: [
-                new FlatButton(
+                new TextButton(
                   onPressed: () {
                     Preferences.updateLocation = movedTo;
                     setState(() => url = null);
                   },
                   child: new Text('Use new location'),
                 ),
-                new FlatButton(
+                new TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: new Text('Cancel'),
                 )
@@ -163,11 +163,11 @@ class _UpdateSheetState extends State<UpdateSheet> {
           msg = 'A new database version ($version) is available.';
           buttons = new ButtonBar(
             children: [
-              new FlatButton(
+              new TextButton(
                 child: new Text('Install Update'),
                 onPressed: () => setState(() => doInstall = true),
               ),
-              new FlatButton(
+              new TextButton(
                 child: new Text('Cancel'),
                 onPressed: () => Navigator.of(context).pop(),
               ),

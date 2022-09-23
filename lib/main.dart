@@ -276,7 +276,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ret = new Text('The entry {$entry} was not found in the database.');
     } else {
       ret = WordDatabase.db[entry].toWidget(
-        Theme.of(context).textTheme.body1,
+        Theme.of(context).textTheme.bodyMedium,
         onTap: load,
       );
     }
@@ -339,18 +339,18 @@ class _MyHomePageState extends State<MyHomePage> {
         child: new Column(children: [
           new KlingonText(fromString:
             '{tlhIngan Hol boQwI\':n:nolink}',
-            style: Theme.of(context).textTheme.headline,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           new Text(
               L7dStrings.of(context).l6e('appname_translation'),
-              style: Theme.of(context).textTheme.subhead
+              style: Theme.of(context).textTheme.headlineSmall
           ),
           new KlingonText(
             fromString: _dbversion,
             style: Theme.of(context).textTheme.caption,
           ),
           new KlingonText(fromString: L7dStrings.of(context).l6e('helptext'),
-            style: Theme.of(context).textTheme.body1,
+            style: Theme.of(context).textTheme.bodyMedium,
             onTap: (dest) => load(dest),
         ),
       ]))]);

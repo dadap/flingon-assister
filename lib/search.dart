@@ -121,7 +121,7 @@ class _SearchPageState extends State<SearchPage> {
         title: widget.query.isEmpty ? new TextField(
           autofocus: true,
           autocorrect: false,
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.titleLarge,
           controller: controller,
         ) : new SingleChildScrollView(
           child: new Text(widget.query),
