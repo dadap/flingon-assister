@@ -526,7 +526,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
     });
     return new Scaffold(
       appBar: new AppBar(
-        title: new KlingonText(fromString: L7dStrings.of(context).l6e('prefs'))
+        title: new KlingonText(fromString: L7dStrings.of(context).l6e('prefs')),
+        backgroundColor: Colors.red[700],
       ),
 
       body: new Center(child: _prefsPanel),

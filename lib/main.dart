@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.red,
-        primaryColor: Colors.red[700],
         accentColor: Colors.redAccent,
         toggleableActiveColor: Colors.redAccent,
       ),
@@ -490,6 +489,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 new MaterialPageRoute(builder: (c) => new MyHomePage('help')))
               : null,
           ),
+          backgroundColor: Colors.red[700],
           actions: _actions,
       ),
       drawer: entry == 'help' ? new Drawer(
