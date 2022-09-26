@@ -127,6 +127,7 @@ class _SearchPageState extends State<SearchPage> {
           child: new Text(widget.query),
           scrollDirection: Axis.horizontal,
         ),
+        backgroundColor: Colors.red[700],
         actions: widget.query.isEmpty ? [
           new IconButton(
             icon: new Icon(Icons.clear),
