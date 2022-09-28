@@ -76,7 +76,7 @@ class L7dStrings {
       'en' : 'Color-code words based on part of speech',
       'de' : 'Zeige Wörter mit Farbe',
       'tlh' : '{mu\'mey nguv}',
-      'pq' : 'Código de cores baseado no tipo de palavra',
+      'pt' : 'Código de cores baseado no tipo de palavra',
     },
     'prefs_search' : {
       'en' : 'Search Settings',
