@@ -324,6 +324,22 @@ class L7dStrings {
       'tlh' : '{qawHaq mI\'}',
       'pt' : 'Versão do Banco de dados',
     },
+    'pos_noun' : {
+      'en' : 'noun',
+      'de' : 'Substantiv',
+      'tlh' : '{DIp}',
+      'pt' : 'substantivo',
+    },
+    'pos_verb' : {
+      'en' : 'verb',
+      'de' : 'Verb',
+      'tlh' : '{wot}',
+      'pt' : 'verbo',
+    },
+    'pos_adv' : {
+      'en' : 'adverbial',
+      'tlh' : '{chuv}',
+    },
     'helptext' : {
       'en' :
         '\nTo begin searching, simply press the "Search" (magnifying '
