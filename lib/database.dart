@@ -543,6 +543,46 @@ class WordDatabase {
   }
 }
 
+enum WordProperties {
+    alternative,
+    archaic,
+    derived,
+    extended_canon,
+    food,
+    fictional,
+    hypothetical,
+    idiom,
+    invective,
+    klcp1,
+//  These properties are defined in the spec but we don't use them
+//  no_anki,
+//  no_dictionary,
+    no_link,
+    regional,
+    slang,
+    weapon,
+    count
+}
+
+final List<String> WordPropertyNames = [
+    'alt',
+    'archaic',
+    'deriv',
+    'extcan',
+    'food',
+    'fic',
+    'hyp',
+    'idiom',
+    'inv',
+    'klcp1',
+//  'noanki',
+//  'nodict',
+    'nolink',
+    'reg',
+    'slang',
+    'weap',
+];
+
 class WordDatabaseEntry {
   // Copy a map of string values parsed from JSON to a map of strings
   static Map<String, String> _localizedMapFromJSON(Map<String, dynamic> json) {
@@ -617,6 +657,16 @@ class WordDatabaseEntry {
         searchTags[lang].addAll(definitionLowercase[lang].split(', '));
       }
     }
+
+    if (partOfSpeech.split(':').length > 1) {
+        for (String tag in partOfSpeech.split(':')[1].split(',')) {
+            int i = WordPropertyNames.indexOf(tag);
+
+            if (i >= 0) {
+                properties[i] = true;
+            };
+        }
+    }
   }
 
   int id;
@@ -633,6 +683,7 @@ class WordDatabaseEntry {
   Map<String, String> examples;
   Map<String, List<String>> searchTags;
   String source;
+  final List<bool> properties = List<bool>.filled(WordProperties.count.index, false);
 
   String searchName;
 
