@@ -52,10 +52,10 @@ class WordDatabase {
         if (await file.exists()) {
           data = await file.readAsBytes();
         } else {
-          data = await rootBundle.load('data/$filename');
+          data = await rootBundle.load('$filename');
         }
       } else {
-        data = await rootBundle.load('data/$filename');
+        data = await rootBundle.load('$filename');
       }
 
       String json = utf8.decode(new BZip2Decoder().decodeBuffer(
