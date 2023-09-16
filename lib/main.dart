@@ -249,14 +249,21 @@ class _MyHomePageState extends State<MyHomePage> {
       ];
 
       for (String component in entry.split('@@')[1].split(',')) {
-        String c = component.trim();
-        entries.add(WordDatabase.db[c].toListTile(onTap: () => load(c)));
+        String trimmed = component.trim();
+
+        if (trimmed.endsWith(':0') && trimmed.split(':').length > 2) {
+          WordDatabase.homophones(trimmed).forEach((h) =>
+            entries.add(h.toListTile(onTap: () => load(h.searchName))));
+        } else {
+          String c = WordDatabaseEntry.normalizeSearchName(trimmed);
+          if (WordDatabase.db.containsKey(c))
+            entries.add(WordDatabase.db[c].toListTile(onTap: () => load(c)));
+        }
       }
 
       ret = new Expanded(child: new ListView(children: entries,));
     } else if (entry.endsWith(':0') && entry.split(':').length > 2) {
       // Load all homophones with the given part of speech
-      String name = entry.split(':')[0];
       String pos = entry.split(':')[1];
 
       List<Widget> entries = [
@@ -266,9 +273,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ))
       ];
 
-      WordDatabase.db.values.where((e) => e.entryName == name &&
-        e.partOfSpeech.startsWith(pos)).forEach((m) =>
-          entries.add(m.toListTile(onTap: () => load(m.searchName))));
+      WordDatabase.homophones(entry).forEach((m) =>
+        entries.add(m.toListTile(onTap: () => load(m.searchName))));
 
       ret = new Expanded(child: new ListView(children: entries,));
     } else if (WordDatabase.db[entry] == null) {
