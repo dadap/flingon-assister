@@ -532,6 +532,15 @@ class WordDatabase {
 
     return 0;
   }
+
+  static Iterable <WordDatabaseEntry> homophones(String searchName)
+  {
+    String name = searchName.split(':')[0];
+    String pos = searchName.split(':')[1];
+
+    return WordDatabase.db.values.where((e) =>
+      e.entryName == name && e.partOfSpeech.startsWith(pos));
+  }
 }
 
 class WordDatabaseEntry {
