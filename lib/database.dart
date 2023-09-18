@@ -58,7 +58,7 @@ class WordDatabase {
         data = await rootBundle.load('data/$filename');
       }
 
-      String json = new String.fromCharCodes(new BZip2Decoder().decodeBuffer(
+      String json = utf8.decode(new BZip2Decoder().decodeBuffer(
           new InputStream(data)));
 
       final doc = jsonDecode(json);
