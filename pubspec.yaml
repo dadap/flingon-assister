@@ -1,8 +1,8 @@
 name: flingon_assister
-version: 1.1.0+1
+version: 1.2.0+1
 description: A port of boQwI' ("Klingon Language Assistant") to Flutter.
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:

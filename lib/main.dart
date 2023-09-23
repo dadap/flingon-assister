@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
 
   MyHomePage(this.entry,
-             {Key? key, this.title: appNamepIqaD, this.secondTitle: ""}) :
+             {Key? key, this.title = appNamepIqaD, this.secondTitle = ""}) :
     super(key: key);
 
   final String title;

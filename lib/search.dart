@@ -7,7 +7,7 @@ import 'preferences.dart';
 class SearchPage extends StatefulWidget {
   final String query;
 
-  SearchPage({this.query : ''});
+  SearchPage({this.query = ''});
 
   @override _SearchPageState createState() => new _SearchPageState();
 }
