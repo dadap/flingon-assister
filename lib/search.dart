@@ -13,17 +13,17 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  Widget main;
+  Widget? main;
 
   TextEditingController controller = new TextEditingController();
-  String debouncedQuery;
-  Function onPressed;
+  String debouncedQuery = '';
+  void Function()? onPressed;
 
   Map<String, WordDatabaseEntry> _db = WordDatabase.db;
 
   @override
   Widget build(BuildContext context) {
-    if (_db == null) {
+    if (_db.isEmpty) {
       setState(() {
         main = new CircularProgressIndicator();
       });
@@ -31,18 +31,18 @@ class _SearchPageState extends State<SearchPage> {
       WordDatabase.getDatabase().then((db) {
         _db = db;
         setState(() {
-          main = null;
+          main = new Container();
         });
       });
     }
 
     if (widget.query.isEmpty) {
-      Function clearText = () =>
+      void Function () clearText = () =>
           setState(() {
             controller.clear();
           });
 
-      Timer timer;
+      Timer? timer;
 
       controller.addListener(() {
         // Debounce in case the view is re-built for any reason other than an
@@ -56,12 +56,12 @@ class _SearchPageState extends State<SearchPage> {
         if (debouncedQuery.isEmpty) {
           // Deactivate the clear query button and clear the results
           setState(() {
-            onPressed = null;
-            main = null;
+            onPressed = (){};
+            main = new Container();
           });
-        } else if (_db != null) {
-          if (timer != null && timer.isActive) {
-            timer.cancel();
+        } else if (_db.isNotEmpty) {
+          if (timer != null && timer!.isActive) {
+            timer!.cancel();
           }
 
           // Rate limit returning query results.
@@ -94,6 +94,7 @@ class _SearchPageState extends State<SearchPage> {
               main = newMain;
             });
           });
+
         }
       });
     } else {

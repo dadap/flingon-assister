@@ -20,7 +20,7 @@ class _UpdateButtonState extends State<UpdateButton> {
   Widget build(BuildContext context) {
     return new ListTile(
       title: new KlingonText(fromString:
-        L7dStrings.of(context).l6e('dbupdate_check')),
+        L7dStrings.of(context)!.l6e('dbupdate_check')!),
       leading: new Container(
         child: new Icon(Icons.update),
         alignment: Alignment.center,
@@ -44,14 +44,14 @@ class UpdateSheet extends StatefulWidget {
 
 class _UpdateSheetState extends State<UpdateSheet> {
   String msg = '';
-  Widget buttons;
-  double completion;
+  Widget? buttons;
+  double completion = 0.0;
 
-  String url;
-  String version;
-  String movedTo;
-  int size;
-  List<int> update;
+  String url = '';
+  String version = '';
+  String movedTo = '';
+  int size = 0;
+  List<int> update = [];
   bool done = false;
   bool doInstall = false;
 
@@ -74,10 +74,10 @@ class _UpdateSheetState extends State<UpdateSheet> {
       });
     }
 
-    if (url == null) {
+    if (url.isEmpty) {
       // URL isn't set yet: fetch the manifest and get the path to the latest db
       String manifestPath = _manifestLocation();
-      msg = L7dStrings.of(context).l6e('dbupdate_checking');
+      msg = L7dStrings.of(context)!.l6e('dbupdate_checking')!;
 
       HttpClient http = new HttpClient();
       http.getUrl(Uri.parse(manifestPath)).then((req) => req.close()).then((
@@ -85,31 +85,32 @@ class _UpdateSheetState extends State<UpdateSheet> {
         final String formatVersion = 'iOS-1';
         String manifest = await resp.transform(utf8.decoder).join();
 
-        Map m;
+        Map m = {};
 
         try {
           m = jsonDecode(manifest);
-          if (m != null) {
+          if (m.isNotEmpty) {
             if (m[formatVersion] != null) {
               version = m[formatVersion]['latest'];
+              print(version);
             }
-            movedTo = m['moved_to'];
+            movedTo = m['moved_to'] == null ? '' : m['moved_to'];
           }
         } catch (e) {
-          error(L7dStrings.of(context).l6e('dbupdate_badmanifest'));
+          error(L7dStrings.of(context)!.l6e('dbupdate_badmanifest')!);
         }
 
-        if (m == null) {
-          error(L7dStrings.of(context).l6e('dbupdate_badmanifest'));
-        } else if (movedTo != null) {
+        if (m.isEmpty) {
+          error(L7dStrings.of(context)!.l6e('dbupdate_badmanifest')!);
+        } else if (movedTo.isNotEmpty) {
           setState(() => url = '');
-        } else if (version != null) {
+        } else if (version.isNotEmpty) {
           setState(() {
             url = m[formatVersion][version]['path'];
             size = m[formatVersion][version]['size'];
 
             // Figure out if the path is absolute or relative and canonicalize
-            if (url != null && size != null) {
+            if (url.isNotEmpty && size > 0) {
               if (!url.contains('://')) {
                 url = '${manifestPath.substring(
                   0, manifestPath.lastIndexOf('/'))}/$url';
@@ -117,15 +118,15 @@ class _UpdateSheetState extends State<UpdateSheet> {
             }
           });
         } else {
-          error(L7dStrings.of(context).l6e('dbupdate_badmanifest'));
+          error(L7dStrings.of(context)!.l6e('dbupdate_badmanifest')!);
         }
       }, onError: ((e) =>
-        error(L7dStrings.of(context).l6e('dbupdate_manifetcherr')))
+        error(L7dStrings.of(context)!.l6e('dbupdate_manifetcherr')!))
       );
-    } else if (update == null) {
+    } else if (update.isEmpty) {
       // Path to the update has been determined, but update hasn't started
       if (!doInstall) {
-        if (movedTo != null) {
+        if (movedTo.isNotEmpty) {
           // Advertise the new update location
           setState(() {
             msg = 'The update location has moved to $movedTo';
@@ -134,7 +135,7 @@ class _UpdateSheetState extends State<UpdateSheet> {
                 new TextButton(
                   onPressed: () {
                     Preferences.updateLocation = movedTo;
-                    setState(() => url = null);
+                    setState(() => url = '');
                   },
                   child: new Text('Use new location'),
                 ),
@@ -208,9 +209,9 @@ class _UpdateSheetState extends State<UpdateSheet> {
       });
     }
 
-    Widget status;
+    Widget? status;
 
-    if (url != null && !doInstall) {
+    if (url.isNotEmpty && !doInstall) {
       status = buttons;
     } else {
       status = new LinearProgressIndicator(value: completion);

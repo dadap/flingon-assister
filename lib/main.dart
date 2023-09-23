@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.red,
-        accentColor: Colors.redAccent,
+        //accentColor: Colors.redAccent,
         toggleableActiveColor: Colors.redAccent,
       ),
       home: new MyHomePage("help"),
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
 
   MyHomePage(this.entry,
-             {Key key, this.title: appNamepIqaD, this.secondTitle: ""}) :
+             {Key? key, this.title: appNamepIqaD, this.secondTitle: ""}) :
     super(key: key);
 
   final String title;
@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     if (!loadHandlerRegistered) {
       messageChannel.setMessageHandler((msg) async {
-        loadURI(msg);
+        if (msg != null) loadURI(msg);
         return '';
       });
       loadHandlerRegistered = true;
@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /* Load an entry as the main widget */
-  load(String destination, {String withTitle}) {
+  load(String destination, {String withTitle = ''}) {
     List<String> destinationSplit = destination.split(':');
     if (destinationSplit.length < 2) {
       if (destination == 'prefix_chart') {
@@ -173,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     List<Widget> ret = [
       new ListTile(
-        title: new KlingonText(fromString: L7dStrings.of(context).l6e('prefs')),
+        title: new KlingonText(fromString: L7dStrings.of(context)!.l6e('prefs')!),
         onTap: () {
           Navigator.pop(context);
           Navigator.push(context, new MaterialPageRoute(
@@ -183,31 +183,31 @@ class _MyHomePageState extends State<MyHomePage> {
       )
     ];
 
-    for (String category in menu.keys) {
+    menu.forEach((category, items) {
       List<ListTile> options = [];
-      for (String name in menu[category].keys) {
+      items.forEach((name, val) {
         options.add(new ListTile(
           title: new KlingonText(fromString:
-            L7dStrings.of(context).l6e('menu_${category}_${name}')),
+            L7dStrings.of(context)!.l6e('menu_${category}_${name}')!),
           onTap: () {
             Navigator.pop(context);
             load(
-              menu[category][name],
-              withTitle: L7dStrings.of(context).l6e('menu_${category}_${name}'),
+              val,
+              withTitle: L7dStrings.of(context)!.l6e('menu_${category}_${name}')!,
             );
           },
-          trailing: KlingonText.iconFromLink(menu[category][name]),
+          trailing: KlingonText.iconFromLink(val),
         ));
-      }
+      });
       ret.add(new ExpansionTile(
         title: new KlingonText(
-          fromString: L7dStrings.of(context).l6e('menu_$category'),
+          fromString: L7dStrings.of(context)!.l6e('menu_$category')!,
           style: new TextStyle(color: Colors.red),
         ),
         children: options,
         initiallyExpanded: true,
       ));
-    }
+    });
 
     return ret;
   }
@@ -217,10 +217,10 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (c) => new SearchPage()));
   }
 
-  Widget getEntry(String entry, BuildContext context, {String withTitle}) {
+  Widget getEntry(String entry, BuildContext context, {String withTitle = ''}) {
     Widget ret;
 
-    if (WordDatabase.db == null) {
+    if (WordDatabase.db.isEmpty) {
       ret = const Text('Error: database not initialized!');
     } else if (entry.startsWith('*:')) {
       // Load all entries with the given category
@@ -231,10 +231,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),),
       ];
 
-      WordDatabase.db.values.where((elem) {
-        return elem.partOfSpeech == entry.substring(2);
-      }).forEach((elem) {
-        entries.add(elem.toListTile(onTap: () => load(elem.searchName)));
+      WordDatabase.db.forEach((key, elem) {
+        if (elem.partOfSpeech == entry.substring(2))
+          entries.add(elem.toListTile(onTap: () => load(key)));
       });
 
       ret = new Expanded(child: new ListView(children: entries));
@@ -256,8 +255,8 @@ class _MyHomePageState extends State<MyHomePage> {
             entries.add(h.toListTile(onTap: () => load(h.searchName))));
         } else {
           String c = WordDatabaseEntry.normalizeSearchName(trimmed);
-          if (WordDatabase.db.containsKey(c))
-            entries.add(WordDatabase.db[c].toListTile(onTap: () => load(c)));
+          if (WordDatabase.db[c] != null)
+            entries.add(WordDatabase.db[c]!.toListTile(onTap: () => load(c)));
         }
       }
 
@@ -280,8 +279,11 @@ class _MyHomePageState extends State<MyHomePage> {
     } else if (WordDatabase.db[entry] == null) {
       ret = new Text('The entry {$entry} was not found in the database.');
     } else {
-      ret = WordDatabase.db[entry].toWidget(
-        Theme.of(context).textTheme.bodyMedium,
+      TextStyle? style = Theme.of(context).textTheme.bodyMedium;
+
+      if (style == null) style = DefaultTextStyle.of(context).style;
+      ret = WordDatabase.db[entry]!.toWidget(
+        style!,
         onTap: load,
       );
     }
@@ -289,7 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Column(children: [ret]);
   }
 
-  Widget buildHelper(BuildContext context, String entry, {String withTitle}) {
+  Widget buildHelper(BuildContext context, String entry, {String withTitle = ''}) {
     Widget main = new CircularProgressIndicator();
 
     if (_actions.isEmpty) {
@@ -320,12 +322,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     // Lazily initialize the database and load destination entry when done.
-    if (WordDatabase.db == null) {
+    if (WordDatabase.db.isEmpty) {
       WordDatabase.getDatabase().then((ret) {
         if (entry != 'help') {
           setState(() {
             main = getEntry(entry, context, withTitle: withTitle);
-            _dbversion = '${L7dStrings.of(context).l6e('database_version')} ${
+            _dbversion = '${L7dStrings.of(context)!.l6e('database_version')} ${
               WordDatabase.version}';
           });
         }
@@ -334,7 +336,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (entry != 'help') {
         main = getEntry(entry, context, withTitle: withTitle);
       }
-      _dbversion = '${L7dStrings.of(context).l6e('database_version')} ${
+      _dbversion = '${L7dStrings.of(context)!.l6e('database_version')} ${
         WordDatabase.version}';
     }
 
@@ -347,14 +349,14 @@ class _MyHomePageState extends State<MyHomePage> {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           new Text(
-              L7dStrings.of(context).l6e('appname_translation'),
+              L7dStrings.of(context)!.l6e('appname_translation')!,
               style: Theme.of(context).textTheme.headlineSmall
           ),
           new KlingonText(
             fromString: _dbversion,
             style: Theme.of(context).textTheme.caption,
           ),
-          new KlingonText(fromString: L7dStrings.of(context).l6e('helptext'),
+          new KlingonText(fromString: L7dStrings.of(context)!.l6e('helptext')!,
             style: Theme.of(context).textTheme.bodyMedium,
             onTap: (dest) => load(dest),
         ),
@@ -511,7 +513,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    L7dStrings.of(context).locale = new Locale(Preferences.uiLang);
+    L7dStrings.of(context)!.locale = new Locale(Preferences.uiLang);
     return buildHelper(context, widget.entry, withTitle: widget.secondTitle);
   }
 }

@@ -27,12 +27,12 @@ class L7dStrings {
 
   Locale locale;
 
-  static L7dStrings of (BuildContext context) {
+  static L7dStrings? of (BuildContext context) {
     return Localizations.of<L7dStrings>(context, L7dStrings);
   }
 
-  String l6e (String key) {
-    return _strings[key][locale.languageCode];
+  String? l6e (String key) {
+    return _strings[key]![locale.languageCode];
   }
 
   static final Map<String, Map<String, String>> _strings = {

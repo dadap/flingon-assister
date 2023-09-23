@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'preferences.dart';
 
 class KlingonText extends RichText {
-  final TextStyle style;
+  final TextStyle? style;
 
   // Constructs a new KlingonText widget
   //
@@ -11,21 +11,24 @@ class KlingonText extends RichText {
   // onTap: A callback to be run when links are tapped
   // style: The default style to apply to non-braced text
 
-  KlingonText({String fromString, Function(String) onTap, this.style}) : super(
+  KlingonText({String fromString = '', Function(String)? onTap, this.style}) : super(
     text: _processKlingonText(fromString, onTap, style),
   );
 
-  static MaterialColor colorForPOS(String pos) {
+  static MaterialColor? colorForPOS(String pos) {
     List<String> posSplit = pos.split(':');
 
     if (posSplit.length < 1) {
       return null;
     }
 
-    return _colorForPOS(posSplit[0], posSplit.length > 1 ? posSplit[1] : null);
+    if (posSplit.length > 1)
+      return _colorForPOS(posSplit[0], posSplit[1]);
+
+    return null;
   }
 
-  static MaterialColor _colorForPOS(String type, String flags) {
+  static MaterialColor? _colorForPOS(String? type, String flags) {
     // Use the default color if color is disabled
     if (!Preferences.partOfSpeechColors) {
       return null;
@@ -42,7 +45,7 @@ class KlingonText extends RichText {
       return null;
     }
 
-    List<String> splitFlags = flags == null ? [] : flags.split(',');
+    List<String> splitFlags = flags.split(',');
     if (splitFlags.contains('suff') || splitFlags.contains('pref')) {
       return Colors.red;
     }
@@ -71,17 +74,17 @@ class KlingonText extends RichText {
       'y' : '', '\'' : '', ',' : '', '.' : '',
     };
 
-    for (String letter in pIqaD.keys) {
-      text = text.replaceAll(letter, pIqaD[letter]);
-    }
+    pIqaD.forEach((find, replace) {
+      text = text.replaceAll(find, replace);
+    });
 
     return text;
   }
 
   // Build a TextSpan containing 'src', with text {in curly braces} formatted
   // appropriately.
-  static TextSpan _processKlingonText(String src, Function(String) onTap,
-      TextStyle style) {
+  static TextSpan _processKlingonText(String src, Function(String)? onTap,
+      TextStyle? style) {
     List<TextSpan> ret = [];
     String remainder = src;
 
@@ -92,27 +95,27 @@ class KlingonText extends RichText {
         String klingon = remainder.substring(1, endIndex);
         List<String> klingonSplit = klingon.split(':');
         String textOnly = klingonSplit[0].split('@@')[0];
-        String textType = klingonSplit.length > 1 ? klingonSplit[1] : null;
-        String textFlags = klingonSplit.length > 2 ? klingonSplit[2] : null;
+        String textType = klingonSplit.length > 1 ? klingonSplit[1] : '';
+        String textFlags = klingonSplit.length > 2 ? klingonSplit[2] : '';
 
         // Klingon words (i.e., anything that's not a URL or source citation)
         // should be in a serif font, to distinguish 'I' and 'l'.
-        bool isKlingon = textType == null || textType != 'url' &&
+        bool isKlingon = textType != 'url' &&
           textType != 'src';
 
         // Anything that's not a source citation or explicitly not a link should
         // be treated as a link. Don't process links without an onTap callback.
-        bool link = onTap != null && (textType == null || textType != 'src') &&
-            (textFlags == null || !textFlags.split(',').contains('nolink'));
+        bool link = onTap != null && textType != 'src' &&
+            !textFlags.split(',').contains('nolink');
 
         // Source citations are italicized
-        bool italic = textType != null && textType == 'src';
+        bool italic = textType == 'src';
 
-        TapGestureRecognizer recognizer = null;
+        TapGestureRecognizer? recognizer;
 
         remainder = remainder.substring(endIndex + 1);
 
-        if (link && onTap != null) {
+        if (link) {
           recognizer = new TapGestureRecognizer();
           recognizer.onTap = () {onTap(klingon);};
         }
@@ -136,7 +139,7 @@ class KlingonText extends RichText {
         ));
 
         if (iconFromLink(klingon) != null) {
-          ret.add(iconToText(iconFromLink(klingon)));
+          ret.add(iconToText(iconFromLink(klingon)!));
         }
       } else {
         int endIndex = remainder.indexOf('{');
@@ -153,18 +156,14 @@ class KlingonText extends RichText {
 
   // Convert a Material icon into a TextSpan
   static TextSpan iconToText(Icon icon) {
-    if (icon == null) {
-      return null;
-    }
-
     return new TextSpan(
-      text: new String.fromCharCode(icon.icon.codePoint),
-      style: new TextStyle(fontFamily: icon.icon.fontFamily),
+      text: new String.fromCharCode(icon.icon!.codePoint),
+      style: new TextStyle(fontFamily: icon.icon!.fontFamily),
     );
   }
 
   // Choose an appropriate icon for an external link
-  static Icon iconFromLink(String link) {
+  static Icon? iconFromLink(String link) {
     List<String> linkSplit = link.split(':');
 
     if (linkSplit.length > 3) {

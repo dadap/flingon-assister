@@ -11,22 +11,19 @@ import 'dart:io';
 import 'package:mutex/mutex.dart';
 
 class WordDatabase {
-  static Map<String, WordDatabaseEntry> db;
+  static Map<String, WordDatabaseEntry> db = new Map();
   static String version = '(loading database…)';
-  static String dbFile;
+  static String dbFile = '';
 
   static String builtInDbVersion = '';
-  static Mutex mutex;
+  static Mutex mutex = new Mutex();
 
   static Future<Map<String, WordDatabaseEntry>> getDatabase(
-    {bool force : false}) async {
-    if (mutex == null) {
-      mutex = new Mutex();
-    }
+    {bool force = false}) async {
 
     await mutex.acquire();
 
-    if (force || db == null) {
+    if (force || db.isEmpty) {
       db = new Map();
 
       await Preferences.loadPreferences();
@@ -37,7 +34,7 @@ class WordDatabase {
       final filename = 'qawHaq.json.bz2';
       var data;
 
-      if (WordDatabase.dbFile == null) {
+      if (WordDatabase.dbFile == '') {
         WordDatabase.dbFile =
         '${(await getApplicationDocumentsDirectory()).path}/$filename';
       }
@@ -46,8 +43,7 @@ class WordDatabase {
         builtInDbVersion = (await rootBundle.loadString('data/VERSION')).trim();
       }
 
-      if (Preferences.dbUpdateVersion != null &&
-          verCmp(Preferences.dbUpdateVersion, builtInDbVersion) > 0) {
+      if (verCmp(Preferences.dbUpdateVersion, builtInDbVersion) > 0) {
         File file = new File(WordDatabase.dbFile);
         if (await file.exists()) {
           data = await file.readAsBytes();
@@ -74,9 +70,9 @@ class WordDatabase {
         Preferences.supportedLangs.add(lang);
       }
 
-      for (String entry in doc['qawHaq'].keys) {
-        db[entry] = new WordDatabaseEntry.fromJSON(doc['qawHaq'][entry]);
-      }
+      doc['qawHaq'].forEach ((key, entry) {
+        db[key] = new WordDatabaseEntry.fromJSON(entry);
+      });
     }
     mutex.release();
 
@@ -86,7 +82,7 @@ class WordDatabase {
   // Measures similarity between haystack and needle. If haystack contains
   // needle, returns the number of extra characters in haystack that aren't
   // also in needle. Otherwise, returns a large number for sorting purposes.
-  static int _levenshtein(String s, String t, {int max: 999999999}) {
+  static int _levenshtein(String s, String t, {int max = 999999999}) {
     if (s == t)
       return 0;
     if (s.length == 0)
@@ -121,8 +117,8 @@ class WordDatabase {
   }
 
   // Lazily populated lists of verb and noun affixes
-  static Iterable<WordDatabaseEntry> _verbprefixes, _verbsuffixes;
-  static Iterable<WordDatabaseEntry> _nounsuffixes;
+  static Iterable<WordDatabaseEntry> _verbprefixes = {}, _verbsuffixes = {};
+  static Iterable<WordDatabaseEntry> _nounsuffixes = {};
   static bool _analysisReady = false;
 
   // Break the query up into separate words and analyze them
@@ -151,7 +147,7 @@ class WordDatabase {
 
   // Test whether a word ends with one of the suffixes in the provided list.
   // Returns an identified suffix, or null if no suffix found.
-  static WordDatabaseEntry _endsWithSuffix(Iterable<WordDatabaseEntry> suffixes,
+  static WordDatabaseEntry? _endsWithSuffix(Iterable<WordDatabaseEntry> suffixes,
       String word) {
     for (WordDatabaseEntry s in suffixes) {
       if (word.endsWith(s.entryName.substring(1))) {
@@ -169,14 +165,14 @@ class WordDatabase {
       String word) {
     List<WordDatabaseEntry> nounResults = [], verbResults = [], results = [];
     String unparsedNoun = word, unparsedVerb = word;
-    WordDatabaseEntry suff;
+    WordDatabaseEntry? suff;
 
     Iterable<WordDatabaseEntry> exact;
 
     // Pop noun suffixes off the end of the word until no more noun suffixes
     // can be identified.
     while ((suff = _endsWithSuffix(_nounsuffixes, unparsedNoun)) != null) {
-      nounResults.insert(0, suff);
+      nounResults.insert(0, suff!);
       unparsedNoun = unparsedNoun.substring(0, unparsedNoun.length -
         suff.entryName.length+1); // Ignore '-'
     }
@@ -203,7 +199,7 @@ class WordDatabase {
 
     // Do the same for verbs
     while ((suff = _endsWithSuffix(_verbsuffixes, unparsedVerb)) != null) {
-      verbResults.insert(0, suff);
+      verbResults.insert(0, suff!);
       unparsedVerb = unparsedVerb.substring(0, unparsedVerb.length -
         suff.entryName.length+1); // Ignore '-'
     }
@@ -308,9 +304,9 @@ class WordDatabase {
       'ё' : 'е', 'е\u0308' : 'е', 'Ё' : 'Е', 'Е\u0308' : 'Е',
     };
 
-    for (String fixKey in unicodeFixes.keys) {
-      string = string.replaceAll(fixKey, unicodeFixes[fixKey]);
-    }
+    unicodeFixes.forEach((find, replace) {
+      string = string.replaceAll(find, replace);
+    });
 
     return string;
   }
@@ -343,25 +339,25 @@ class WordDatabase {
       // Lowercase the query if it was entered in xifan hol
       string = string.toLowerCase();
 
-      for (String letter in xifanCommon.keys) {
-        string = string.replaceAll(letter, xifanCommon[letter]);
-      }
+      xifanCommon.forEach((letter, replacement) {
+        string = string.replaceAll(letter, replacement);
+      });
 
       if (inputMode == InputMode.xifanholkq) {
-        for (String letter in xifankq.keys) {
-          string = string.replaceAll(letter, xifankq[letter]);
-        }
+        xifankq.forEach((letter, replacement) {
+          string = string.replaceAll(letter, replacement);
+        });
       } else if (inputMode == InputMode.xifanholkQ) {
-        for (String letter in xifankQ.keys) {
-          string = string.replaceAll(letter, xifankQ[letter]);
-        }
+        xifankQ.forEach((letter, replacement) {
+          string = string.replaceAll(letter, replacement);
+        });
       }
     }
 
     // Recase letters that can only ever be one case in Klingon
-    for (String letter in klingonCase.keys) {
-      string = string.replaceAll(letter, klingonCase[letter]);
-    }
+    klingonCase.forEach((letter, replacement) {
+      string = string.replaceAll(letter, replacement);
+    });
 
     // 'h' is lowercase when part of 'ch', 'gh', or 'tlh', and capital when 'H'.
     // Replace h/H last, to allow c, g, l, and t to be lowercased first.
@@ -371,9 +367,9 @@ class WordDatabase {
       new RegExp('(c|^g|[^n]g|tl)H'), (m) => '${m[1]}h');
 
     // Transliterate any pIqaD that may be present in the search query
-    for (String letter in pIqaD.keys) {
-      string = string.replaceAll(letter, pIqaD[letter]);
-    }
+    pIqaD.forEach((letter, replacement) {
+      string = string.replaceAll(letter, replacement);
+    });
 
     return string;
   }
@@ -386,7 +382,7 @@ class WordDatabase {
     if (Preferences.searchDefinitions &&
         entry.definitionLowercase[Preferences.searchLang] != null) {
       result = min(result, _levenshtein(querylc,
-        entry.definitionLowercase[Preferences.searchLang]));
+        entry.definitionLowercase[Preferences.searchLang]!));
     }
 
     if (Preferences.searchEntryNames) {
@@ -394,26 +390,23 @@ class WordDatabase {
     }
 
     if (Preferences.searchSearchTags &&
-        entry.searchTags != null &&
         entry.searchTags[Preferences.searchLang] != null) {
-      for (String tag in entry.searchTags[Preferences.searchLang]) {
+      entry.searchTags[Preferences.searchLang]!.forEach((tag) {
         result = min(result, _levenshtein(querylc, tag));
-      }
+      });
     }
 
     return result;
   }
 
   // Analyze a query and search for matching non-analyzed database entries
-  static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry> db,
-    String query, InputMode inputMode}) {
+  static List<WordDatabaseEntry> match({Map<String, WordDatabaseEntry>? db,
+    String query = '', InputMode? inputMode}) {
     // Get the current locale. Preferences should have already been initialized
     // when the database was initialized.
     String locale = Preferences.searchLang;
 
-    if (inputMode == null) {
-      inputMode = Preferences.inputMode;
-    }
+    if (inputMode == null) inputMode = Preferences.inputMode;
 
     // Sanitize query, create a lowercase version for use in non-Klingon text
     // searches, and a transliterated (if appropriate) and Klingon-cased version
@@ -426,7 +419,7 @@ class WordDatabase {
     List <WordDatabaseEntry> ret = [];
 
     // Start with analysis results
-    if (Preferences.searchEntryNames) {
+    if (db != null && Preferences.searchEntryNames) {
       ret.addAll(_analyze(db, query));
     }
 
@@ -454,8 +447,8 @@ class WordDatabase {
       if (Preferences.searchSearchTags) {
         List<WordDatabaseEntry> tagMatches = db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
-            e.searchTags != null && e.searchTags[locale] != null &&
-                e.searchTags[locale].contains(queryLowercase)
+            e.searchTags[locale] != null &&
+                e.searchTags[locale]!.contains(queryLowercase)
         )).toList();
         ret.addAll(tagMatches);
       }
@@ -467,8 +460,8 @@ class WordDatabase {
       if (Preferences.searchSearchTags) {
         partialMatches.addAll(db.values.where((e) =>
         ret.where((r) => r.searchName == e.searchName).isEmpty && (
-          e.searchTags != null && e.searchTags[locale] != null &&
-          e.searchTags[locale].where((t) =>
+          e.searchTags[locale] != null &&
+          e.searchTags[locale]!.where((t) =>
             t.contains(queryLowercase)).isNotEmpty
         )).toList());
       }
@@ -491,8 +484,8 @@ class WordDatabase {
             partialMatches.where((m) => m.searchName == e.searchName).isEmpty &&
             e.definitionLowercase[locale] != null &&
             (query.length > 2 ||
-             _levenshtein(query, e.definitionLowercase[locale], max: 4) < 4) &&
-            e.definitionLowercase[locale].contains(queryLowercase)
+             _levenshtein(query, e.definitionLowercase[locale]!, max: 4) < 4) &&
+            e.definitionLowercase[locale]!.contains(queryLowercase)
         ).toList());
       }
 
@@ -546,10 +539,6 @@ class WordDatabase {
 class WordDatabaseEntry {
   // Copy a map of string values parsed from JSON to a map of strings
   static Map<String, String> _localizedMapFromJSON(Map<String, dynamic> json) {
-    if (json == null) {
-      return null;
-    }
-
     Map<String, String> ret = {};
 
     for (String lang in json.keys) {
@@ -566,20 +555,20 @@ class WordDatabaseEntry {
       // XXX figure out what ID isn't parsing
       id = 0;
     }
-    entryName = json['entry_name'];
-    partOfSpeech = json['part_of_speech'];
-    synonyms = json['synonyms'];
-    antonyms = json['antonyms'];
-    seeAlso = json['see_also'];
-    hiddenNotes = json['hidden_notes'];
-    components = json['components'];
-    source = json['source'];
+    if (json['entry_name'] != null) entryName = json['entry_name'];
+    if (json['part_of_speech'] != null) partOfSpeech = json['part_of_speech'];
+    if (json['synonyms'] != null) synonyms = json['synonyms'];
+    if (json['antonyms'] != null) antonyms = json['antonyms'];
+    if (json['see_also'] != null) seeAlso = json['see_also'];
+    if (json['hidden_notes'] != null) hiddenNotes = json['hidden_notes'];
+    if (json['components'] != null) components = json['components'];
+    if (json['source'] != null) source = json['source'];
 
     searchName = normalizeSearchName('$entryName:$partOfSpeech');
 
-    definition = _localizedMapFromJSON(json['definition']);
-    notes = _localizedMapFromJSON(json['notes']);
-    examples = _localizedMapFromJSON(json['examples']);
+    if (json['definition'] != null) definition = _localizedMapFromJSON(json['definition']);
+    if (json['notes'] != null) notes = _localizedMapFromJSON(json['notes']);
+    if (json['examples'] != null) examples = _localizedMapFromJSON(json['examples']);
 
     if (json['search_tags'] != null) {
       searchTags = {};
@@ -588,55 +577,48 @@ class WordDatabaseEntry {
         searchTags[lang] = [];
 
         for (String tag in json['search_tags'][lang]) {
-          searchTags[lang].add(tag);
+          searchTags[lang]!.add(tag);
         }
       }
     }
 
     for (String lang in definition.keys) {
-      if (definitionLowercase == null) {
-        definitionLowercase = {};
-      }
-
       // Precomputed a lowercased definition for searching. Also decompose "ß"
       // to "ss" to support Swiss German spelling in search, and replace 'ё'
       // with 'е' to make searches agnostic of the presence of a diaresis
       definitionLowercase[lang] =
-        definition[lang].toLowerCase().
+        definition[lang]!.toLowerCase().
           replaceAll('ß', 'ss').replaceAll('ё', 'е');
 
       // Infer that commas split lists of multiple definitions and add them as
       // search tags to improve search relevance
-      if (definitionLowercase[lang].contains(',')) {
-        if (searchTags == null) {
-          searchTags = {};
-        }
+      if (definitionLowercase[lang]!.contains(',')) {
         if (searchTags[lang] == null) {
           searchTags[lang] = [];
         }
-        searchTags[lang].addAll(definitionLowercase[lang].split(', '));
+        searchTags[lang]!.addAll(definitionLowercase[lang]!.split(', '));
       }
     }
   }
 
-  int id;
-  String entryName;
-  String partOfSpeech;
-  Map<String, String> definition;
-  Map<String, String> definitionLowercase;
-  String synonyms;
-  String antonyms;
-  String seeAlso;
-  Map<String, String> notes;
-  String hiddenNotes;
-  String components;
-  Map<String, String> examples;
-  Map<String, List<String>> searchTags;
-  String source;
+  int id = 0;
+  String entryName = '';
+  String partOfSpeech = '';
+  Map<String, String> definition = {};
+  Map<String, String> definitionLowercase = {};
+  String synonyms = '';
+  String antonyms = '';
+  String seeAlso = '';
+  Map<String, String> notes = {};
+  String hiddenNotes = '';
+  String components = '';
+  Map<String, String> examples = {};
+  Map<String, List<String>> searchTags = {};
+  String source = '';
 
-  String searchName;
+  String searchName = '';
 
-  Widget toWidget(TextStyle style, {Function(String) onTap}) {
+  Widget toWidget(TextStyle style, {Function(String)? onTap}) {
     final double listPadding = 8.0;
     final double hMargins = 8.0;
 
@@ -652,8 +634,8 @@ class WordDatabaseEntry {
     // Tests whether the given localized entry contains text, falling back
     // to English if empty in the current locale.
     bool _isNotNullOrEmpty(Map<String, String> map) {
-      return map != null && ((map[locale] != null && map[locale].isNotEmpty) ||
-        map['en'] != null && map['en'].isNotEmpty);
+      return ((map[locale] != null && map[locale]!.isNotEmpty) ||
+        map['en'] != null && map['en']!.isNotEmpty);
     }
 
     return new Expanded(child: new Padding(
@@ -665,7 +647,7 @@ class WordDatabaseEntry {
             child: new KlingonText(
                 fromString: '{$entryName:$partOfSpeech}',
                 style: new TextStyle(
-                  fontSize: style.fontSize * 2.5,
+                  fontSize: style.fontSize! * 2.5,
                 ),
           )),
           new Padding(
@@ -696,11 +678,11 @@ class WordDatabaseEntry {
                 onTap: onTap
             ),
           ) : emptyWidget,
-          hiddenNotes != null && hiddenNotes.isNotEmpty ? new Padding(
+          hiddenNotes.isNotEmpty ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
               fromString: hiddenNotes,
-              style: new TextStyle(fontSize: style.fontSize * 0.8),
+              style: new TextStyle(fontSize: style.fontSize! * 0.8),
               onTap: onTap,
             ),
           ) : emptyWidget,
@@ -713,7 +695,7 @@ class WordDatabaseEntry {
             onTap: onTap
             ),
           ) : emptyWidget,
-          seeAlso != null && seeAlso.isNotEmpty ? new Padding(
+          seeAlso.isNotEmpty ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
                 fromString: 'See also: $seeAlso',
@@ -721,7 +703,7 @@ class WordDatabaseEntry {
                 onTap: onTap
             ),
           ) : emptyWidget,
-          source != null && source.isNotEmpty ? new Padding(
+          source.isNotEmpty ? new Padding(
             padding: new EdgeInsets.only(bottom: listPadding),
             child: new KlingonText(
                 fromString: 'Source(s): $source',
@@ -733,14 +715,14 @@ class WordDatabaseEntry {
     )));
   }
 
-  ListTile toListTile({Function onTap}) {
+  ListTile toListTile({void Function()? onTap}) {
     String locale = Preferences.searchLang;
 
     return new ListTile(
       title: new KlingonText(fromString: '{$entryName:$partOfSpeech}'),
       subtitle: new KlingonText(
         fromString: definition[locale] != null ?
-          definition[locale] : definition['en']
+          definition[locale]! : definition['en']!
       ),
       onTap: onTap,
     );

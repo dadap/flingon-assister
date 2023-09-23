@@ -24,9 +24,9 @@ class Preferences {
   static bool _searchSearchTags = true;
   static bool _enableIncompleteLanguages = false;
   static String _updateLocation = _defaultUpdateLocation;
-  static String _dbUpdateVersion;
-  static Map <String, String> langs;
-  static List<String> supportedLangs;
+  static String _dbUpdateVersion = '';
+  static Map <String, String> langs = new Map();
+  static List<String> supportedLangs = new List<String>.empty(growable: true);
 
   static String inputModeName(InputMode im) {
     switch(im) {
@@ -37,7 +37,6 @@ class Preferences {
       case InputMode.xifanholkQ:
         return "xifan hol (k=Q; q=q)";
     }
-    return "unknown";
   }
 
   static String langName(String shortName) {
@@ -45,8 +44,8 @@ class Preferences {
       return "{tlhIngan Hol}";
     }
 
-    if (langs != null && langs.keys.contains(shortName)) {
-      return langs[shortName];
+    if (langs.keys.contains(shortName)) {
+      return langs[shortName]!;
     }
 
     return "unknown";
@@ -178,18 +177,18 @@ class Preferences {
   static loadPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    int inputMode = preferences.getInt('input_mode');
-    String searchLang = preferences.getString('search_language');
-    String uiLang = preferences.getString('user_interface_language');
-    String font = preferences.getString('font');
-    bool partOfSpeechColors = preferences.getBool('part_of_speech_colors');
-    bool searchEntryNames = preferences.getBool('search_entry_names');
-    bool searchDefinitions = preferences.getBool('search_definitions');
-    bool searchSearchTags = preferences.getBool('search_search_tags');
-    bool enableIncompleteLanguages =
+    int? inputMode = preferences.getInt('input_mode');
+    String? searchLang = preferences.getString('search_language');
+    String? uiLang = preferences.getString('user_interface_language');
+    String? font = preferences.getString('font');
+    bool? partOfSpeechColors = preferences.getBool('part_of_speech_colors');
+    bool? searchEntryNames = preferences.getBool('search_entry_names');
+    bool? searchDefinitions = preferences.getBool('search_definitions');
+    bool? searchSearchTags = preferences.getBool('search_search_tags');
+    bool? enableIncompleteLanguages =
       preferences.getBool('enable_incomplete_languages');
-    String updateLocation = preferences.getString('update_location');
-    String dbUpdateVersion = preferences.getString('db_update_version');
+    String? updateLocation = preferences.getString('update_location');
+    String? dbUpdateVersion = preferences.getString('db_update_version');
 
     if (inputMode != null) {
       _inputMode = _intToInputMode(inputMode);
@@ -243,7 +242,7 @@ class PreferencesPage extends StatefulWidget {
 }
 
 class _PreferencesPageState extends State<PreferencesPage> {
-  Widget _prefsPanel;
+  Widget? _prefsPanel;
   String _inputModeLabel = '';
   String _searchLanguageLabel = '';
   String _uiLanguageLabel = '';
@@ -308,7 +307,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
         children: [
           new ExpansionTile(
             title: new KlingonText(
-              fromString: L7dStrings.of(context).l6e('prefs_disp'),
+              fromString: L7dStrings.of(context)!.l6e('prefs_disp')!,
               style: new TextStyle(color: Colors.red),
             ),
             initiallyExpanded: true,
@@ -327,7 +326,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 onSelected: (val) {
                   setState(() {
                     _searchLanguageLabel =
-                      '${L7dStrings.of(context).l6e('prefs_disp_dblang')}: ${
+                      '${L7dStrings.of(context)!.l6e('prefs_disp_dblang')}: ${
                         Preferences.langName(val)}';
                   });
                   Preferences.searchLang = val;
@@ -339,8 +338,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   child: new Checkbox(
                       value: _enableIncompleteLanguages,
                       onChanged: (v) {
-                        setState(() => _enableIncompleteLanguages = v);
-                        Preferences.enableIncompleteLanguages = v;
+                        setState(() => _enableIncompleteLanguages = v!);
+                        Preferences.enableIncompleteLanguages = v!;
                       }
                   ),
                   alignment: Alignment.center,
@@ -348,7 +347,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   height: 20.0,
                 ),
                 title: new KlingonText(fromString:
-                L7dStrings.of(context).l6e('prefs_disp_alldblangs')),
+                L7dStrings.of(context)!.l6e('prefs_disp_alldblangs')!),
               ),
               new PopupMenuButton<String>(
                 child: new ListTile(
@@ -363,10 +362,10 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 itemBuilder: (ctx) => uiLanguageMenu,
                 onSelected: (val) {
                   Preferences.uiLang = val;
-                  L7dStrings.of(context).locale = new Locale(val);
+                  L7dStrings.of(context)!.locale = new Locale(val);
                   setState(() {
                     _uiLanguageLabel =
-                      '${L7dStrings.of(context).l6e('prefs_disp_uilang')}: ${
+                      '${L7dStrings.of(context)!.l6e('prefs_disp_uilang')}: ${
                         Preferences.langName(val)}';
                   });
                 },
@@ -385,7 +384,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 onSelected: (val) {
                   setState(() {
                     _fontLabel =
-                      '${L7dStrings.of(context).l6e('prefs_disp_tlhdisp')}: ${
+                      '${L7dStrings.of(context)!.l6e('prefs_disp_tlhdisp')}: ${
                         Preferences.fontName(val)}';
                   });
                   Preferences.font = val;
@@ -397,8 +396,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   child: new Checkbox(
                     value: _partOfSpeechColors,
                     onChanged: (v) {
-                      setState(() => _partOfSpeechColors = v);
-                      Preferences.partOfSpeechColors = v;
+                      setState(() => _partOfSpeechColors = v!);
+                      Preferences.partOfSpeechColors = v!;
                     }
                   ),
                   alignment: Alignment.center,
@@ -406,14 +405,14 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   height: 20.0,
                 ),
                 title: new KlingonText(fromString:
-                L7dStrings.of(context).l6e('prefs_disp_poscolors')),
+                L7dStrings.of(context)!.l6e('prefs_disp_poscolors')!),
               ),
 
             ]
           ),
           new ExpansionTile(
             title: new KlingonText(
-              fromString: L7dStrings.of(context).l6e('prefs_search'),
+              fromString: L7dStrings.of(context)!.l6e('prefs_search')!,
               style: new TextStyle(color: Colors.red),
             ),
             initiallyExpanded: true,
@@ -432,7 +431,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 onSelected: (val) {
                   setState(() {
                     _inputModeLabel =
-                    '${L7dStrings.of(context).l6e('prefs_search_inputmode')}: ${
+                    '${L7dStrings.of(context)!.l6e('prefs_search_inputmode')}: ${
                       Preferences.inputModeName(val)}';
                   });
                   Preferences.inputMode = val;
@@ -444,8 +443,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   child: new Checkbox(
                     value: _searchEntryNames,
                     onChanged: (v) {
-                      setState(() => _searchEntryNames = v);
-                      Preferences.searchEntryNames = v;
+                      setState(() => _searchEntryNames = v!);
+                      Preferences.searchEntryNames = v!;
                     }
                   ),
                   alignment: Alignment.center,
@@ -453,15 +452,15 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   height: 20.0,
                 ),
                 title: new KlingonText(fromString:
-                  L7dStrings.of(context).l6e('prefs_search_ent')),
+                  L7dStrings.of(context)!.l6e('prefs_search_ent')!),
               ),
               new ListTile(
                 leading: new Container(
                   child: new Checkbox(
                     value: _searchDefinitions,
                     onChanged: (v) {
-                      setState(() => _searchDefinitions = v);
-                      Preferences.searchDefinitions = v;
+                      setState(() => _searchDefinitions = v!);
+                      Preferences.searchDefinitions = v!;
                     }
                   ),
                   alignment: Alignment.center,
@@ -469,15 +468,15 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   height: 20.0,
                 ),
                 title: new KlingonText(fromString:
-                  L7dStrings.of(context).l6e('prefs_search_def')),
+                  L7dStrings.of(context)!.l6e('prefs_search_def')!),
               ),
               new ListTile(
                 leading: new Container(
                 child: new Checkbox(
                   value: _searchSearchTags,
                     onChanged: (v) {
-                      setState(() => _searchSearchTags = v);
-                      Preferences.searchSearchTags = v;
+                      setState(() => _searchSearchTags = v!);
+                      Preferences.searchSearchTags = v!;
                     }
                   ),
                   alignment: Alignment.center,
@@ -485,13 +484,13 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   height: 20.0,
                 ),
                 title: new KlingonText(fromString:
-                  L7dStrings.of(context).l6e('prefs_search_tags')),
+                  L7dStrings.of(context)!.l6e('prefs_search_tags')!),
               ),
             ],
           ),
           new ExpansionTile(
             title: new KlingonText(
-              fromString: L7dStrings.of(context).l6e('prefs_dbupdate'),
+              fromString: L7dStrings.of(context)!.l6e('prefs_dbupdate')!,
               style: new TextStyle(color: Colors.red),
             ),
             initiallyExpanded: true,
@@ -503,7 +502,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                   keyboardType: TextInputType.url,
                 ),
                 subtitle: new KlingonText(fromString:
-                  L7dStrings.of(context).l6e('prefs_dbupdate_location')),
+                  L7dStrings.of(context)!.l6e('prefs_dbupdate_location')!),
               ),
             ]
           ),
@@ -511,22 +510,22 @@ class _PreferencesPageState extends State<PreferencesPage> {
       );
       setState(() {
         _inputModeLabel =
-          '${L7dStrings.of(context).l6e('prefs_search_inputmode')}: ${
+          '${L7dStrings.of(context)!.l6e('prefs_search_inputmode')}: ${
             Preferences.inputModeName(Preferences.inputMode)}';
         _searchLanguageLabel =
-          '${L7dStrings.of(context).l6e('prefs_disp_dblang')}: ${
+          '${L7dStrings.of(context)!.l6e('prefs_disp_dblang')}: ${
             Preferences.langName(Preferences.searchLang)}';
         _uiLanguageLabel =
-          '${L7dStrings.of(context).l6e('prefs_disp_uilang')}: ${
+          '${L7dStrings.of(context)!.l6e('prefs_disp_uilang')}: ${
             Preferences.langName(Preferences.uiLang)}';
         _fontLabel =
-          '${L7dStrings.of(context).l6e('prefs_disp_tlhdisp')}: ${
+          '${L7dStrings.of(context)!.l6e('prefs_disp_tlhdisp')}: ${
             Preferences.fontName(Preferences.font)}';
       });
     });
     return new Scaffold(
       appBar: new AppBar(
-        title: new KlingonText(fromString: L7dStrings.of(context).l6e('prefs')),
+        title: new KlingonText(fromString: L7dStrings.of(context)!.l6e('prefs')!),
         backgroundColor: Colors.red[700],
       ),
 
