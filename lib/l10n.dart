@@ -46,7 +46,7 @@ class L7dStrings {
       'en' : 'Display Settings',
       'de' : 'Anzeigeeinstellungen',
       'tlh' : '{HaSta DuHmey}',
-      'pt' : 'Configurações de visulização',
+      'pt' : 'Configurações de visualização',
     },
     'prefs_disp_dblang' : {
       'en' : 'Database language',
@@ -56,7 +56,7 @@ class L7dStrings {
     },
     'prefs_disp_alldblangs' : {
       'en' : 'Enable incomplete database languages',
-      'de' : 'Aktivieren unvollständige Datenbanksprachen',
+      'de' : 'Unvollständige Datenbanksprachen aktivieren',
       'tlh' : '{qawHaq Holmey naQHa\' yIDuHmoH}',
       'pt' : 'Habilitar banco de dados de línguas incompletas',
     },
@@ -74,7 +74,7 @@ class L7dStrings {
     },
     'prefs_disp_poscolors' : {
       'en' : 'Color-code words based on part of speech',
-      'de' : 'Zeige Wörter mit Farbe',
+      'de' : 'Wörter nach Wortart einfärben',
       'tlh' : '{mu\'mey nguv}',
       'pt' : 'Código de cores baseado no tipo de palavra',
     },
@@ -92,7 +92,7 @@ class L7dStrings {
     },
     'prefs_search_ent' : {
       'en' : 'Search entry names',
-      'de' : 'Suche nach Einstragnamen',
+      'de' : 'Suche nach Einträgen',
       'tlh' : '{tlhIngan Hol mu\'mey tISam}',
       'pt' : 'Pesquisar nome das entradas',
     },
@@ -116,7 +116,7 @@ class L7dStrings {
     },
     'prefs_dbupdate_location' : {
       'en' : 'Database update location',
-      'de' : 'Databankaktualisierungsspeicherort',
+      'de' : 'Pfad zur Datenbankaktualisierung',
       'tlh' : '{qawHaqvaD De\' chu\' Daq}',
       'pt' : 'Local de atualização do banco de dados',
     },
@@ -190,7 +190,7 @@ class L7dStrings {
       'en' : 'Beginner\'s Conversation',
       'de' : 'Sätze für Anfänger',
       'tlh' : '{ghojchoHwI\' mu\'tlheghmey}',
-      'pt' : 'Conversação para inciantes',
+      'pt' : 'Conversação para iniciantes',
     },
     'menu_phr_jokes' : {
       'en' : 'Jokes and Funny Stories',
@@ -202,7 +202,7 @@ class L7dStrings {
       'en' : 'Rite of Ascension',
       'de' : 'Ritus des Aufsteigens',
       'tlh' : '{nentay}',
-      'pt' : 'Rial de Ascensão',
+      'pt' : 'Ritual de Ascensão',
     },
     'menu_phr_Ql' : {
       'en' : 'QI\'lop Holiday',
@@ -220,7 +220,7 @@ class L7dStrings {
       'en' : 'Lyrics',
       'de' : 'Liedtexte',
       'tlh' : '{bom mu\'}',
-      'pt' : 'Letra de músicas',
+      'pt' : 'Letras de músicas',
     },
     'menu_phr_curses' : {
       'en' : 'Curse Warfare',
@@ -242,13 +242,13 @@ class L7dStrings {
     },
     'menu_phr_empunday' : {
       'en' : 'Empire Union Day',
-      'de' : 'Reichsfeiertag',
+      'de' : 'Tag der Reichsvereinigung',
       'tlh' : '{wo\' boq jaj}',
       'pt' : 'Dia da União do Império',
     },
     'menu_phr_reject' : {
       'en' : 'Rejecting a Suitor',
-      'de' : 'Ablehnen einer Anmache',
+      'de' : 'Annäherungsversuche ablehnen',
       'tlh' : '{nga\'chuq \'e\' lajQo\'}',
       'pt' : 'Rejeitando um pretendente',
     },
@@ -308,19 +308,19 @@ class L7dStrings {
     },
     'menu_kli_questions' : {
       'en' : 'Ask Questions!',
-      'de' : 'Frage stellen!',
+      'de' : 'Stell eine Frage!',
       'tlh' : '{yIghel!}',
       'pt' : 'Faça uma pergunta!',
     },
     'appname_translation' : {
-      'en' : '"Klingon Language Assitant"',
+      'en' : '"Klingon Language Assistant"',
       'de' : '"Klingonisch-Assistent"',
       'tlh' : '', // The line above already says "tlhIngan Hol boQwI'"
       'pt' : '"Assistente da Língua Klingon"',
     },
     'database_version' : {
       'en' : 'Database version',
-      'de' : 'Datenbank version',
+      'de' : 'Datenbankversion',
       'tlh' : '{qawHaq mI\'}',
       'pt' : 'Versão do Banco de dados',
     },
@@ -367,12 +367,12 @@ class L7dStrings {
         'creating the Klingon language.'
         ,
       'de' :
-        '\nUm eine Suche zu starten, Klicke auf das Suchsymbol (die Lupe) und '
+        '\nUm eine Suche zu starten, klicke auf das Suchsymbol (die Lupe) und '
         'gib etwas in das Suchfeld ein.\n\n'
         'Um die klingonischen Wörter zu hören, muss die {klingonisch '
         'Vorlesesoftware:url:https://itunes.apple.com/us/app/hija/id1366951358}'
         ' installiert werden.\n\n'
-        'Es wird empfohlen, ein klingonische Tastatur zu installieren. Um auf '
+        'Es wird empfohlen, eine klingonische Tastatur zu installieren. Um auf '
         'einer kleinen Tastatur einfacher Klingonisch einzugeben, kann in den '
         'Einstellungen die folgende vereinfachte Eingabemethode ("xifan hol" '
         'genannt) aktiviert werden:\n'
@@ -382,14 +382,14 @@ class L7dStrings {
         'x ▶ {tlh:sen:nolink} / z ▶ {\':sen:nolink}\n'
         'Zusätzlich kann auch die folgende Tastenbelegung ausgewählt werden:\n'
         'k ▶ {q:sen:nolink} / q ▶ {Q:sen:nolink}\n\n'
-        'Bei Problemen oder Vorschlägen, bitte gib ein {Problem auf GitHub'
+        'Bei Problemen oder Vorschlägen, öffne bitte ein {Issue auf GitHub'
         ':url:http://github.com/dadap/flingon-assister/issues} oder {sende eine'
         ' E-Mail:url:mailto:daniel@dadap.net?subject=boQwI%27%20feedback}.\n\n'
         'Bitte unterstütze die klingonische Sprache durch den Erwerb der '
         'Bücher {The Klingon Dictionary:src}, '
         '{Klingon for the Galactic Traveler:src}, {The Klingon Way:src}, '
-        '{Conversational Klingon:src}, {Power Klingon:src}, sowie der anderen '
-        'Klingonen- oder Star-Trek-bezogenen Produkte von Pocket Books, Simon '
+        '{Conversational Klingon:src}, {Power Klingon:src}, sowie anderer '
+        'Produkte mit Klingonen- oder Star-Trek-Bezug von Pocket Books, Simon '
         '&amp; Schuster, und Paramount/Viacom/CBS Entertainment.\n\n'
         'Klingon, Star Trek, und verwandte Begriffe sind Schutzmarken von CBS '
         'Studios, Inc., und werden unter "fair use" verwendet.\n\n'
@@ -473,7 +473,7 @@ class L7dStrings {
           '{DISqa\'vI\'rIy pIqaD:n:nolink} fonte: {Quvar:n:name,nolink} '
           '(Lieven L. Litaer)\n'
           '{pIqaD qolqoS:n:nolink} fonte: Daniel Dadap\n\n'
-          'Agradecimentos especiais a Mark Okrand ({marq \'oqranD:n:name}) por '
+          'Agradecimentos especiais a Marc Okrand ({marq \'oqranD:n:name}) por '
           'criar a Língua Klingon.'          
     }
   };
