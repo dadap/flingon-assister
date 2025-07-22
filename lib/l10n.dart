@@ -363,7 +363,7 @@ class L7dStrings {
         '{DISqa\'vI\'rIy pIqaD:n:nolink} font: {Quvar:n:name,nolink} '
         '(Lieven L. Litaer)\n'
         '{pIqaD qolqoS:n:nolink} font: Daniel Dadap\n\n'
-        'Special thanks to Mark Okrand ({marq \'oqranD:n:name}) for '
+        'Special thanks to Marc Okrand ({marq \'oqranD:n:name}) for '
         'creating the Klingon language.'
         ,
       'de' :
